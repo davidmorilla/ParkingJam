@@ -1,5 +1,11 @@
+package es.upm.pproject.parkingjam.parking_jam.model;
+
 import java.util.Map;
 import java.util.Stack;
+
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 
 public class Level {
     int score;                  // Puntuación del n
@@ -13,13 +19,13 @@ public class Level {
         this.cars= cars;
     }
 
-    public void moveCar(char car, Coordinates newCoordinates) throws InvalidMovementException {
+    public void moveCar(char car, Coordinates newCoordinates) throws InvalidMovementException, SameMovementException {
         checkMovementValidity(car, newCoordinates);
         cars.get(car).setCoordinates(newCoordinates.getX(),newCoordinates.getY());
 
     }
 
-	private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws InvalidMovementException{
+	private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws InvalidMovementException, SameMovementException{
         //TODO checkear validez del movimiento (free tiles)
 
         Car car =cars.get(carChar);

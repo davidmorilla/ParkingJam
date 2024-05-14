@@ -1,4 +1,4 @@
-package es.upm.pproject.parkingjam.parking_jam.model;
+package es.upm.pproject.parkingjam.parking_jam.model.exceptions;
 
 public class InvalidMovementException extends Exception{
 

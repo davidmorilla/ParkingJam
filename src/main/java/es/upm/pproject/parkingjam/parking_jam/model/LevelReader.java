@@ -1,3 +1,5 @@
+package es.upm.pproject.parkingjam.parking_jam.model;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 
