@@ -10,26 +10,34 @@ public class Car {
 	private char orientation;           // Orientación del coche
 
 	public Car(int posX, int posY, int length, char orientation){
-		this.pos = new Coordinates(posX, posY);
-		this.length = length;
-		this.orientation = orientation;
-
-	}
+        this.pos = new Coordinates(posX, posY);
+        this.length = length;
+        this.orientation = orientation;
+        
+    }
 
 	public Coordinates getCoordinates(){
-		return this.pos; 
-	}
+        return this.pos; 
+    }
 
-	public void setCoordinates(int x, int y){
-		pos.setCoordinates(x, y);
-	}
+    public void setCoordinates(int x, int y){
+        pos.setCoordinates(x, y);
+    }
 
-	public int getLength(){
-		return this.length;
-	}
+    public int getLength(){
+        return this.length;
+    }
 
-	public char getOrientation(){
-		return this.orientation;
-	}
+    public void setLength(int l){
+        this.length = l;
+    }
+
+    public char getOrientation(){
+        return this.orientation;
+    }
+
+    public void setOrientation(char o){
+        this.orientation = o;
+    }
 
 }

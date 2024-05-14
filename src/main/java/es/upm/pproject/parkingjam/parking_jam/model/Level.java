@@ -1,35 +1,145 @@
 package es.upm.pproject.parkingjam.parking_jam.model;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
 
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
-import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
+import es.upm.pproject.parkingjam.parking_jam.utilities.*; 
 
 public class Level {
     private int score;                  // Puntuación del n
-    //Stack movements;
     private Map<Character, Car> cars;   // Coches del tablero
     private char[][]board;              //Mapa con la representación de los vehículos con letras
-    private int nrows;
-    private int ncolumns;
+    private LinkedList<OldBoardData>history;
 
-    public Level (char[][] board,  int nrows, int ncolumns, Map<Character, Car> cars){ // necesitamos guardar el tam del tablero para checkear la validez de un movimiento mas adelante.
+    public Level (char[][] board, Map<Character, Car> cars){
         this.score=0;
         this.board= board;
         this.cars= cars;
-        this.nrows=nrows;
-        this.ncolumns=ncolumns;
+        this.history = new LinkedList<>();
     }
 
-    public void moveCar(char car, Coordinates newCoordinates) throws InvalidMovementException, SameMovementException {
-        checkMovementValidity(car, newCoordinates);
-        cars.get(car).setCoordinates(newCoordinates.getX(),newCoordinates.getY());
-
+    //Moves the car in the way and the length specified when its possible and uploads the current board, 
+    //returns the old board or null if the car does not exist or its not possible to move the car to the specified possition. 
+    public char[][] moveCar(char car, int length, char way) throws SameMovementException{
+        char[][] newBoard = board;
+        OldBoardData copy = new OldBoardData(board, cars);
+        Coordinates coord = null;
+        int xCar = 0;
+        int yCar = 0;
+        if(cars.get(car)==null)
+            return null;
+        switch (way) {
+            //Left
+            case 'L':
+                xCar = cars.get(car).getCoordinates().getX();
+                yCar = cars.get(car).getCoordinates().getY();
+                coord = new Coordinates(xCar - length, yCar);
+                if(checkMovementValidity(car, coord)){
+                    try {
+                        deleteCar(car, newBoard, cars);
+                        addCar(car, newBoard, cars, coord);
+                        score ++;
+                        //Add the old map at the top of the stack
+                        history.add(0,copy);        
+                        board = newBoard;
+                    } catch (IllegalCarException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            //Right
+            case 'R':
+                xCar = cars.get(car).getCoordinates().getX();
+                yCar = cars.get(car).getCoordinates().getY();
+                coord = new Coordinates(xCar + length, yCar);
+                if(checkMovementValidity(car, coord)){
+                    try {
+                        deleteCar(car, newBoard, cars);
+                        addCar(car, newBoard, cars, coord);
+                        score ++;
+                        //Add the old map at the top of the stack
+                        history.add(0,copy);        
+                        board = newBoard;
+                    } catch (IllegalCarException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            //Up
+            case 'U':
+                xCar = cars.get(car).getCoordinates().getX();
+                yCar = cars.get(car).getCoordinates().getY();
+                coord = new Coordinates(xCar, yCar-length);
+                if(checkMovementValidity(car, coord)){
+                    try {
+                        deleteCar(car, newBoard, cars);
+                        addCar(car, newBoard, cars, coord);
+                        score ++;
+                        //Add the old map at the top of the stack
+                        history.add(0,copy);        
+                        board = newBoard;
+                    } catch (IllegalCarException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            //Down
+            case 'D':
+                xCar = cars.get(car).getCoordinates().getX();
+                yCar = cars.get(car).getCoordinates().getY();
+                coord = new Coordinates(xCar, yCar+length);
+                if(checkMovementValidity(car, coord)){
+                    try {
+                        deleteCar(car, newBoard, cars);
+                        addCar(car, newBoard, cars, coord);
+                        score ++;
+                        //Add the old map at the top of the stack
+                        history.add(0,copy);        
+                        board = newBoard;
+                    } catch (IllegalCarException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+        } 
+        
+        return newBoard;
     }
-
-private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws SameMovementException{
+    
+    public void deleteCar(char car, char[][]board, Map<Character,Car>cars) throws IllegalCarException{
+        int xCar = 0;
+        int yCar = 0;
+        if(cars.get(car)==null)
+            throw new IllegalCarException();
+        
+        xCar = cars.get(car).getCoordinates().getX();
+        yCar = cars.get(car).getCoordinates().getY();
+        for(int i = 1; i<=cars.get(car).getLength(); i++){ 
+            if(cars.get(car).getOrientation()=='H')
+                board[yCar][xCar+(i-1)]=' ';
+            else
+            board[yCar +(i-1)][xCar]=' ';
+        }
+    }
+    
+    public void addCar(char car, char[][]board, Map<Character,Car>cars, Coordinates coord) throws IllegalCarException{
+        int xCar = 0;
+        int yCar = 0;
+        if(cars.get(car)==null)
+            throw new IllegalCarException();
+        
+        xCar = coord.getX();
+        yCar = coord.getY();
+        for(int i = 1; i<=cars.get(car).getLength(); i++){ 
+            if(cars.get(car).getOrientation()=='H')
+                board[yCar][xCar+(i-1)]=car;
+            else
+            board[yCar +(i-1)][xCar]=car;
+        }
+    }
+    private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws SameMovementException{
         Car car =cars.get(carChar);
         Coordinates carCoordinates = car.getCoordinates();
         int carLength = car.getLength();
@@ -96,9 +206,17 @@ private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) 
             return valid;
         }
 	}
+	
+    
+	public void undoMovement() throws CannotUndoMovementException{
+	    if(this.history.size()==1)
+	        throw new CannotUndoMovementException();
+	    OldBoardData restoredBoard = history.getFirst();
+	    history.removeFirst();
+	    this.board = restoredBoard.getBoard();
+	    this.cars = restoredBoard.getCars();
+	    this.score--;
 	}
-    
-    
 
 }
 

@@ -4,9 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 public class LevelReader {
-	public static final String LEVEL_FILE_NAME_FORMAT = "src/main/resources/levels/level_%d.txt";
+	public final String LEVEL_FILE_NAME_FORMAT = "src/main/java/es/upm/pproject/parkingjam/parking_jam/levels/level_%d.txt";
+
 	
-    public static char[][] readMap(int level) {
+    public char[][] readMap(int level) {
         String fileName = LEVEL_FILE_NAME_FORMAT;
 		BufferedReader reader;
 		char[][] board = null;
@@ -36,12 +37,12 @@ public class LevelReader {
 							}
 						}
 					}
-					}
 				}
 			}
+		}
 
             // Cerrar el archivo
-            reader.close();
+        reader.close();
 
         } catch (Exception e) {
             System.err.println("Error al leer el archivo: " + e.getMessage());
