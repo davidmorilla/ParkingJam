@@ -29,9 +29,7 @@ public class Level {
 
     }
 
-	private boolean checkMovementValidity(char carChar, Coordinates newCoordinates, int carLength) throws SameMovementException{
-        //TODO checkear validez del movimiento (free tiles)
-
+private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws SameMovementException{
         Car car =cars.get(carChar);
         Coordinates carCoordinates = car.getCoordinates();
         int carLength = car.getLength();
@@ -39,7 +37,7 @@ public class Level {
         if(carCoordinates.getX()== newCoordinates.getX() && carCoordinates.getY()== newCoordinates.getY()) // no se debe computar como movimiento si se quiere mover al mismo lugar (de momento lanzo excepcion porque tecnicamente es valido pero no se debe sumar 1 al contador de movimientos, es como una accion vacia, ya veremos como tratamos este caso especifico
             throw new SameMovementException();
         if(carOrientation=='V' ){
-            if(carCoordinates.getX()!= newCoordinates.getX() || newCoordinates.getY()<0 || newCoordinates.getY()>= nrows){ //si quiere moverse a una X diferente estaria moviendose lateralmente == invalido, no puede moverse a una fila menor a 0 o mayor igual que el numero de filas (null pointer exc)
+            if(carCoordinates.getX()!= newCoordinates.getX() || newCoordinates.getY()<0 || newCoordinates.getY()>= board[0].length){ //si quiere moverse a una X diferente estaria moviendose lateralmente == invalido, no puede moverse a una fila menor a 0 o mayor igual que el numero de filas (null pointer exc)
                 return false;
             }
             boolean valid=true;
@@ -50,7 +48,7 @@ public class Level {
                 int i = 1; // si inicializamos a 0 comprobaria su actual posicion tambien que ya sabemos que es valida 
                 int limit = currentY - goalY;
                 while(valid && i<limit + 1){
-                    if( (board[carCoordinates.getX()][currentY - i] != ' ') && (board[carCoordinates.getX()][currentY + i] != '@'))
+                    if( (board[currentY - i][carCoordinates.getX()] != ' ') && (board[currentY + i][carCoordinates.getX()] != '@'))
                         valid=false;
                     i++;
                 }
@@ -58,9 +56,9 @@ public class Level {
                 int i = carLength;
                 int limit = goalY - currentY;
                 while(valid && i<limit + carLength){
-                    if(board[carCoordinates.getX()][currentY + i] != '@')
+                    if(board[currentY + i][carCoordinates.getX()] == '@')
                         return true;
-                    if(board[carCoordinates.getX()][currentY + i] != ' ') && (board[carCoordinates.getX()][currentY + i] != '@') ){)
+                    if((board[currentY + i][carCoordinates.getX()] != ' ') && (board[currentY + i][carCoordinates.getX()] != '@') ){
                         valid=false;
                     }
                     i++;
@@ -68,7 +66,7 @@ public class Level {
             }
             return valid;
         } else { // caso orientation == 'H'
-            if(carCoordinates.getY()!= newCoordinates.getY() || newCoordinates.getX()<0 || newCoordinates.getX()>= ncolumns){ //si quiere moverse a una Y diferente estaria moviendose verticalmente == invalido, no puede moverse a una columna menor a 0 o mayor igual que el numero de columnas (null pointer exc)
+            if(carCoordinates.getY()!= newCoordinates.getY() || newCoordinates.getX()<0 || newCoordinates.getX()>= board.length){ //si quiere moverse a una Y diferente estaria moviendose verticalmente == invalido, no puede moverse a una columna menor a 0 o mayor igual que el numero de columnas (null pointer exc)
                 return false;
             }
             boolean valid=true;
@@ -79,7 +77,7 @@ public class Level {
                 int i = 1; // si inicializamos a 0 comprobaria su actual posicion tambien que ya sabemos que es valida 
                 int limit = currentX - goalX;
                 while(valid && i<limit + 1){
-                    if( (board[currentX - i][carCoordinates.getY()] != ' ') && (board[currentX - i][carCoordinates.getY()] != '@'))
+                    if( (board[carCoordinates.getY()][currentX - i] != ' ') && (board[carCoordinates.getY()][currentX - i] != '@'))
                         valid=false;
                     i++;
                 }
@@ -87,9 +85,9 @@ public class Level {
                 int i = carLength;
                 int limit = goalX - currentX;
                 while(valid && i<limit + carLength){
-                    if(board[currentX + i][carCoordinates.getY()] != '@')
+                    if(board[carCoordinates.getY()][currentX + i] == '@')
                         return true;
-                    if(board[currentX + i][carCoordinates.getY()] != ' ') && (board[currentX + i][carCoordinates.getY()] != '@') ){)
+                    if((board[carCoordinates.getY()][currentX + i] != ' ') && (board[carCoordinates.getY()][currentX + i] != '@') ){
                         valid=false;
                     }
                     i++;
@@ -97,6 +95,7 @@ public class Level {
             }
             return valid;
         }
+	}
 	}
     
     
