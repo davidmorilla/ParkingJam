@@ -8,10 +8,11 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.*; 
 
 public class Level {
-    private int score;                  // Puntuación del n
-    private Map<Character, Car> cars;   // Coches del tablero
-    private char[][]board;              //Mapa con la representación de los vehículos con letras
-    private LinkedList<OldBoardData>history;
+    int score;                  // Puntuación del n
+    Map<Character, Car> cars;   // Coches del tablero
+    char[][]board;              //Mapa con la representación de los vehículos con letras
+
+    LinkedList<OldBoardData> history;
 
     public Level (char[][] board, Map<Character, Car> cars){
         this.score=0;
@@ -19,6 +20,7 @@ public class Level {
         this.cars= cars;
         this.history = new LinkedList<>();
     }
+
 
     //Moves the car in the way and the length specified when its possible and uploads the current board, 
     //returns the old board or null if the car does not exist or its not possible to move the car to the specified possition. 
@@ -103,10 +105,11 @@ public class Level {
                     }
                 }
                 break;
-        } 
+        }
         
         return newBoard;
     }
+
     
     public void deleteCar(char car, char[][]board, Map<Character,Car>cars) throws IllegalCarException{
         int xCar = 0;
@@ -123,7 +126,7 @@ public class Level {
             board[yCar +(i-1)][xCar]=' ';
         }
     }
-    
+
     public void addCar(char car, char[][]board, Map<Character,Car>cars, Coordinates coord) throws IllegalCarException{
         int xCar = 0;
         int yCar = 0;
@@ -139,7 +142,9 @@ public class Level {
             board[yCar +(i-1)][xCar]=car;
         }
     }
-    private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws SameMovementException{
+
+
+	private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws SameMovementException{
         Car car =cars.get(carChar);
         Coordinates carCoordinates = car.getCoordinates();
         int carLength = car.getLength();
@@ -206,17 +211,15 @@ public class Level {
             return valid;
         }
 	}
-	
     
-	public void undoMovement() throws CannotUndoMovementException{
-	    if(this.history.size()==1)
-	        throw new CannotUndoMovementException();
-	    OldBoardData restoredBoard = history.getFirst();
-	    history.removeFirst();
-	    this.board = restoredBoard.getBoard();
-	    this.cars = restoredBoard.getCars();
-	    this.score--;
-	}
+    public void undoMovement() throws CannotUndoMovementException{
+        if(this.history.size()==1)
+            throw new CannotUndoMovementException();
+        OldBoardData restoredBoard = history.getFirst();
+        history.removeFirst();
+        this.board = restoredBoard.getBoard();
+        this.cars = restoredBoard.getCars();
+        this.score--;
+    }
 
 }
-
