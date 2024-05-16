@@ -9,24 +9,23 @@ import java.net.URL;
 
 import javax.swing.*;
 
+import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
-
 public class MainFrame extends JFrame{
 	private Controller controller;
 	private ImageIcon icon;
-	private Image image;
-	private JPanel elements;
+	private JPanel mainPanel;
+	private JPanel scorePanel;
 	
-	public MainFrame(Controller controller) {
+	public MainFrame() {
 		super("Parking Jam - Programming Project");
 		//setLayout(null);
 		
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		this.controller = controller;
 		this.setResizable(false);
 		
 		
@@ -35,8 +34,7 @@ public class MainFrame extends JFrame{
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		image = icon.getImage();
-		this.setIconImage(image); 
+		this.setIconImage(icon.getImage()); 
 		
 		//this.add(new Grid());
 		//------------------------
@@ -60,18 +58,39 @@ public class MainFrame extends JFrame{
         getContentPane().add(panel);
         pack();
         setLocationRelativeTo(null);*/
+		
+		
+		// Panel principal
+        mainPanel = new JPanel(new BorderLayout());
+        
+        scorePanel = new JPanel();
+        BoxLayout boxY = new BoxLayout(scorePanel, BoxLayout.Y_AXIS);
+        scorePanel.setLayout(boxY);
+        
+        JLabel gameScoreLabel = new JLabel("Puntuación del juego: 0");
+        JLabel levelScoreLabel = new JLabel("Puntuación del nivel: 0");
+        scorePanel.add(gameScoreLabel, Component.CENTER_ALIGNMENT);
+        scorePanel.add(levelScoreLabel, Component.CENTER_ALIGNMENT);
+		
 		int rows = 8;
         int cols = 10;
-        Grid panel = new Grid(rows, cols);
+        Grid gridPanel = new Grid(rows, cols);
 
-        getContentPane().add(panel);
+        mainPanel.add(scorePanel, BorderLayout.LINE_END);
+        mainPanel.add(gridPanel, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(null);
 		//-------------
 		
+        
+        add(mainPanel);
 		setBounds(0,0,1200,800);
+		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);		Pantalla maximizada
 		this.setVisible(true);
 		
 	}
 	
+	public void setController(Controller controller) {
+		this.controller = controller;
+	}
 }

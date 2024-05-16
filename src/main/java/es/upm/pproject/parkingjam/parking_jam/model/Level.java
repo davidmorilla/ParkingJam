@@ -2,15 +2,14 @@ package es.upm.pproject.parkingjam.parking_jam.model;
 
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
 
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.*; 
 
 public class Level {
-    int score;                  // Puntuación del n
+    int score;                  // Puntuación del nivel
     Map<Character, Car> cars;   // Coches del tablero
-    char[][]board;              //Mapa con la representación de los vehículos con letras
+    char[][] board;             //Mapa con la representación de los vehículos con letras
 
     LinkedList<OldBoardData> history;
 
@@ -21,6 +20,20 @@ public class Level {
         this.history = new LinkedList<>();
     }
 
+    public int getScore() {
+    	return score;
+    }
+    
+    public char[][] undoMovement() throws CannotUndoMovementException {
+        if(this.history.size()==1)
+            throw new CannotUndoMovementException();
+        OldBoardData restoredBoard = history.getFirst();
+        history.removeFirst();
+        this.board = restoredBoard.getBoard();
+        this.cars = restoredBoard.getCars();
+        this.score--;
+        return board;
+    }
 
     //Moves the car in the way and the length specified when its possible and uploads the current board, 
     //returns the old board or null if the car does not exist or its not possible to move the car to the specified possition. 
@@ -32,86 +45,46 @@ public class Level {
         int yCar = 0;
         if(cars.get(car)==null)
             return null;
-        switch (way) {
+        if(way == 'L' || way == 'R' || way == 'U' || way == 'D') {
+        	xCar = cars.get(car).getCoordinates().getX();
+            yCar = cars.get(car).getCoordinates().getY();
+            
+            switch (way) {
             //Left
             case 'L':
-                xCar = cars.get(car).getCoordinates().getX();
-                yCar = cars.get(car).getCoordinates().getY();
-                coord = new Coordinates(xCar - length, yCar);
-                if(checkMovementValidity(car, coord)){
-                    try {
-                        deleteCar(car, newBoard, cars);
-                        addCar(car, newBoard, cars, coord);
-                        score ++;
-                        //Add the old map at the top of the stack
-                        history.add(0,copy);        
-                        board = newBoard;
-                    } catch (IllegalCarException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            //Right
+            	coord = new Coordinates(xCar - length, yCar);
+            	break;
+            	//Right
             case 'R':
-                xCar = cars.get(car).getCoordinates().getX();
-                yCar = cars.get(car).getCoordinates().getY();
-                coord = new Coordinates(xCar + length, yCar);
-                if(checkMovementValidity(car, coord)){
-                    try {
-                        deleteCar(car, newBoard, cars);
-                        addCar(car, newBoard, cars, coord);
-                        score ++;
-                        //Add the old map at the top of the stack
-                        history.add(0,copy);        
-                        board = newBoard;
-                    } catch (IllegalCarException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            //Up
+            	coord = new Coordinates(xCar + length, yCar);
+            	break;
+            	//Up
             case 'U':
-                xCar = cars.get(car).getCoordinates().getX();
-                yCar = cars.get(car).getCoordinates().getY();
-                coord = new Coordinates(xCar, yCar-length);
-                if(checkMovementValidity(car, coord)){
-                    try {
-                        deleteCar(car, newBoard, cars);
-                        addCar(car, newBoard, cars, coord);
-                        score ++;
-                        //Add the old map at the top of the stack
-                        history.add(0,copy);        
-                        board = newBoard;
-                    } catch (IllegalCarException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            //Down
+            	coord = new Coordinates(xCar, yCar - length);
+            	break;
+            	//Down
             case 'D':
-                xCar = cars.get(car).getCoordinates().getX();
-                yCar = cars.get(car).getCoordinates().getY();
-                coord = new Coordinates(xCar, yCar+length);
-                if(checkMovementValidity(car, coord)){
-                    try {
-                        deleteCar(car, newBoard, cars);
-                        addCar(car, newBoard, cars, coord);
-                        score ++;
-                        //Add the old map at the top of the stack
-                        history.add(0,copy);        
-                        board = newBoard;
-                    } catch (IllegalCarException e) {
-                        e.printStackTrace();
-                    }
+            	coord = new Coordinates(xCar, yCar + length);
+            	break;
+            }
+            
+            if(checkMovementValidity(car, coord)){
+                try {
+                    deleteCar(car, newBoard, cars);
+                    addCar(car, newBoard, cars, coord);
+                    score++;
+                    //Add the old map at the top of the stack
+                    history.add(0,copy);        
+                    board = newBoard;
+                } catch (IllegalCarException e) {
+                    e.printStackTrace();
                 }
-                break;
+            }
         }
-        
         return newBoard;
     }
 
-    
-    public void deleteCar(char car, char[][]board, Map<Character,Car>cars) throws IllegalCarException{
+    private void deleteCar(char car, char[][]board, Map<Character,Car>cars) throws IllegalCarException{
         int xCar = 0;
         int yCar = 0;
         if(cars.get(car)==null)
@@ -127,7 +100,7 @@ public class Level {
         }
     }
 
-    public void addCar(char car, char[][]board, Map<Character,Car>cars, Coordinates coord) throws IllegalCarException{
+    private void addCar(char car, char[][]board, Map<Character,Car>cars, Coordinates coord) throws IllegalCarException{
         int xCar = 0;
         int yCar = 0;
         if(cars.get(car)==null)
@@ -143,9 +116,8 @@ public class Level {
         }
     }
 
-
 	private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws SameMovementException{
-        Car car =cars.get(carChar);
+        Car car = cars.get(carChar);
         Coordinates carCoordinates = car.getCoordinates();
         int carLength = car.getLength();
         char carOrientation = car.getOrientation();
@@ -211,15 +183,5 @@ public class Level {
             return valid;
         }
 	}
-    
-    public void undoMovement() throws CannotUndoMovementException{
-        if(this.history.size()==1)
-            throw new CannotUndoMovementException();
-        OldBoardData restoredBoard = history.getFirst();
-        history.removeFirst();
-        this.board = restoredBoard.getBoard();
-        this.cars = restoredBoard.getCars();
-        this.score--;
-    }
 
 }

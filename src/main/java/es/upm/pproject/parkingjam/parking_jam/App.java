@@ -2,12 +2,17 @@ package es.upm.pproject.parkingjam.parking_jam;
 
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 import es.upm.pproject.parkingjam.parking_jam.model.Car;
+import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
 import es.upm.pproject.parkingjam.parking_jam.model.LevelConverter;
 import es.upm.pproject.parkingjam.parking_jam.model.LevelReader;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
+import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
 
 public class App {
      
@@ -73,7 +78,23 @@ public class App {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
-    	new Controller();
+    	
+    	
+    	SwingUtilities.invokeLater(new Runnable() {
+			public void run() {		
+				try {
+					MainFrame view = new MainFrame(); 
+					Game model = new Game(); 
+
+					Controller controller = new Controller(view, model);
+					
+					view.setController(controller);
+				}
+				catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e.getMessage());
+				} 
+			}
+		});
     }
     
 }

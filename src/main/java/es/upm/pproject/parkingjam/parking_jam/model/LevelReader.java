@@ -6,7 +6,6 @@ import java.io.FileReader;
 public class LevelReader {
 	public final String LEVEL_FILE_NAME_FORMAT = "src/main/java/es/upm/pproject/parkingjam/parking_jam/levels/level_%d.txt";
 
-	
     public char[][] readMap(int level) {
         String fileName = LEVEL_FILE_NAME_FORMAT;
 		BufferedReader reader;

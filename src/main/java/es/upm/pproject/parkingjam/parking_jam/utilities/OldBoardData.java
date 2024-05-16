@@ -5,9 +5,10 @@ import java.util.Map;
 import es.upm.pproject.parkingjam.parking_jam.model.Car;
 
 public class OldBoardData {
-	private char [][]board;
-    private Map<Character,Car>cars;
-    public OldBoardData(char[][]board, Map<Character,Car>cars){
+	private char[][] board;
+    private Map<Character,Car> cars;
+    
+    public OldBoardData(char[][] board, Map<Character,Car> cars){
         this.board = board;
         this.cars = cars;
     }
