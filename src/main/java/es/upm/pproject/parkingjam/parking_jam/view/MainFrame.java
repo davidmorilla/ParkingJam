@@ -9,6 +9,10 @@ import java.net.URL;
 
 import javax.swing.*;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 
 public class MainFrame extends JFrame{
@@ -34,10 +38,40 @@ public class MainFrame extends JFrame{
 		image = icon.getImage();
 		this.setIconImage(image); 
 		
-		this.add(new Grid());
+		//this.add(new Grid());
+		//------------------------
+		
+        /*// Crear el panel principal con un GridLayout
+		int rows = 8;
+		int cols = 10;
+        JPanel panel = new JPanel(new GridLayout(rows, cols));
+        JButton [][]buttons = new JButton[rows][cols];
+
+        // Crear y agregar botones al panel
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                JButton button = new JButton();
+                button.setPreferredSize(new Dimension(50, 50)); // Establecer tamaño de botón
+                buttons[i][j] = button;
+                panel.add(button);
+            }
+        }
+
+        getContentPane().add(panel);
+        pack();
+        setLocationRelativeTo(null);*/
+		int rows = 8;
+        int cols = 10;
+        Grid panel = new Grid(rows, cols);
+
+        getContentPane().add(panel);
+        pack();
+        setLocationRelativeTo(null);
+		//-------------
 		
 		setBounds(0,0,1200,800);
 		this.setVisible(true);
 		
 	}
+	
 }
