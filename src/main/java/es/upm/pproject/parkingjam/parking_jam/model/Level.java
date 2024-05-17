@@ -50,7 +50,7 @@ public class Level {
 
     // Moves the car in the way and the length specified when its possible and
     // uploads the current board,
-    // returns the old board or null if the car does not exist or its not possible
+    // returns the new board or null if the car does not exist or its not possible
     // to move the car to the specified possition.
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
         char[][] newBoard = board;
@@ -63,7 +63,7 @@ public class Level {
         if (way == 'L' || way == 'R' || way == 'U' || way == 'D') {
             xCar = cars.get(car).getCoordinates().getX();
             yCar = cars.get(car).getCoordinates().getY();
-
+    
             switch (way) {
                 // Left
                 case 'L':
@@ -71,6 +71,7 @@ public class Level {
                     break;
                 // Right
                 case 'R':
+                    System.out.println("-------------------DERECHA");
                     coord = new Coordinates(xCar + Math.abs(length), yCar);
                     break;
                 // Up
@@ -82,25 +83,34 @@ public class Level {
                     coord = new Coordinates(xCar, yCar + Math.abs(length));
                     break;
             }
-
-            if (checkMovementValidity(car, coord)) {
-                try {
-                    System.out.println("--------------------------------------MOVING CAR------------------------------------");
-                    deleteCar(car, newBoard, cars);
-                    addCar(car, newBoard, cars, coord);
-                    score++;
-                    // Add the old map at the top of the stack
-                    history.add(0, copy);
-                    board = newBoard;
-                } catch (IllegalCarException e) {
-                    e.printStackTrace();
+    
+            // Verificar si las nuevas coordenadas están dentro de los límites del tablero
+            if (coord.getX() >= 0 && coord.getX() < board[0].length && coord.getY() >= 0 && coord.getY() < board.length) {
+                if (checkMovementValidity(car, coord,way)) {
+                    try {
+                        System.out.println("--------------------------------------MOVING CAR------------------------------------");
+                        deleteCar(car, newBoard, cars);
+                        addCar(car, newBoard, cars, coord);
+                        this.cars.get(car).setCoordinates(coord.getX(), coord.getY());
+                        System.out.println("COORD COCHE " + car + " X:" +this.cars.get(car).getCoordinates().getX()
+                        + " Y: " + this.cars.get(car).getCoordinates().getY() + "   Longitud: " +this.cars.get(car).getLength() );
+                        score++;
+                        // Add the old map at the top of the stack
+                        history.add(0, copy);
+                        board = newBoard;
+                    } catch (IllegalCarException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Me deja");
+                } else {
+                    System.out.println("NO me deja");
+                    return null;
                 }
             }
-            else   
-                return null;
         }
         return newBoard;
     }
+    
 
     private void deleteCar(char car, char[][] board, Map<Character, Car> cars) throws IllegalCarException {
         int xCar = 0;
@@ -135,86 +145,8 @@ public class Level {
         }
     }
 
-    /*private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws SameMovementException {
-        Car car = cars.get(carChar);
-        Coordinates carCoordinates = car.getCoordinates();
-        int carLength = car.getLength();
-        char carOrientation = car.getOrientation();
-        if (carCoordinates.getX() == newCoordinates.getX() && carCoordinates.getY() == newCoordinates.getY()) 
-            throw new SameMovementException();
-        if (carOrientation == 'V') {
-            if (carCoordinates.getX() != newCoordinates.getX() || newCoordinates.getY() <= 0
-                    || newCoordinates.getY() >= board[0].length) { // si quiere moverse a una X diferente estaria
-                                                                   // moviendose lateralmente == invalido, no puede
-                                                                   // moverse a una fila menor a 0 o mayor igual que el
-                                                                   // numero de filas (null pointer exc)
-                return false;
-            }
-            boolean valid = true;
-            int goalY = newCoordinates.getY();
-            int currentY = carCoordinates.getY();
-            boolean goalIsUp = goalY - currentY < 0;
-            if (goalIsUp) {
-                int i = 1; // si inicializamos a 0 comprobaria su actual posicion tambien que ya sabemos
-                           // que es valida
-                int limit = currentY - goalY;
-                while (valid && i < limit + 1) {
-                    if ((board[currentY - i][carCoordinates.getX()] != ' ')
-                            && (board[currentY + i][carCoordinates.getX()] != '@'))
-                        valid = false;
-                    i++;
-                }
-            } else { // goal is down
-                int i = carLength;
-                int limit = goalY - currentY;
-                while (valid && i < limit + carLength) {
-                    if (board[currentY + i][carCoordinates.getX()] == '@')
-                        return true;
-                    if ((board[currentY + i][carCoordinates.getX()] != ' ')
-                            && (board[currentY + i][carCoordinates.getX()] != '@')) {
-                        valid = false;
-                    }
-                    i++;
-                }
-            }
-            return valid;
-        } else { // caso orientation == 'H'
-            if (carCoordinates.getY() != newCoordinates.getY() || newCoordinates.getX() <= 0
-                    || newCoordinates.getX() >= board.length) { // si quiere moverse a una Y diferente estaria
-                                                                // moviendose verticalmente == invalido, no puede
-                                                                // moverse a una columna menor a 0 o mayor igual que el
-                                                                // numero de columnas (null pointer exc)
-                return false;
-            }
-            boolean valid = true;
-            boolean goalIsLeft = newCoordinates.getX() - carCoordinates.getX() < 0;
-            if (goalIsLeft) {
-                int i = 1; // si inicializamos a 0 comprobaria su actual posicion tambien que ya sabemos
-                           // que es valida
-                int movementLength = carCoordinates.getX() - newCoordinates.getX();
-                while (valid && i < movementLength + 1) {
-                    if ((board[carCoordinates.getY()][carCoordinates.getX() - i] != ' ')
-                            && (board[carCoordinates.getY()][carCoordinates.getX() - i] != '@'))
-                        valid = false;
-                    i++;
-                }
-            } else { // goal is right
-                int i = carLength;
-                int movementLength = newCoordinates.getX() - carCoordinates.getX();
-                while (valid && i < movementLength + carLength) {
-                    if (board[carCoordinates.getY()][carCoordinates.getX() + i] == '@')
-                        return true;
-                    if (board[carCoordinates.getY()][carCoordinates.getX() + i] != ' '&& board[carCoordinates.getY()][carCoordinates.getX() + i] != '@'
-                            && board[carCoordinates.getY()][carCoordinates.getX() + i] != carChar ) {
-                        valid = false;
-                    }
-                    i++;
-                }
-            }
-            return valid;
-        }
-    }*/
-    private boolean checkMovementValidity(char carChar, Coordinates newCoordinates) throws SameMovementException {
+
+    private boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way) throws SameMovementException {
         Car car = cars.get(carChar);
         Coordinates carCoordinates = car.getCoordinates();
         int carLength = car.getLength();
@@ -222,32 +154,45 @@ public class Level {
         int boardWidth = board[0].length;
         int boardHeight = board.length;
 
-        if (carCoordinates.getX() == newCoordinates.getX() && carCoordinates.getY() == newCoordinates.getY()) 
-            throw new SameMovementException();
+        /* if (carCoordinates.getX() == newCoordinates.getX() && carCoordinates.getY() == newCoordinates.getY()) 
+            throw new SameMovementException(); */
 
         if (carOrientation == 'V') {
             if (carCoordinates.getX() != newCoordinates.getX() || newCoordinates.getY() < 0
                     || newCoordinates.getY() + carLength > boardHeight) {
                 return false;
             }
-            int step = newCoordinates.getY() > carCoordinates.getY() ? 1 : -1;
-            for (int i = 0; i < Math.abs(newCoordinates.getY() - carCoordinates.getY()); i++) {
-                int currentY = carCoordinates.getY() + (i + 1) * step;
-                if (board[currentY][carCoordinates.getX()] != ' ' && board[currentY][carCoordinates.getX()] != '@') {
-                    return false;
-                }
+            
+            int currentY = carCoordinates.getY() ;
+                
+            if (way =='U' && board[currentY-1][carCoordinates.getX()] != ' ' && board[currentY-1][carCoordinates.getX()] != '@' ) {
+                System.out.println("----> UP COMPROBANDO CELDA: X=" +  carCoordinates.getX() + "   Y= " + (currentY-1));
+                return false;
             }
+            else if(way =='D' && board[currentY+ carLength][carCoordinates.getX()] != ' ' && board[currentY+carLength][carCoordinates.getX()] != '@'){
+                int aux = currentY + carLength;
+                System.out.println("----> DOWN COMPROBANDO CELDA: X=" +  carCoordinates.getX() + "   Y= " + aux +"\nCONTENIDO: " + board[currentY+carLength][carCoordinates.getX()]);
+                return false;
+            }
+                
+            //}
         } else { // carOrientation == 'H'
+        System.out.println("HORIZONTAAAAAAAAAL");
             if (carCoordinates.getY() != newCoordinates.getY() || newCoordinates.getX() < 0
                     || newCoordinates.getX() + carLength > boardWidth) {
                 return false;
             }
-            int step = newCoordinates.getX() > carCoordinates.getX() ? 1 : -1;
-            for (int i = 0; i < Math.abs(newCoordinates.getX() - carCoordinates.getX()); i++) {
-                int currentX = carCoordinates.getX() + (i + 1) * step;
-                if (board[carCoordinates.getY()][currentX] != ' ' && board[carCoordinates.getY()][currentX] != '@') {
-                    return false;
-                }
+            
+            int currentX = carCoordinates.getX();
+                
+            if (way =='L' && board[carCoordinates.getY()][currentX-1] != ' ' && board[carCoordinates.getY()][currentX-1] != '@' ) {
+                System.out.println("----> LEFT COMPROBANDO CELDA: X=" +  (currentX-1) + "   Y= " + carCoordinates.getY());
+                return false;
+            }
+            else if(way =='R' && board[carCoordinates.getY()][currentX+carLength] != ' ' && board[carCoordinates.getY()][currentX+carLength] != '@'){
+                int aux = currentX + carLength;
+                System.out.println("----> RIGHT COMPROBANDO CELDA: X=" +  aux + "   Y= " + carCoordinates.getY() +"\nCONTENIDO: " + board[carCoordinates.getY()][currentX+carLength]);
+                return false;
             }
         }
         return true;

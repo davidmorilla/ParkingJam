@@ -53,6 +53,13 @@ public class Controller {
 	}
 
 	public char[][] getBoard(){
+		System.out.println("\nEN CONTROLLER\n");
+		for(int i = 0; i<game.getBoard().length; i++){
+			for(int j = 0; j<game.getBoard()[i].length; j++){
+				System.out.print(game.getBoard()[i][j]);
+			}
+			System.out.println();
+		}
 		return game.getBoard();
 	}
 
