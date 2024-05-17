@@ -6,9 +6,13 @@ import java.net.URL;
 import javax.swing.*;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
+import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
 	private Controller controller;
@@ -16,6 +20,7 @@ public class MainFrame extends JFrame {
 	private JPanel mainPanel;
 	private DataPanel dataPanel;
 	private Grid gridPanel;
+	private JButton actionButton;
 
 	public MainFrame(Controller controller) {
 		super("Parking Jam - Programming Project");
@@ -25,7 +30,7 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setBounds(0, 0, 1200, 800);
+		setBounds(0, 0, 600, 600);
 		// this.setExtendedState(JFrame.MAXIMIZED_BOTH); Pantalla maximizada
 
 		try {
@@ -40,12 +45,48 @@ public class MainFrame extends JFrame {
 		Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
 		System.out.println(dimensions.getLeft());
 		System.out.println(dimensions.getRight());
-		gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller);
+
+		dataPanel = new DataPanel();
+		mainPanel.add(dataPanel, BorderLayout.LINE_END);
+		
+		gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller,dataPanel);
 
 		mainPanel.add(gridPanel, BorderLayout.CENTER);
 		
-		dataPanel = new DataPanel();
-		mainPanel.add(dataPanel, BorderLayout.LINE_END);
+		
+		// Crear un JPanel para el botón
+        JPanel buttonPanel = new JPanel();
+        actionButton = new JButton("UNDO");
+        buttonPanel.add(actionButton);
+
+        // Añadir el JPanel del botón al mainPanel en la parte inferior
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Añadir ActionListener al botón
+        actionButton.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					OldBoardData old = controller.undoMovement();
+					char[][]oldBoard = old.getBoard();
+					for (int i = 0; i < oldBoard.length; i++) {
+						for (int j = 0; j < oldBoard[i].length; j++) {
+							System.out.print(oldBoard[i][j]);
+						}
+						System.out.println();
+					}
+					gridPanel= new Grid(dimensions,old.getCars(), oldBoard, controller,dataPanel);
+					
+					gridPanel.repaint();
+				} catch (CannotUndoMovementException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}; // Ejemplo de llamada a un método en el controlador
+                updateDataPanel();
+			}
+        });
+
+		
 
 
 		add(mainPanel);

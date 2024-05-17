@@ -2,6 +2,7 @@ package es.upm.pproject.parkingjam.parking_jam.model;
 
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Stack;
 
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.*;
@@ -12,17 +13,24 @@ public class Level {
     private char[][] board; // Mapa con la representación de los vehículos con letras
     private Pair<Integer, Integer> dimensions;
 
-    LinkedList<OldBoardData> history;
+    private Stack<OldBoardData> history;
 
     public Level(char[][] board, Map<Character, Car> cars) {
         this.score = 0;
         this.board = board;
         this.cars = cars;
-        this.history = new LinkedList<>();
+        this.history = new Stack<>();
+        addToHistory();
         int numRows = board.length;
         int numCols = board[0].length;
         dimensions = new Pair<>(numRows, numCols);
 
+    }
+
+    private void addToHistory() {
+        OldBoardData copy = new OldBoardData(board, cars);
+        
+        history.push(copy);
     }
 
     public Pair<Integer, Integer> getDimensions() {
@@ -37,15 +45,15 @@ public class Level {
         return score;
     }
 
-    public char[][] undoMovement() throws CannotUndoMovementException {
-        if (this.history.size() == 1)
+    public OldBoardData undoMovement() throws CannotUndoMovementException {
+        if (history.isEmpty())
             throw new CannotUndoMovementException();
-        OldBoardData restoredBoard = history.getFirst();
-        history.removeFirst();
+
+        OldBoardData restoredBoard = history.pop();
         this.board = restoredBoard.getBoard();
         this.cars = restoredBoard.getCars();
         this.score--;
-        return board;
+        return restoredBoard;
     }
 
     // Moves the car in the way and the length specified when its possible and
@@ -53,8 +61,9 @@ public class Level {
     // returns the new board or null if the car does not exist or its not possible
     // to move the car to the specified possition.
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-        char[][] newBoard = board;
-        OldBoardData copy = new OldBoardData(board, cars);
+        System.out.println("LONGITUD DEL MOVIMIENTO: " + length);
+    
+        char[][] newBoard = deepCopy(board); // Hacer una copia profunda de la matriz original
         Coordinates coord = null;
         int xCar = 0;
         int yCar = 0;
@@ -71,7 +80,6 @@ public class Level {
                     break;
                 // Right
                 case 'R':
-                    System.out.println("-------------------DERECHA");
                     coord = new Coordinates(xCar + Math.abs(length), yCar);
                     break;
                 // Up
@@ -86,31 +94,42 @@ public class Level {
     
             // Verificar si las nuevas coordenadas están dentro de los límites del tablero
             if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1 && coord.getY() < board.length - 1) {
-
+    
                 if (checkMovementValidity(car, coord, way)) {
                     try {
-                        System.out.println("--------------------------------------MOVING CAR------------------------------------");
+                        addToHistory();
                         deleteCar(car, newBoard, cars);
                         addCar(car, newBoard, cars, coord);
                         this.cars.get(car).setCoordinates(coord.getX(), coord.getY());
-                        System.out.println("COORD COCHE " + car + " X:" +this.cars.get(car).getCoordinates().getX()
-                        + " Y: " + this.cars.get(car).getCoordinates().getY() + "   Longitud: " +this.cars.get(car).getLength() );
-                        score++;
+                        System.out.println("COORD COCHE " + car + " X:" + this.cars.get(car).getCoordinates().getX()
+                                + " Y: " + this.cars.get(car).getCoordinates().getY() + "   Longitud: "
+                                + this.cars.get(car).getLength());
+    
                         // Add the old map at the top of the stack
-                        
-                        history.add(0, copy);
-                        board = newBoard;
+    
+                        score++;
+                        board = newBoard; // No es necesario actualizar la matriz original
                     } catch (IllegalCarException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("Me deja");
                 } else {
-                    System.out.println("NO me deja");
                     return null;
                 }
             }
         }
         return newBoard;
+    }
+    
+    private char[][] deepCopy(char[][] original) {
+        if (original == null) {
+            return null;
+        }
+    
+        final char[][] result = new char[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            result[i] = original[i].clone();
+        }
+        return result;
     }
     
 

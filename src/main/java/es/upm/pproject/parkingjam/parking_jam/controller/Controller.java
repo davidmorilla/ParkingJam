@@ -8,6 +8,7 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovemen
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
 
@@ -28,8 +29,9 @@ public class Controller {
 		return game.moveCar(car, length, way);
 	}
 	
-	public void undoMovement() throws CannotUndoMovementException {
-		game.undoMovement();
+	public OldBoardData undoMovement() throws CannotUndoMovementException {
+		
+		return game.undoMovement();
 	}
 	
 	public char[][] getBoard(){
