@@ -26,7 +26,7 @@ public class LevelConverter {
                     
                     else{
                         //valores por defecto
-                        Car c = new Car(j, i, 1, 'H');
+                        Car c = new Car(board[i][j], j, i, 1, 'H');
                         cars.put(board[i][j], c);
                     }
                 }

@@ -85,8 +85,9 @@ public class Level {
             }
     
             // Verificar si las nuevas coordenadas están dentro de los límites del tablero
-            if (coord.getX() >= 0 && coord.getX() < board[0].length && coord.getY() >= 0 && coord.getY() < board.length) {
-                if (checkMovementValidity(car, coord,way)) {
+            if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1 && coord.getY() < board.length - 1) {
+
+                if (checkMovementValidity(car, coord, way)) {
                     try {
                         System.out.println("--------------------------------------MOVING CAR------------------------------------");
                         deleteCar(car, newBoard, cars);
@@ -96,6 +97,7 @@ public class Level {
                         + " Y: " + this.cars.get(car).getCoordinates().getY() + "   Longitud: " +this.cars.get(car).getLength() );
                         score++;
                         // Add the old map at the top of the stack
+                        
                         history.add(0, copy);
                         board = newBoard;
                     } catch (IllegalCarException e) {

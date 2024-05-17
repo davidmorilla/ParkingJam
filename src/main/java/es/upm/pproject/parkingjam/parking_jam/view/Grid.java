@@ -9,7 +9,8 @@ import javax.swing.*;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 import es.upm.pproject.parkingjam.parking_jam.model.Car;
-import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;
 
 public class Grid extends JPanel {
@@ -20,9 +21,9 @@ public class Grid extends JPanel {
     private Controller controller;
     private char[][] board;
 
-    public Grid(int rows, int cols, Map<Character, Car> cars, char[][] board, Controller controller) {
-        this.rows = rows;
-        this.cols = cols;
+    public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller) {
+        this.rows = dimensions.getLeft();
+        this.cols = dimensions.getRight();
         this.cars = cars;
         this.board = board;
         this.controller = controller;
@@ -30,14 +31,8 @@ public class Grid extends JPanel {
 
         // Añadir el MouseAdapter para cada coche movible
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
-            char carKey = entry.getKey();
             Car car = entry.getValue();
-            int row = car.getCoordinates().getY();
-            int col = car.getCoordinates().getX();
-            Color color = Color.blue;
-            if (carKey == '*')
-                color = Color.RED;
-            MovableCar movableCar = new MovableCar(color, carKey, row, col, rows, cols, squareSize, car.getLength(), car.getOrientation(), controller, this);
+            MovableCar movableCar =  new MovableCar(car, rows, cols, squareSize, this);
             MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, movableCar, this);
             this.addMouseListener(mouseAdapter);
             this.addMouseMotionListener(mouseAdapter);
@@ -75,12 +70,7 @@ public class Grid extends JPanel {
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             char carKey = entry.getKey();
             Car car = entry.getValue();
-            int row = car.getCoordinates().getY();
-            int col = car.getCoordinates().getX();
-            Color color = Color.blue;
-            if (carKey == '*')
-                color = Color.RED;
-            MovableCar movableCar = new MovableCar(color, carKey, row, col, rows, cols, squareSize, car.getLength(), car.getOrientation(), controller, this);
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this);
             movableCar.draw(g);
         }
     }
@@ -96,4 +86,8 @@ public class Grid extends JPanel {
     public char [][] getBoard(){
         return this.board;
     }
+    
+    public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+  		return controller.moveCar(car, length, way);
+  	}
 }

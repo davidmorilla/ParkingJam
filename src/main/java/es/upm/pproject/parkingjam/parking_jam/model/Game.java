@@ -11,13 +11,11 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
 // Game es la clase central del model, gestionando los niveles y la puntuacion
 public class Game {
-	private Controller controller;
 	private int acumulatedScore;		// Puntuación conjunta de anteriores niveles del juego
 	private int levelNumber;			// Número del nivel actual del juego
 	private Level level;				// Nivel actual del juego
 	
-	public Game(Controller controller) throws IllegalExitsNumberException, IllegalCarDimensionException {
-		this.controller = controller;
+	public Game() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		acumulatedScore = 0;
 		levelNumber = 0;
 		loadNewLevel();	
@@ -55,17 +53,17 @@ public class Game {
 	public int getLevelScore() {
 		return level.getScore();
 	}
+	
+	public int getLevelNumber() {
+		return levelNumber;
+	}
 
 	public Level getLevel(){
-		return this.level;
+		return level;
 	}
 
 	public Map<Character,Car> getCars(){
 		return level.getCars();
-	}
-
-	public char[][] move(char car,int length , char way) throws SameMovementException{
-		return level.moveCar(car, length, way);
 	}
 	
 }
