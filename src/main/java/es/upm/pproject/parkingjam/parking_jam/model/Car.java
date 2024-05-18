@@ -5,17 +5,16 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 public class Car {
 	// X e Y representan la 1a posición leída del coche en el fichero del mapa
 	//(la de arriba de un coche en vertical y la de la izquierda de uno en horizontal)
-	private char symbol;				// Caracter que representa un coche; letra o *
-	private Coordinates pos;            // Posición (X,Y) del coche
-	private int length;                 // Longitud del coche
-	private char orientation;           // Orientación del coche
+	private char symbol;
+    private Coordinates coordinates;
+    private int length;
+    private char orientation;
 
-	public Car(char symbol, int posX, int posY, int length, char orientation){
-		this.symbol = symbol;
-        this.pos = new Coordinates(posX, posY);
+    public Car(char symbol, int x, int y, int length, char orientation) {
+        this.symbol = symbol;
+        this.coordinates = new Coordinates(x, y);
         this.length = length;
         this.orientation = orientation;
-        
     }
 	
 	public char getSymbol() {
@@ -27,11 +26,12 @@ public class Car {
 	}
 
 	public Coordinates getCoordinates(){
-        return this.pos; 
+        return this.coordinates; 
     }
 
-    public void setCoordinates(int x, int y){
-        pos.setCoordinates(x, y);
+    public void setCoordinates(int x, int y) {
+        this.coordinates.setX(x);
+        this.coordinates.setY(y);
     }
 
     public int getLength(){

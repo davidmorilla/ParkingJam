@@ -92,6 +92,7 @@ public class MovableCar {
 				}
                 parent.setCars(controller.getCars());
                 parent.setBoard(newBoard);
+                System.out.println("EN DRAG");
                 parent.repaint(); // Repintar el panel después de mover el coche
             }
         } catch (Exception e) {

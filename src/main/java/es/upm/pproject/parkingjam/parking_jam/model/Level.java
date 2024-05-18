@@ -1,5 +1,6 @@
 package es.upm.pproject.parkingjam.parking_jam.model;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
@@ -20,7 +21,7 @@ public class Level {
         this.board = board;
         this.cars = cars;
         this.history = new Stack<>();
-        addToHistory();
+        // addToHistory();
         int numRows = board.length;
         int numCols = board[0].length;
         dimensions = new Pair<>(numRows, numCols);
@@ -28,16 +29,36 @@ public class Level {
     }
 
     private void addToHistory() {
-        OldBoardData copy = new OldBoardData(board, cars);
-        
+        System.out.println("\n\n///////EN ADDHISTORY///////\n");
+        Map<Character, Car> carsCopy = deepCopyCars(cars); // Copia profunda de los coches
+        char[][] boardCopy = deepCopy(board); // Copia profunda del tablero
+
+        for (Car c : carsCopy.values()) {
+            System.out.println("Car: " + c.getSymbol() + " X: " + c.getCoordinates().getX() + " Y: "
+                    + c.getCoordinates().getY() + " LENGTH: " + c.getLength());
+        }
+
+        OldBoardData copy = new OldBoardData(boardCopy, carsCopy);
+
         history.push(copy);
+    }
+
+    private Map<Character, Car> deepCopyCars(Map<Character, Car> original) {
+        Map<Character, Car> copy = new HashMap<>();
+        for (Map.Entry<Character, Car> entry : original.entrySet()) {
+            Car car = entry.getValue();
+            Car carCopy = new Car(car.getSymbol(), car.getCoordinates().getX(), car.getCoordinates().getY(),
+                    car.getLength(), car.getOrientation());
+            copy.put(entry.getKey(), carCopy);
+        }
+        return copy;
     }
 
     public Pair<Integer, Integer> getDimensions() {
         return dimensions;
     }
 
-    public char[][] getBoard(){
+    public char[][] getBoard() {
         return this.board;
     }
 
@@ -46,12 +67,13 @@ public class Level {
     }
 
     public OldBoardData undoMovement() throws CannotUndoMovementException {
-        if (history.isEmpty())
+        if (history.isEmpty()) {
             throw new CannotUndoMovementException();
+        }
 
         OldBoardData restoredBoard = history.pop();
-        this.board = restoredBoard.getBoard();
-        this.cars = restoredBoard.getCars();
+        this.board = deepCopy(restoredBoard.getBoard());
+        this.cars = deepCopyCars(restoredBoard.getCars());
         this.score--;
         return restoredBoard;
     }
@@ -62,7 +84,7 @@ public class Level {
     // to move the car to the specified possition.
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
         System.out.println("LONGITUD DEL MOVIMIENTO: " + length);
-    
+        addToHistory();
         char[][] newBoard = deepCopy(board); // Hacer una copia profunda de la matriz original
         Coordinates coord = null;
         int xCar = 0;
@@ -72,7 +94,7 @@ public class Level {
         if (way == 'L' || way == 'R' || way == 'U' || way == 'D') {
             xCar = cars.get(car).getCoordinates().getX();
             yCar = cars.get(car).getCoordinates().getY();
-    
+
             switch (way) {
                 // Left
                 case 'L':
@@ -91,35 +113,37 @@ public class Level {
                     coord = new Coordinates(xCar, yCar + Math.abs(length));
                     break;
             }
-    
+
             // Verificar si las nuevas coordenadas están dentro de los límites del tablero
-            if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1 && coord.getY() < board.length - 1) {
-    
+            if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1
+                    && coord.getY() < board.length - 1) {
+
                 if (checkMovementValidity(car, coord, way)) {
                     try {
-                        addToHistory();
+
                         deleteCar(car, newBoard, cars);
                         addCar(car, newBoard, cars, coord);
                         this.cars.get(car).setCoordinates(coord.getX(), coord.getY());
                         System.out.println("COORD COCHE " + car + " X:" + this.cars.get(car).getCoordinates().getX()
                                 + " Y: " + this.cars.get(car).getCoordinates().getY() + "   Longitud: "
                                 + this.cars.get(car).getLength());
-    
+
                         // Add the old map at the top of the stack
-    
+
                         score++;
                         board = newBoard; // No es necesario actualizar la matriz original
                     } catch (IllegalCarException e) {
                         e.printStackTrace();
                     }
                 } else {
+                    this.history.pop();
                     return null;
                 }
             }
         }
         return newBoard;
     }
-    
+
     private char[][] deepCopy(char[][] original) {
         if (original == null) {
             return null;
@@ -166,8 +190,8 @@ public class Level {
         }
     }
 
-
-    private boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way) throws SameMovementException {
+    private boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way)
+            throws SameMovementException {
         Car car = cars.get(carChar);
         Coordinates carCoordinates = car.getCoordinates();
         int carLength = car.getLength();
@@ -175,44 +199,53 @@ public class Level {
         int boardWidth = board[0].length;
         int boardHeight = board.length;
 
-        /* if (carCoordinates.getX() == newCoordinates.getX() && carCoordinates.getY() == newCoordinates.getY()) 
-            throw new SameMovementException(); */
+        /*
+         * if (carCoordinates.getX() == newCoordinates.getX() && carCoordinates.getY()
+         * == newCoordinates.getY())
+         * throw new SameMovementException();
+         */
 
         if (carOrientation == 'V') {
             if (carCoordinates.getX() != newCoordinates.getX() || newCoordinates.getY() < 0
                     || newCoordinates.getY() + carLength > boardHeight) {
                 return false;
             }
-            
-            int currentY = carCoordinates.getY() ;
-                
-            if (way =='U' && board[currentY-1][carCoordinates.getX()] != ' ' && board[currentY-1][carCoordinates.getX()] != '@' ) {
-                System.out.println("----> UP COMPROBANDO CELDA: X=" +  carCoordinates.getX() + "   Y= " + (currentY-1));
+
+            int currentY = carCoordinates.getY();
+
+            if (way == 'U' && board[currentY - 1][carCoordinates.getX()] != ' '
+                    && board[currentY - 1][carCoordinates.getX()] != '@') {
+                System.out
+                        .println("----> UP COMPROBANDO CELDA: X=" + carCoordinates.getX() + "   Y= " + (currentY - 1));
                 return false;
-            }
-            else if(way =='D' && board[currentY+ carLength][carCoordinates.getX()] != ' ' && board[currentY+carLength][carCoordinates.getX()] != '@'){
+            } else if (way == 'D' && board[currentY + carLength][carCoordinates.getX()] != ' '
+                    && board[currentY + carLength][carCoordinates.getX()] != '@') {
                 int aux = currentY + carLength;
-                System.out.println("----> DOWN COMPROBANDO CELDA: X=" +  carCoordinates.getX() + "   Y= " + aux +"\nCONTENIDO: " + board[currentY+carLength][carCoordinates.getX()]);
+                System.out.println("----> DOWN COMPROBANDO CELDA: X=" + carCoordinates.getX() + "   Y= " + aux
+                        + "\nCONTENIDO: " + board[currentY + carLength][carCoordinates.getX()]);
                 return false;
             }
-                
-            //}
+
+            // }
         } else { // carOrientation == 'H'
-        System.out.println("HORIZONTAAAAAAAAAL");
+            System.out.println("HORIZONTAAAAAAAAAL");
             if (carCoordinates.getY() != newCoordinates.getY() || newCoordinates.getX() < 0
                     || newCoordinates.getX() + carLength > boardWidth) {
                 return false;
             }
-            
+
             int currentX = carCoordinates.getX();
-                
-            if (way =='L' && board[carCoordinates.getY()][currentX-1] != ' ' && board[carCoordinates.getY()][currentX-1] != '@' ) {
-                System.out.println("----> LEFT COMPROBANDO CELDA: X=" +  (currentX-1) + "   Y= " + carCoordinates.getY());
+
+            if (way == 'L' && board[carCoordinates.getY()][currentX - 1] != ' '
+                    && board[carCoordinates.getY()][currentX - 1] != '@') {
+                System.out.println(
+                        "----> LEFT COMPROBANDO CELDA: X=" + (currentX - 1) + "   Y= " + carCoordinates.getY());
                 return false;
-            }
-            else if(way =='R' && board[carCoordinates.getY()][currentX+carLength] != ' ' && board[carCoordinates.getY()][currentX+carLength] != '@'){
+            } else if (way == 'R' && board[carCoordinates.getY()][currentX + carLength] != ' '
+                    && board[carCoordinates.getY()][currentX + carLength] != '@') {
                 int aux = currentX + carLength;
-                System.out.println("----> RIGHT COMPROBANDO CELDA: X=" +  aux + "   Y= " + carCoordinates.getY() +"\nCONTENIDO: " + board[carCoordinates.getY()][currentX+carLength]);
+                System.out.println("----> RIGHT COMPROBANDO CELDA: X=" + aux + "   Y= " + carCoordinates.getY()
+                        + "\nCONTENIDO: " + board[carCoordinates.getY()][currentX + carLength]);
                 return false;
             }
         }

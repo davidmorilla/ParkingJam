@@ -6,6 +6,7 @@ import java.net.URL;
 import javax.swing.*;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.model.Car;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
@@ -69,17 +70,22 @@ public class MainFrame extends JFrame {
 				try {
 					OldBoardData old = controller.undoMovement();
 					char[][]oldBoard = old.getBoard();
+					System.out.println("\n\n-----------EN MAINFRAME----------\n");
 					for (int i = 0; i < oldBoard.length; i++) {
 						for (int j = 0; j < oldBoard[i].length; j++) {
 							System.out.print(oldBoard[i][j]);
 						}
 						System.out.println();
 					}
-					gridPanel= new Grid(dimensions,old.getCars(), oldBoard, controller,dataPanel);
 					
+					for(Car c : old.getCars().values()){ 
+						System.out.println("Car: " + c.getSymbol() + "	X: " +c.getCoordinates().getX() + "	Y: " +  c.getCoordinates().getY() + " LENGTH: "+ c.getLength());
+					}
+					gridPanel.setCars(old.getCars());
+					gridPanel.setBoard(oldBoard);
 					gridPanel.repaint();
 				} catch (CannotUndoMovementException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}; // Ejemplo de llamada a un método en el controlador
                 updateDataPanel();

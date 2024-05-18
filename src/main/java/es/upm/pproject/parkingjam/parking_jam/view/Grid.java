@@ -51,6 +51,7 @@ public class Grid extends JPanel {
         super.paintComponent(g);
         levelCompleted = true;
         // Dibujar el tablero
+        System.out.println("REPINTANDO");
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 char elem = getElemAt(board, j, i);

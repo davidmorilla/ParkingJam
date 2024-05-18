@@ -52,7 +52,7 @@ public class MyMouseAdapter extends MouseAdapter {
                 lastDy = dy;
             }
 
-            grid.repaint();
+            //grid.repaint();
         }
     }
 
