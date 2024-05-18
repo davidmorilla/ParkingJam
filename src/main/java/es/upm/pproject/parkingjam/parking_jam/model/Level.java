@@ -72,7 +72,7 @@ public class Level {
     }
 
     public OldBoardData undoMovement() throws CannotUndoMovementException {
-        if( !history.isEmpty() && !this.isLevelFinished(board)){
+        if( !history.isEmpty() /*&& !this.isLevelFinished(board)*/){
 
             OldBoardData restoredBoard = history.pop();
             this.board = deepCopy(restoredBoard.getBoard());
@@ -112,6 +112,7 @@ public class Level {
                     break;
                 // Right
                 case 'R':
+                	System.out.println("entro en caso R");
                     coord = new Coordinates(xCar + Math.abs(length), yCar);
                     break;
                 // Up
@@ -128,7 +129,7 @@ public class Level {
             if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1
                     && coord.getY() < board.length - 1) {
 
-                if (checkMovementValidity(car, coord, way) && !this.isLevelFinished(newBoard)) {
+                if (checkMovementValidity(car, coord, way) /*&& !this.isLevelFinished(newBoard)*/) {
                     try {
                         System.out.println("HOLAAA");
                         deleteCar(car, newBoard, cars);
