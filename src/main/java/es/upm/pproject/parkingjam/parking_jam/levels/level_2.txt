@@ -1,0 +1,10 @@
+Initial level
+8 8
+++++++++
++a  bbb+
++a  d c+
++** dec@
++jjj ec+
++  h ff+
++iihgg +
+++++++++

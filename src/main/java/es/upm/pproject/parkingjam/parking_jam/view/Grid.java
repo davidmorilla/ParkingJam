@@ -58,14 +58,14 @@ public class Grid extends JPanel {
                     g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
                 } else if (elem == '@') {
                     levelCompleted = false;
-                    g.setColor(Color.GREEN);
+                    g.setColor(Color.WHITE);
                     g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
                 } else {
                     g.setColor(Color.WHITE);
                     g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
                 }
-                g.setColor(Color.BLACK);
-                g.drawRect(j * squareSize, i * squareSize, squareSize, squareSize);
+                /* g.setColor(Color.BLACK);
+                g.drawRect(j * squareSize, i * squareSize, squareSize, squareSize); */
             }
         }
 
