@@ -23,7 +23,6 @@ public class Game {
 
 	public Pair<Integer, Integer> getDimensions() {
         // We need to return the dimensions of the current level
-		System.out.println(level.getDimensions());
 		return level.getDimensions();
     }
 

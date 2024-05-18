@@ -37,15 +37,35 @@ public class DataPanel extends JPanel {
     }
 
     public void updateData(int level, int gamePoints, int levelPoints) {
+        System.out.println("LEVEL: " + level + " GAME SCORE: " + gamePoints + "    LEVEL SCORE: " +levelPoints);
+        this.level = level;
+        this.totalPoints = gamePoints;
+        this.levelPoints = levelPoints;
     	levelNumber.setText(String.format(LEVEL_NUMBER_TEXT, level));
     	gameScore.setText(String.format(GAME_SCORE_TEXT, gamePoints));
     	levelScore.setText(String.format(LEVEL_SCORE_TEXT, levelPoints));
     }
 
     public void addPoint(){
-        levelPoints = controller.getGameScore();
-        totalPoints = levelPoints;
-        this.updateData(level, totalPoints, levelPoints);
+        levelPoints = controller.getLevelScore();
+        //totalPoints = levelPoints;
+        this.updateData(level, ++totalPoints, levelPoints);
+    }
+
+    public DataPanel deepCopy() {
+        DataPanel copy = new DataPanel(this.controller);
+
+        // Copiar las propiedades primitivas
+        copy.level = this.level;
+        copy.totalPoints = this.totalPoints;
+        copy.levelPoints = this.levelPoints;
+
+        // Copiar los textos de los JLabels
+        copy.levelNumber.setText(this.levelNumber.getText());
+        copy.gameScore.setText(this.gameScore.getText());
+        copy.levelScore.setText(this.levelScore.getText());
+
+        return copy;
     }
 
     

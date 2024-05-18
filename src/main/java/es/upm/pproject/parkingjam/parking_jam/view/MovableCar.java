@@ -19,8 +19,9 @@ public class MovableCar {
     private char orientation, carSymbol;
     private int length;
     private Controller controller;
+    private MainFrame mf;
 
-    public MovableCar(Car car, int rows, int cols, int squareSize, Grid grid, Controller controller) {
+    public MovableCar(Car car, int rows, int cols, int squareSize, Grid grid, Controller controller, MainFrame mf) {
         this.parent = grid;
         this.carSymbol = car.getSymbol();
         this.row = car.getCoordinates().getY();
@@ -32,6 +33,7 @@ public class MovableCar {
         this.orientation = car.getOrientation();
         this.length = car.getLength();
         this.controller = controller;
+        this.mf = mf;
     }
 
     public void updateCar(Car car) {
@@ -84,21 +86,18 @@ public class MovableCar {
                 }
             }
             if (newBoard != null) {
-				for (int i = 0; i < newBoard.length; i++) {
-					for (int j = 0; j < newBoard[i].length; j++) {
-						System.out.print(newBoard[i][j]);
-					}
-					System.out.println();
-				}
+				
+                mf.increaseScore();
                 parent.setCars(controller.getCars());
                 parent.setBoard(newBoard);
-                System.out.println("EN DRAG");
                 parent.repaint(); // Repintar el panel después de mover el coche
+                
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     private static Color chooseColor(char c) {
         if (c == '*')

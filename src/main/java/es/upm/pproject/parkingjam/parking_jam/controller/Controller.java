@@ -23,6 +23,7 @@ public class Controller {
 	
 	public void loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		game.loadNewLevel();
+		
 	}
 	
 	public char[][] moveCar(char car, int length, char way) throws SameMovementException {

@@ -20,23 +20,24 @@ public class Grid extends JPanel {
     private Map<Character, MovableCar> movableCars; // Almacenar las instancias de MovableCar
     private Controller controller;
     private char[][] board;
-    private DataPanel dataPanel;
-    boolean levelCompleted;
+    private boolean levelCompleted;
+    private MainFrame mf;
      
 
-    public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller, DataPanel dataPanel) {
+    public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller, MainFrame mf) {
         this.rows = dimensions.getLeft();
         this.cols = dimensions.getRight();
         this.board = board;
         this.controller = controller;
-        this.dataPanel = dataPanel;
+        this.levelCompleted = false;
+        this.mf = mf;
         this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
         this.movableCars = new HashMap<>(); // Inicializar el mapa de MovableCar
 
         // Crear y añadir el MouseAdapter para cada coche movible
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller);
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf);
             movableCars.put(entry.getKey(), movableCar); // Almacenar MovableCar en el mapa
             MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, movableCar);
             this.addMouseListener(mouseAdapter);
@@ -47,9 +48,7 @@ public class Grid extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        levelCompleted = true;
         // Dibujar el tablero
-        System.out.println("REPINTANDO");
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 char elem = getElemAt(board, j, i);
@@ -74,9 +73,9 @@ public class Grid extends JPanel {
             movableCar.draw(g);
         }
         
-        dataPanel.addPoint();
+        //dataPanel.addPoint();
 
-        if (levelCompleted) {
+        if (isLevelCompleted()) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 30)); // Cambiar la fuente y el tamaño del texto
             g.drawString("LEVEL COMPLETED", (cols * squareSize) / 2 - 100, (rows * squareSize) / 2);
@@ -108,9 +107,33 @@ public class Grid extends JPanel {
         }
     }
 
+    public void setCarsMap(Map<Character, Car> cars) {
+        // Actualizar las instancias de MovableCar
+        for (Map.Entry<Character, Car> entry : cars.entrySet()) {
+            Car car = entry.getValue();
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, mf);
+            movableCars.put(entry.getKey(), movableCar); // Almacenar MovableCar en el mapa
+            MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, movableCar);
+            this.addMouseListener(mouseAdapter);
+            this.addMouseMotionListener(mouseAdapter);
+        }
+    }
+
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
         
         return controller.moveCar(car, length, way);
+    }
+
+    public boolean isLevelCompleted(){
+        levelCompleted = true;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                char elem = getElemAt(board, j, i);
+                if (elem == '@') 
+                    levelCompleted = false;
+            }
+        }
+        return this.levelCompleted;
     }
     
     

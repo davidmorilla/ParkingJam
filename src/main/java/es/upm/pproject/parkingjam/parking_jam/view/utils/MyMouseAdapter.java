@@ -3,7 +3,6 @@ package es.upm.pproject.parkingjam.parking_jam.view.utils;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JPanel;
 import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
 
 public class MyMouseAdapter extends MouseAdapter {

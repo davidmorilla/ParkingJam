@@ -37,12 +37,6 @@ public class Level {
     private void addToHistory() {
         Map<Character, Car> carsCopy = deepCopyCars(cars); // Copia profunda de los coches
         char[][] boardCopy = deepCopy(board); // Copia profunda del tablero
-
-        for (Car c : carsCopy.values()) {
-            System.out.println("Car: " + c.getSymbol() + " X: " + c.getCoordinates().getX() + " Y: "
-                    + c.getCoordinates().getY() + " LENGTH: " + c.getLength());
-        }
-
         OldBoardData copy = new OldBoardData(boardCopy, carsCopy);
 
         history.push(copy);
@@ -93,7 +87,6 @@ public class Level {
     // returns the new board or null if the car does not exist or its not possible
     // to move the car to the specified possition.
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-        System.out.println("LONGITUD DEL MOVIMIENTO: " + length);
         addToHistory();
         char[][] newBoard = deepCopy(board); // Hacer una copia profunda de la matriz original
         Coordinates coord = null;
@@ -112,7 +105,6 @@ public class Level {
                     break;
                 // Right
                 case 'R':
-                	System.out.println("entro en caso R");
                     coord = new Coordinates(xCar + Math.abs(length), yCar);
                     break;
                 // Up
@@ -129,15 +121,14 @@ public class Level {
             if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1
                     && coord.getY() < board.length - 1) {
 
-                if (checkMovementValidity(car, coord, way) /*&& !this.isLevelFinished(newBoard)*/) {
+                if (checkMovementValidity(car, coord, way) && !this.isLevelFinished(newBoard)) {
                     try {
-                        System.out.println("HOLAAA");
                         deleteCar(car, newBoard, cars);
                         addCar(car, newBoard, cars, coord);
                         this.cars.get(car).setCoordinates(coord.getX(), coord.getY());
-                        System.out.println("COORD COCHE " + car + " X:" + this.cars.get(car).getCoordinates().getX()
+                        /* System.out.println("COORD COCHE " + car + " X:" + this.cars.get(car).getCoordinates().getX()
                                 + " Y: " + this.cars.get(car).getCoordinates().getY() + "   Longitud: "
-                                + this.cars.get(car).getLength());
+                                + this.cars.get(car).getLength()); */
 
                         // Add the old map at the top of the stack
 
@@ -147,13 +138,11 @@ public class Level {
                         e.printStackTrace();
                     }
                 } else {
-                    System.out.println("DEVOLVIENDO NULL");
                     this.history.pop();
                     return null;
                 }
             }
             else{
-                System.out.println("DEVOLVIENDO NULL");
                 return null;
             }
         }
@@ -238,20 +227,14 @@ public class Level {
 
             if (way == 'U' && board[currentY - 1][carCoordinates.getX()] != ' '
                     && board[currentY - 1][carCoordinates.getX()] != '@') {
-                System.out
-                        .println("----> UP COMPROBANDO CELDA: X=" + carCoordinates.getX() + "   Y= " + (currentY - 1));
                 return false;
             } else if (way == 'D' && board[currentY + carLength][carCoordinates.getX()] != ' '
                     && board[currentY + carLength][carCoordinates.getX()] != '@') {
-                int aux = currentY + carLength;
-                System.out.println("----> DOWN COMPROBANDO CELDA: X=" + carCoordinates.getX() + "   Y= " + aux
-                        + "\nCONTENIDO: " + board[currentY + carLength][carCoordinates.getX()]);
                 return false;
             }
 
             // }
         } else { // carOrientation == 'H'
-            System.out.println("HORIZONTAAAAAAAAAL");
             if (carCoordinates.getY() != newCoordinates.getY() || newCoordinates.getX() < 0
                     || newCoordinates.getX() + carLength > boardWidth) {
                 return false;
@@ -261,14 +244,9 @@ public class Level {
 
             if (way == 'L' && board[carCoordinates.getY()][currentX - 1] != ' '
                     && board[carCoordinates.getY()][currentX - 1] != '@') {
-                System.out.println(
-                        "----> LEFT COMPROBANDO CELDA: X=" + (currentX - 1) + "   Y= " + carCoordinates.getY());
                 return false;
             } else if (way == 'R' && board[carCoordinates.getY()][currentX + carLength] != ' '
                     && board[carCoordinates.getY()][currentX + carLength] != '@') {
-                int aux = currentX + carLength;
-                System.out.println("----> RIGHT COMPROBANDO CELDA: X=" + aux + "   Y= " + carCoordinates.getY()
-                        + "\nCONTENIDO: " + board[carCoordinates.getY()][currentX + carLength]);
                 return false;
             }
         }
@@ -289,6 +267,7 @@ public class Level {
                 }
             }
         }
+        System.out.println(res);
         return res;
     }
 }

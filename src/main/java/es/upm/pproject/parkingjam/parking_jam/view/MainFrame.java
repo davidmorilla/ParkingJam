@@ -21,6 +21,7 @@ public class MainFrame extends JFrame {
     private Grid gridPanel;
     private JButton actionButton;
     private JButton resetButton;
+    private JButton nextButton;
     private MusicPlayer musicPlayer;
 
     public MainFrame(Controller controller) {
@@ -43,7 +44,7 @@ public class MainFrame extends JFrame {
         dataPanel = new DataPanel(controller);
         mainPanel.add(dataPanel, BorderLayout.LINE_END);
 
-        gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, dataPanel);
+        gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, this);
         mainPanel.add(gridPanel, BorderLayout.CENTER);
 
         // Crear un JPanel para el botón
@@ -53,6 +54,9 @@ public class MainFrame extends JFrame {
 
         resetButton = new JButton("RESET LEVEL");
         buttonPanel.add(resetButton);
+
+        nextButton = new JButton("NEXT LEVEL");
+        buttonPanel.add(nextButton);
 
         // Añadir el JPanel del botón al mainPanel en la parte inferior
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -86,6 +90,32 @@ public class MainFrame extends JFrame {
             }
         });
 
+        nextButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                try {
+                    if(gridPanel.isLevelCompleted()){
+                        controller.loadNewLevel();
+                        for (int i = 0; i < controller.getBoard().length; i++) {
+                            for (int j = 0; j < controller.getBoard()[i].length; j++) {
+                                System.out.print(controller.getBoard()[i][j]);
+                            }
+                            System.out.println();
+                        }
+
+                        updateDataPanel();
+                        gridPanel.setCarsMap(controller.getCars());
+                        gridPanel.setCars(controller.getCars());
+                        gridPanel.setBoard(controller.getBoard());
+                        gridPanel.repaint();
+                        
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
         add(mainPanel);
 
         // Iniciar la música
@@ -106,5 +136,9 @@ public class MainFrame extends JFrame {
 
     public void updateDataPanel() {
         dataPanel.updateData(controller.getLevelNumber(), controller.getGameScore(), controller.getLevelScore());
+    }
+
+    public void increaseScore(){
+        dataPanel.addPoint();
     }
 }
