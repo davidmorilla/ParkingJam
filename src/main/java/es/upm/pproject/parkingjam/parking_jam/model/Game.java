@@ -2,7 +2,6 @@ package es.upm.pproject.parkingjam.parking_jam.model;
 
 import java.util.Map;
 
-import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
@@ -66,6 +65,10 @@ public class Game {
 
 	public Map<Character,Car> getCars(){
 		return level.getCars();
+	}
+
+	public void resetLevel(){
+		level.resetLevel();
 	}
 	
 }

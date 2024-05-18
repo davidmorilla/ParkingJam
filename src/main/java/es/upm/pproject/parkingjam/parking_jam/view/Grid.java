@@ -17,7 +17,6 @@ public class Grid extends JPanel {
     private int rows;
     private int cols;
     private int squareSize = 50;
-    private Map<Character, Car> cars;
     private Map<Character, MovableCar> movableCars; // Almacenar las instancias de MovableCar
     private Controller controller;
     private char[][] board;
@@ -28,7 +27,6 @@ public class Grid extends JPanel {
     public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller, DataPanel dataPanel) {
         this.rows = dimensions.getLeft();
         this.cols = dimensions.getRight();
-        this.cars = cars;
         this.board = board;
         this.controller = controller;
         this.dataPanel = dataPanel;
@@ -40,7 +38,7 @@ public class Grid extends JPanel {
             Car car = entry.getValue();
             MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller);
             movableCars.put(entry.getKey(), movableCar); // Almacenar MovableCar en el mapa
-            MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, movableCar, this);
+            MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, movableCar);
             this.addMouseListener(mouseAdapter);
             this.addMouseMotionListener(mouseAdapter);
         }
@@ -76,12 +74,15 @@ public class Grid extends JPanel {
             movableCar.draw(g);
         }
         
+        dataPanel.addPoint();
 
         if (levelCompleted) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 30)); // Cambiar la fuente y el tamaño del texto
             g.drawString("LEVEL COMPLETED", (cols * squareSize) / 2 - 100, (rows * squareSize) / 2);
         }
+
+        
 
     }
 
@@ -98,7 +99,6 @@ public class Grid extends JPanel {
     }
 
     public void setCars(Map<Character, Car> cars) {
-        this.cars = cars;
         // Actualizar las instancias de MovableCar
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             MovableCar movableCar = movableCars.get(entry.getKey());
@@ -109,8 +109,7 @@ public class Grid extends JPanel {
     }
 
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-        if(!levelCompleted)
-            dataPanel.addPoint();
+        
         return controller.moveCar(car, length, way);
     }
     

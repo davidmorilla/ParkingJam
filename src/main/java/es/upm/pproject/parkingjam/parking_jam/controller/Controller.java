@@ -58,5 +58,9 @@ public class Controller {
 	public int getLevelNumber() {
 		return game.getLevelNumber();
 	}	
+
+	public void resetLevel(){
+		game.resetLevel();
+	}
 	
 }

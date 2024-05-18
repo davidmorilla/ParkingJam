@@ -6,6 +6,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+
 public class DataPanel extends JPanel {
 	private JLabel levelNumber;
     private JLabel gameScore;
@@ -16,14 +18,15 @@ public class DataPanel extends JPanel {
     private int level;
     private int totalPoints;
     private int levelPoints;
+    private Controller controller;
 
-    public DataPanel() {
+    public DataPanel(Controller controller) {
         BoxLayout boxY = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxY);
         level = 1;
         totalPoints =0;
-        levelPoints = 0;
-        
+        levelPoints = controller.getGameScore();
+        this.controller = controller;
         levelNumber = new JLabel(String.format(LEVEL_NUMBER_TEXT, level));
         gameScore = new JLabel(String.format(GAME_SCORE_TEXT, totalPoints));
         levelScore = new JLabel(String.format(LEVEL_SCORE_TEXT, levelPoints));
@@ -40,7 +43,9 @@ public class DataPanel extends JPanel {
     }
 
     public void addPoint(){
-        this.updateData(level, ++totalPoints, ++levelPoints);
+        levelPoints = controller.getGameScore();
+        totalPoints = levelPoints;
+        this.updateData(level, totalPoints, levelPoints);
     }
 
     

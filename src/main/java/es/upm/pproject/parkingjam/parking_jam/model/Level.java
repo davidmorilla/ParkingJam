@@ -1,7 +1,6 @@
 package es.upm.pproject.parkingjam.parking_jam.model;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
 
@@ -9,27 +8,33 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.*;
 
 public class Level {
-    private int score; // Puntuación del nivel
-    private Map<Character, Car> cars; // Coches del tablero
-    private char[][] board; // Mapa con la representación de los vehículos con letras
+    private int score, oldScore; // Puntuación del nivel
+    private Map<Character, Car> cars, carsDefault; // Coches del tablero
+    private char[][] board, boardDefault; // Mapa con la representación de los vehículos con letras
     private Pair<Integer, Integer> dimensions;
-
     private Stack<OldBoardData> history;
 
     public Level(char[][] board, Map<Character, Car> cars) {
         this.score = 0;
-        this.board = board;
-        this.cars = cars;
+        this.board = deepCopy(board); // Copia profunda del tablero inicial
+        this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
         this.history = new Stack<>();
-        // addToHistory();
+        this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
+        this.carsDefault = deepCopyCars(cars); // Guardar una copia profunda del estado inicial de los coches
         int numRows = board.length;
         int numCols = board[0].length;
         dimensions = new Pair<>(numRows, numCols);
+    }
 
+    private void increaseScore() {
+        score++;
+    }
+
+    private void decreaseScore() {
+        score--;
     }
 
     private void addToHistory() {
-        System.out.println("\n\n///////EN ADDHISTORY///////\n");
         Map<Character, Car> carsCopy = deepCopyCars(cars); // Copia profunda de los coches
         char[][] boardCopy = deepCopy(board); // Copia profunda del tablero
 
@@ -67,15 +72,20 @@ public class Level {
     }
 
     public OldBoardData undoMovement() throws CannotUndoMovementException {
-        if (history.isEmpty()) {
+        if( !history.isEmpty() && !this.isLevelFinished(board)){
+
+            OldBoardData restoredBoard = history.pop();
+            this.board = deepCopy(restoredBoard.getBoard());
+            this.cars = deepCopyCars(restoredBoard.getCars());
+            decreaseScore();
+            if(score == -1){
+                score = oldScore;
+            }
+            return restoredBoard;
+        }
+        else{
             throw new CannotUndoMovementException();
         }
-
-        OldBoardData restoredBoard = history.pop();
-        this.board = deepCopy(restoredBoard.getBoard());
-        this.cars = deepCopyCars(restoredBoard.getCars());
-        this.score--;
-        return restoredBoard;
     }
 
     // Moves the car in the way and the length specified when its possible and
@@ -118,9 +128,9 @@ public class Level {
             if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1
                     && coord.getY() < board.length - 1) {
 
-                if (checkMovementValidity(car, coord, way)) {
+                if (checkMovementValidity(car, coord, way) && !this.isLevelFinished(newBoard)) {
                     try {
-
+                        System.out.println("HOLAAA");
                         deleteCar(car, newBoard, cars);
                         addCar(car, newBoard, cars, coord);
                         this.cars.get(car).setCoordinates(coord.getX(), coord.getY());
@@ -130,15 +140,19 @@ public class Level {
 
                         // Add the old map at the top of the stack
 
-                        score++;
+                        increaseScore();
                         board = newBoard; // No es necesario actualizar la matriz original
                     } catch (IllegalCarException e) {
                         e.printStackTrace();
                     }
                 } else {
+                    System.out.println("DEVOLVIENDO NULL");
                     this.history.pop();
                     return null;
                 }
+            }
+            else{
+                return null;
             }
         }
         return newBoard;
@@ -148,14 +162,21 @@ public class Level {
         if (original == null) {
             return null;
         }
-    
+
         final char[][] result = new char[original.length][];
         for (int i = 0; i < original.length; i++) {
             result[i] = original[i].clone();
         }
         return result;
     }
-    
+
+    public void resetLevel() {
+        oldScore = score;
+        addToHistory();
+        this.score = 0;
+        this.board = deepCopy(boardDefault); // Restaurar la copia profunda del tablero inicial
+        this.cars = deepCopyCars(carsDefault); // Restaurar la copia profunda de los coches iniciales
+    }
 
     private void deleteCar(char car, char[][] board, Map<Character, Car> cars) throws IllegalCarException {
         int xCar = 0;
@@ -256,4 +277,16 @@ public class Level {
         return this.cars;
     }
 
+    private boolean isLevelFinished(char[][] board) {
+        boolean res = true;
+        for (int i = 0; i < board.length && res; i++) {
+            for (int j = 0; j < board[i].length && res; j++) {
+                char elem = board[i][j];
+                if (elem == '@') {
+                    res = false;
+                }
+            }
+        }
+        return res;
+    }
 }

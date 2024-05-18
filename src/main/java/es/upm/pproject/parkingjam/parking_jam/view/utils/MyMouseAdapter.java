@@ -10,15 +10,13 @@ public class MyMouseAdapter extends MouseAdapter {
     private boolean dragging;
     private int squareSize;
     private MovableCar movableSquare;
-    private JPanel grid;
     private Point click;
     private int lastDx;
     private int lastDy;
 
-    public MyMouseAdapter(int squareSize, MovableCar movableSquare, JPanel grid) {
+    public MyMouseAdapter(int squareSize, MovableCar movableSquare) {
         this.squareSize = squareSize;
         this.movableSquare = movableSquare;
-        this.grid = grid;
         this.lastDx = 0;
         this.lastDy = 0;
     }
@@ -51,8 +49,6 @@ public class MyMouseAdapter extends MouseAdapter {
                 lastDx = 0;
                 lastDy = dy;
             }
-
-            //grid.repaint();
         }
     }
 
