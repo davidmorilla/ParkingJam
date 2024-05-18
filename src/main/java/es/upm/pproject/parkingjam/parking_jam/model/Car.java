@@ -1,5 +1,7 @@
 package es.upm.pproject.parkingjam.parking_jam.model;
 
+import java.util.Objects;
+
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 
 public class Car {
@@ -49,5 +51,22 @@ public class Car {
     public void setOrientation(char o){
         this.orientation = o;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return symbol == car.symbol &&
+               length == car.length &&
+               orientation == car.orientation &&
+               coordinates.getX() == car.getCoordinates().getX()&&
+               coordinates.getY() == car.getCoordinates().getY();
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(symbol, coordinates.getX(), coordinates.getY(), length, orientation);
+    }
 }
+
+

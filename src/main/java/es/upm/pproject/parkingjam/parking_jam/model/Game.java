@@ -34,6 +34,7 @@ public class Game {
 		
 	public char[][] loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		levelNumber++;
+		acumulatedScore+= level !=null ? level.getScore() : 0;
 		char[][] board = new LevelReader().readMap(levelNumber);
 		level = new Level(board, new LevelConverter().convertLevel(board));
 		return board;

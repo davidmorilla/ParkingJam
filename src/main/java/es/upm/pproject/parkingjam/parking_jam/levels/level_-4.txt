@@ -1,0 +1,10 @@
+Test level 4 (wrong f car dimensions)
+8 8
+++++++++
++aabbbc+
++   * c+
++d  *  +
++d fff +
++defff +
++ e ggg+
+++++@+++
