@@ -46,6 +46,7 @@ public class DataPanel extends JPanel {
     }
 
     public void addPoint(){
+        System.out.println("Incrementando");
         levelPoints = controller.getLevelScore();
         //totalPoints = levelPoints;
         this.updateData(level, ++totalPoints, levelPoints);

@@ -63,5 +63,9 @@ public class Controller {
 	public void resetLevel(){
 		game.resetLevel();
 	}
+
+	public void increaseScore(){
+		game.increaseScore();
+	}
 	
 }

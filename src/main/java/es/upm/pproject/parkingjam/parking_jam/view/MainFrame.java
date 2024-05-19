@@ -148,4 +148,8 @@ public class MainFrame extends JFrame {
     public void increaseScore(){
         dataPanel.addPoint();
     }
+
+    public Controller getController(){
+        return this.controller;
+    }
 }

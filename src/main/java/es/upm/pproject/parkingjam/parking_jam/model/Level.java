@@ -26,7 +26,7 @@ public class Level {
         dimensions = new Pair<>(numRows, numCols);
     }
 
-    private void increaseScore() {
+    public void increaseScore() {
         score++;
     }
 
@@ -132,7 +132,7 @@ public class Level {
 
                         // Add the old map at the top of the stack
 
-                        increaseScore();
+                        //increaseScore();
                         board = newBoard; // No es necesario actualizar la matriz original
                     } catch (IllegalCarException e) {
                         e.printStackTrace();

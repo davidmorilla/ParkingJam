@@ -22,7 +22,6 @@ public class Grid extends JPanel {
     private Controller controller;
     private char[][] board;
     private boolean levelCompleted;
-    private MainFrame mf;
 
     public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
             MainFrame mf) {
@@ -31,19 +30,18 @@ public class Grid extends JPanel {
         this.board = board;
         this.controller = controller;
         this.levelCompleted = false;
-        this.mf = mf;
         this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
         this.movableCars = new HashMap<>();
 
         // Crear instancias de MovableCar y almacenarlas en el mapa
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf);
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller);
             movableCars.put(entry.getKey(), movableCar);
         }
 
         // Añadir un solo MouseAdapter para toda la cuadrícula
-        MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, this);
+        MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, this, mf);
         this.addMouseListener(mouseAdapter);
         this.addMouseMotionListener(mouseAdapter);
     }
@@ -119,7 +117,7 @@ public class Grid extends JPanel {
         this.movableCars = new HashMap<>();
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf);
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller);
             movableCars.put(entry.getKey(), movableCar);
         }
     }

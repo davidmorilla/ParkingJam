@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import es.upm.pproject.parkingjam.parking_jam.view.Grid;
+import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
 import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
 
 public class MyMouseAdapter extends MouseAdapter {
@@ -14,12 +15,17 @@ public class MyMouseAdapter extends MouseAdapter {
     private Point click;
     private int lastDx;
     private int lastDy;
+    private boolean movementSuccess;
+    private MainFrame mf;
 
-    public MyMouseAdapter(int squareSize, Grid grid) {
+
+    public MyMouseAdapter(int squareSize, Grid grid, MainFrame mf) {
         this.squareSize = squareSize;
         this.grid = grid;
         this.lastDx = 0;
         this.lastDy = 0;
+        this.mf = mf;
+        movementSuccess = false;
     }
 
     @Override
@@ -43,11 +49,11 @@ public class MyMouseAdapter extends MouseAdapter {
 
             // Mover solo una posición a la vez
             if (dx != lastDx) {
-                movableSquare.drag(dx - lastDx, 0);
+                movementSuccess = movableSquare.drag(dx - lastDx, 0);
                 lastDx = dx;
                 lastDy = 0;
             } else if (dy != lastDy) {
-                movableSquare.drag(0, dy - lastDy);
+                movementSuccess = movableSquare.drag(0, dy - lastDy);
                 lastDx = 0;
                 lastDy = dy;
             }
@@ -57,5 +63,9 @@ public class MyMouseAdapter extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         dragging = false;
+        if(movementSuccess){
+            mf.getController().increaseScore();;
+            mf.increaseScore();
+        }
     }
 }
