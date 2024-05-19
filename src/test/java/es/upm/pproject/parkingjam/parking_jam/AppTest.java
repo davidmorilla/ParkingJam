@@ -99,6 +99,10 @@ public class AppTest {
 			char[][] board = lr.readMap(-6);
 			Assertions.assertThrows(IllegalCarDimensionException.class, () -> lc.convertLevel(board));
 		}
+		public void convertLevelWithInvalidRedCarDimensionsTest3() {
+			char[][] board = lr.readMap(-7);
+			Assertions.assertThrows(IllegalCarDimensionException.class, () -> lc.convertLevel(board));
+		}
 	}
 	@DisplayName ("Tests related to testing the class Car")
 	@Nested

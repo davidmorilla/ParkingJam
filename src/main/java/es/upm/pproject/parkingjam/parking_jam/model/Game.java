@@ -36,11 +36,12 @@ public class Game {
 	}
 		
 	public char[][] loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		logger.info("Loading level {}...", levelNumber);
 		levelNumber++;
 		acumulatedScore+= level !=null ? level.getScore() : 0;
 		char[][] board = new LevelReader().readMap(levelNumber);
 		level = new Level(board, new LevelConverter().convertLevel(board));
-		logger.info("Load level {}", levelNumber);
+		logger.info("Level {} has been loaded.", levelNumber);
 		return board;
 	}
 	
@@ -61,10 +62,14 @@ public class Game {
 	}
 	
 	public int getLevelNumber() {
+		logger.info("Getting level number...");
+		logger.info("Level number has been given.");
 		return levelNumber;
 	}
 
 	public Level getLevel(){
+		logger.info("Getting level...");
+		logger.info("Level has been given.");
 		return level;
 	}
 

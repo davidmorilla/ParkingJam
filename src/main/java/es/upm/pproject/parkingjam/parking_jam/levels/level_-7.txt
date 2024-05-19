@@ -4,7 +4,7 @@ Test level 1 (ok level)
 +aabbbc+
 +  ** c+
 +d     +
-+d fff +
-+d     +
++d f   +
++d ff  +
 +   ggg+
 ++++@+++

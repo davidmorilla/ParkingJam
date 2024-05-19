@@ -3,14 +3,18 @@ package es.upm.pproject.parkingjam.parking_jam.model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class LevelReader {
 	public final String LEVEL_FILE_NAME_FORMAT = "src/main/java/es/upm/pproject/parkingjam/parking_jam/levels/level_%d.txt";
-
+    private static final Logger logger = LoggerFactory.getLogger(Game.class);
     public char[][] readMap(int level) {
         String fileName = LEVEL_FILE_NAME_FORMAT;
+    	logger.info("Reading map from file: '{}'...",String.format(fileName, level));
 		BufferedReader reader;
 		char[][] board = null;
-
+		
         try {
             // Abrir el archivo
             reader = new BufferedReader(new FileReader(String.format(fileName, level)));		
@@ -31,21 +35,35 @@ public class LevelReader {
 						board = new char[nRows][nColumns];
 						for (int i = 0; i < nRows; i++) {
 							String row = reader.readLine();
+							if(row!=null) {
 							for (int j = 0; j < nColumns; j++) {
 								board[i][j] = row.charAt(j);
 							}
+							}else {
+								logger.error("ERROR: The board is missing lines.");
+							}
 						}
+					}else {
+						logger.error("ERROR: The board is too small.");
 					}
+				}else {
+					logger.error("ERROR: The dimensions of the board are not in the correct format.");
 				}
+			}else {
+				logger.error("ERROR: The dimensions of the board are not specified.");
 			}
+		} else {
+			logger.error("ERROR: The name of the board is not specified.");
 		}
 
             // Cerrar el archivo
         reader.close();
 
         } catch (Exception e) {
+        	logger.error("ERROR: There was an error while reading the file: {}.", e.getMessage());
             System.err.println("Error al leer el archivo: " + e.getMessage());
         }
+        logger.info("Map has been read.");
 		return board;
     }
 
