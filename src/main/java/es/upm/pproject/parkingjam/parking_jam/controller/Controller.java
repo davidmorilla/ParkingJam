@@ -67,5 +67,9 @@ public class Controller {
 	public void increaseScore(){
 		game.increaseScore();
 	}
+
+	public void addToHistory(){
+		game.getLevel().addToHistory();
+	}
 	
 }

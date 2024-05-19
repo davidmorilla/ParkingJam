@@ -22,9 +22,11 @@ public class Grid extends JPanel {
     private Controller controller;
     private char[][] board;
     private boolean levelCompleted;
+    private Map<Character,Car> cars;
 
     public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
             MainFrame mf) {
+        this.cars=cars;
         this.rows = dimensions.getLeft();
         this.cols = dimensions.getRight();
         this.board = board;
@@ -137,6 +139,10 @@ public class Grid extends JPanel {
             }
         }
         return this.levelCompleted;
+    }
+
+    public Map<Character,Car> getCars(){
+        return this.cars;
     }
 
 }

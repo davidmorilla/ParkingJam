@@ -17,9 +17,9 @@ public class Level {
     private Pair<Integer, Integer> dimensions;
     private Stack<OldBoardData> history;
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
-	
+
     public Level(char[][] board, Map<Character, Car> cars) {
-		logger.info("Creating level...");
+        logger.info("Creating level...");
         this.score = 0;
         this.board = deepCopy(board); // Copia profunda del tablero inicial
         this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
@@ -29,9 +29,10 @@ public class Level {
         int numRows = board.length;
         int numCols = board[0].length;
         dimensions = new Pair<>(numRows, numCols);
-        
-		logger.info("Level has been created: \n{}.",charMatrixToString(this.boardDefault));
+
+        logger.info("Level has been created: \n{}.", charMatrixToString(this.boardDefault));
     }
+
     private String charMatrixToString(char[][] board) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < board.length; i++) {
@@ -44,18 +45,18 @@ public class Level {
     }
 
     public void increaseScore() {
-		logger.info("Increasing score...");
-		logger.info("Score has been increased by 1 unit (new score: {}).", score+1);
+        logger.info("Increasing score...");
+        logger.info("Score has been increased by 1 unit (new score: {}).", score + 1);
         score++;
     }
 
     private void decreaseScore() {
-		logger.info("Decreasing score...");
-		logger.info("Score has been decreased by 1 unit(new score: {}).", score-1);
+        logger.info("Decreasing score...");
+        logger.info("Score has been decreased by 1 unit(new score: {}).", score - 1);
         score--;
     }
 
-    private void addToHistory() {
+    public void addToHistory() {
         Map<Character, Car> carsCopy = deepCopyCars(cars); // Copia profunda de los coches
         char[][] boardCopy = deepCopy(board); // Copia profunda del tablero
         OldBoardData copy = new OldBoardData(boardCopy, carsCopy);
@@ -75,39 +76,38 @@ public class Level {
     }
 
     public Pair<Integer, Integer> getDimensions() {
-		logger.info("Getting dimensions...");
-		logger.info("Dimensions have been given (dimensions: {}x{}).",dimensions.getLeft(),dimensions.getRight());
+        logger.info("Getting dimensions...");
+        logger.info("Dimensions have been given (dimensions: {}x{}).", dimensions.getLeft(), dimensions.getRight());
         return dimensions;
     }
 
     public char[][] getBoard() {
-		logger.info("Getting board...");
-		logger.info("Board has been given: \n{}", charMatrixToString(this.board));
+        logger.info("Getting board...");
+        logger.info("Board has been given: \n{}", charMatrixToString(this.board));
         return this.board;
     }
 
     public int getScore() {
-		logger.info("Getting score...");
-		logger.info("Score has been given (score: {}).", score);
+        logger.info("Getting score...");
+        logger.info("Score has been given (score: {}).", score);
         return score;
     }
 
     public OldBoardData undoMovement() throws CannotUndoMovementException {
-    	logger.info("Undoing movement...");
-        if( !history.isEmpty() /*&& !this.isLevelFinished(board)*/){
-            
+        logger.info("Undoing movement...");
+        if (!history.isEmpty() && !this.isLevelFinished(board)) {
+
             OldBoardData restoredBoard = history.pop();
             this.board = deepCopy(restoredBoard.getBoard());
             this.cars = deepCopyCars(restoredBoard.getCars());
             decreaseScore();
-            if(score == -1){
+            if (score == -1) {
                 score = oldScore;
             }
             logger.info("Movement has been undone.");
             return restoredBoard;
-        }
-        else{
-        	logger.error("There are no movements to undo because no movement has been done before.");
+        } else {
+            logger.error("There are no movements to undo because no movement has been done before.");
             throw new CannotUndoMovementException();
         }
     }
@@ -117,14 +117,13 @@ public class Level {
     // returns the new board or null if the car does not exist or its not possible
     // to move the car to the specified possition.
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-    	logger.info("Moving car '{}'...", car);
-        addToHistory();
+        logger.info("Moving car '{}'...", car);
         char[][] newBoard = deepCopy(board); // Hacer una copia profunda de la matriz original
         Coordinates coord = null;
         int xCar = 0;
         int yCar = 0;
         if (cars.get(car) == null) {
-        	logger.error("Car '{}' does not exist.", car);
+            logger.error("Car '{}' does not exist.", car);
             return null;
         }
         if (way == 'L' || way == 'R' || way == 'U' || way == 'D') {
@@ -134,22 +133,22 @@ public class Level {
             switch (way) {
                 // Left
                 case 'L':
-                   	logger.info("Moving car '{}' {} units left...", car, length);
+                    logger.info("Moving car '{}' {} units left...", car, length);
                     coord = new Coordinates(xCar - Math.abs(length), yCar);
                     break;
                 // Right
                 case 'R':
-                   	logger.info("Moving car '{}' {} units right...", car, length);
+                    logger.info("Moving car '{}' {} units right...", car, length);
                     coord = new Coordinates(xCar + Math.abs(length), yCar);
                     break;
                 // Up
                 case 'U':
-                   	logger.info("Moving car '{}' {} units up...", car, length);
+                    logger.info("Moving car '{}' {} units up...", car, length);
                     coord = new Coordinates(xCar, yCar - Math.abs(length));
                     break;
                 // Down
                 case 'D':
-                   	logger.info("Moving car '{}' {} units down...", car, length);
+                    logger.info("Moving car '{}' {} units down...", car, length);
                     coord = new Coordinates(xCar, yCar + Math.abs(length));
                     break;
             }
@@ -163,34 +162,36 @@ public class Level {
                         deleteCar(car, newBoard, cars);
                         addCar(car, newBoard, cars, coord);
                         this.cars.get(car).setCoordinates(coord.getX(), coord.getY());
-                        /* System.out.println("COORD COCHE " + car + " X:" + this.cars.get(car).getCoordinates().getX()
-                                + " Y: " + this.cars.get(car).getCoordinates().getY() + "   Longitud: "
-                                + this.cars.get(car).getLength()); */
+                        /*
+                         * System.out.println("COORD COCHE " + car + " X:" +
+                         * this.cars.get(car).getCoordinates().getX()
+                         * + " Y: " + this.cars.get(car).getCoordinates().getY() + "   Longitud: "
+                         * + this.cars.get(car).getLength());
+                         */
 
                         // Add the old map at the top of the stack
 
-                        //increaseScore();
+                        // increaseScore();
                         board = newBoard; // No es necesario actualizar la matriz original
                     } catch (IllegalCarException e) {
                         e.printStackTrace();
                     }
                 } else {
-                	if(this.isLevelFinished(newBoard)) {
-                		logger.warn("Cannot move car '{}', level is finished", car);
-                	}else {
-                		logger.warn("Cannot move car '{}', there´s an obstacle", car);
-                	}
+                    if (this.isLevelFinished(newBoard)) {
+                        logger.warn("Cannot move car '{}', level is finished", car);
+                    } else {
+                        logger.warn("Cannot move car '{}', there's an obstacle", car);
+                    }
                     this.history.pop();
                     return null;
                 }
-            }
-            else{
+            } else {
                 this.history.pop();
                 logger.warn("Cannot move car '{}', new movement is out of reach.", car);
                 return null;
             }
         }
-        logger.info("Car '{}' has been moved.",car);
+        logger.info("Car '{}' has been moved.", car);
         return newBoard;
     }
 
@@ -207,23 +208,24 @@ public class Level {
     }
 
     public void resetLevel() {
-    	logger.info("Resetting level...");
+        logger.info("Resetting level...");
         oldScore = score;
         addToHistory();
         this.score = 0;
         this.board = deepCopy(boardDefault); // Restaurar la copia profunda del tablero inicial
         this.cars = deepCopyCars(carsDefault); // Restaurar la copia profunda de los coches iniciales
-    	logger.info("Level has been reset.");
+        logger.info("Level has been reset.");
     }
 
     private void deleteCar(char car, char[][] board, Map<Character, Car> cars) throws IllegalCarException {
-    	logger.info("Deleting car '{}'...", car);
+        logger.info("Deleting car '{}'...", car);
         int xCar = 0;
         int yCar = 0;
         if (cars.get(car) == null) {
-        	logger.error("Car '{}' does not exist.", car);
+            logger.error("Car '{}' does not exist.", car);
             throw new IllegalCarException();
         }
+
         xCar = cars.get(car).getCoordinates().getX();
         yCar = cars.get(car).getCoordinates().getY();
         for (int i = 1; i <= cars.get(car).getLength(); i++) {
@@ -237,13 +239,14 @@ public class Level {
 
     private void addCar(char car, char[][] board, Map<Character, Car> cars, Coordinates coord)
             throws IllegalCarException {
-    	logger.info("Adding car '{}'...", car);
+        logger.info("Adding car '{}'...", car);
         int xCar = 0;
         int yCar = 0;
-        if (cars.get(car) == null) {
+        if (cars.get(car) == null){
         	logger.error("Car '{}' does not exist.", car);
             throw new IllegalCarException();
         }
+
         xCar = coord.getX();
         yCar = coord.getY();
         for (int i = 1; i <= cars.get(car).getLength(); i++) {
@@ -252,11 +255,13 @@ public class Level {
             else
                 board[yCar + (i - 1)][xCar] = car;
         }
+        logger.info("Car '{}' has been added.", car);
     }
 
     private boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way)
             throws SameMovementException {
-    	logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...",carChar,newCoordinates.getX(), newCoordinates.getY(),way);
+        logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...",carChar,newCoordinates.getX(), newCoordinates.getY(),way);
+        
         Car car = cars.get(carChar);
         Coordinates carCoordinates = car.getCoordinates();
         int carLength = car.getLength();
@@ -273,7 +278,7 @@ public class Level {
         if (carOrientation == 'V') {
             if (carCoordinates.getX() != newCoordinates.getX() || newCoordinates.getY() < 0
                     || newCoordinates.getY() + carLength > boardHeight) {
-            	logger.warn("Invalid movement: Trying to move horizontally when the orientation is vertical.");
+                logger.warn("Invalid movement: Trying to move horizontally when the orientation is vertical.");
                 return false;
             }
 
@@ -291,7 +296,7 @@ public class Level {
         } else { // carOrientation == 'H'
             if (carCoordinates.getY() != newCoordinates.getY() || newCoordinates.getX() < 0
                     || newCoordinates.getX() + carLength > boardWidth) {
-            	logger.warn("Invalid movement: Trying to move vertically when the orientation is horizontal.");
+                logger.warn("Invalid movement: Trying to move vertically when the orientation is horizontal.");
                 return false;
             }
 
@@ -299,11 +304,11 @@ public class Level {
 
             if (way == 'L' && board[carCoordinates.getY()][currentX - 1] != ' '
                     && board[carCoordinates.getY()][currentX - 1] != '@') {
-            	logger.warn("Invalid movement: Trying to move into a non-empty cell.");
+                logger.warn("Invalid movement: Trying to move into a non-empty cell.");
                 return false;
             } else if (way == 'R' && board[carCoordinates.getY()][currentX + carLength] != ' '
                     && board[carCoordinates.getY()][currentX + carLength] != '@') {
-            	logger.warn("Invalid movement: Trying to move into a non-empty cell.");
+                logger.warn("Invalid movement: Trying to move into a non-empty cell.");
                 return false;
             }
         }
@@ -312,11 +317,11 @@ public class Level {
     }
 
     public Map<Character, Car> getCars() {
-    	logger.info("Getting all cars...");
+        logger.info("Getting all cars...");
     	logger.info("All cars have been given (cars: {} ).",cars.keySet().toString());
         return this.cars;
     }
-    
+
     private boolean isLevelFinished(char[][] board) {
         boolean res = true;
         for (int i = 0; i < board.length && res; i++) {

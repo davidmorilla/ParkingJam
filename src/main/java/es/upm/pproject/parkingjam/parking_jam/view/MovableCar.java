@@ -88,6 +88,7 @@ public class MovableCar {
                 parent.setCars(controller.getCars());
                 parent.setBoard(newBoard);
                 parent.repaint(); // Repintar el panel después de mover el coche
+                System.out.println("DEVOLVIENDO TRUE");
                 return true;
                 
             }

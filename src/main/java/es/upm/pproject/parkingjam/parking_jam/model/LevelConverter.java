@@ -14,7 +14,7 @@ public class LevelConverter {
     
 	public Map<Character, Car> convertLevel(char[][]board) throws IllegalExitsNumberException, IllegalCarDimensionException{
         logger.info("Converting level...");
-		Map<Character, Car> cars = new HashMap<>();
+        Map<Character, Car> cars = new HashMap<>();
         int numExits=0;
         for(int i = 0; i<board.length; i++){
             for(int j = 0; j<board[i].length; j++){
@@ -26,10 +26,11 @@ public class LevelConverter {
                             c.setOrientation('V');
                         }
                         else if(c.getCoordinates().getY()!=i && c.getLength()>2 && c.getOrientation()=='H'){
-                        	logger.error("Car '{}' has invalid dimensions.", board[i][j]);
+                            logger.error("Car '{}' has invalid dimensions.", board[i][j]);
                             throw new IllegalCarDimensionException();
                         }
                     }
+                    
                     else{
                         //valores por defecto
                         Car c = new Car(board[i][j], j, i, 1, 'H');
@@ -43,12 +44,12 @@ public class LevelConverter {
         } 
         //If the level has only 1 exit and the dimensions of the car are 2x1 or 1x2 then the level is OK, IOC returns null
         if(numExits!=1){
-        	logger.error("There are {} exits. The number of exits must be exactly 1.",numExits);
+            logger.error("There are {} exits. The number of exits must be exactly 1.",numExits);
             cars= null;
             throw new IllegalExitsNumberException();
         }
         if(cars.get('*').getLength()!=2){
-        	logger.error("There red car length is {}. The length of the red car must be exactly 2.",cars.get('*').getLength());
+            logger.error("There red car length is {}. The length of the red car must be exactly 2.",cars.get('*').getLength());
             cars= null;
             throw new IllegalCarDimensionException();
         }

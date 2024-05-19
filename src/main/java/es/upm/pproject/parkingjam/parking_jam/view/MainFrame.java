@@ -7,11 +7,10 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MusicPlayer;
 
-import javax.swing.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,11 +23,11 @@ public class MainFrame extends JFrame {
     private JPanel mainPanel;
     private DataPanel dataPanel;
     private Grid gridPanel;
-    private JButton actionButton;
+    private JButton undoButton;
     private JButton resetButton;
     private JButton nextButton;
     private MusicPlayer musicPlayer;
-    
+
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
 
     public MainFrame(Controller controller) {
@@ -48,7 +47,7 @@ public class MainFrame extends JFrame {
         try {
             icon = new ImageIcon(new URL("https://store-images.s-microsoft.com/image/apps.32576.13852498558802281.02407fd2-7c4b-4af9-a1f0-3b18d41974a0.70dbf666-990b-481d-b089-01bbce54de27?mode=scale&q=90&h=200&w=200&background=%23FFFFFF"));
         } catch (MalformedURLException e) {
-        	logger.error("Could not load game icon");
+            logger.error("Could not load game icon");
             e.printStackTrace();
         }
         this.setIconImage(icon.getImage());
@@ -63,8 +62,8 @@ public class MainFrame extends JFrame {
 
         // Crear un JPanel para el botón
         JPanel buttonPanel = new JPanel();
-        actionButton = new JButton("UNDO");
-        buttonPanel.add(actionButton);
+        undoButton = new JButton("UNDO");
+        buttonPanel.add(undoButton);
 
         resetButton = new JButton("RESET LEVEL");
         buttonPanel.add(resetButton);
@@ -76,7 +75,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         // Añadir ActionListener al botón UNDO
-        actionButton.addActionListener(new ActionListener() {
+        undoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 try {
@@ -85,8 +84,8 @@ public class MainFrame extends JFrame {
                     gridPanel.setCars(old.getCars());
                     gridPanel.setBoard(oldBoard);
                     gridPanel.repaint();
-                    logger.info("Movement undone");
                     musicPlayer.playErase();
+                    logger.info("Movement undone");
 
                 } catch (CannotUndoMovementException e) {
                     e.printStackTrace();
@@ -132,7 +131,7 @@ public class MainFrame extends JFrame {
                         musicPlayer.playLevelSuccess();
                     }
                 } catch (Exception e){
-                	logger.error("Could not load next level");
+                    logger.error("Could not load next level");
                     e.printStackTrace();
                 }
             }
@@ -140,6 +139,7 @@ public class MainFrame extends JFrame {
 
         add(mainPanel);
 
+        
 
         this.setVisible(true);
         musicPlayer.playLevelStart();
