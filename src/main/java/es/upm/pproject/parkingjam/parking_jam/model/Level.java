@@ -182,11 +182,11 @@ public class Level {
                     } else {
                         logger.warn("Cannot move car '{}', there's an obstacle", car);
                     }
-                    this.history.pop();
+                    //this.history.pop();
                     return null;
                 }
             } else {
-                this.history.pop();
+                //this.history.pop();
                 logger.warn("Cannot move car '{}', new movement is out of reach.", car);
                 return null;
             }

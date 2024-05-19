@@ -28,13 +28,10 @@ public class AppTest {
 	@Nested
 	class LevelReaderTests {
 		private LevelReader lr;
-		@BeforeEach
-		void runBeforeEach () {
-			lr = new LevelReader();
-			new LevelConverter();
-		}
+		
 		@Test
 		public void readOKLevelTest() {
+			lr = new LevelReader();
 			char[][] board = lr.readMap(-1);
 			char[][] expectedBoard={{'+','+','+','+','+','+','+','+'},
 					{'+','a','a','b','b','b','c','+'},
@@ -48,22 +45,27 @@ public class AppTest {
 		}
 		@Test
 		public void readLevelWithNoNameTest() {
+			lr = new LevelReader();
 			Assertions.assertNull(lr.readMap(-8));
 		}
 		@Test
 		public void readLevelWithNoDimensionsTest() {
+			lr = new LevelReader();
 			Assertions.assertNull(lr.readMap(-9));
 		}
 		@Test
 		public void readLevelWithWrongDimensionsFormatTest() {
+			lr = new LevelReader();
 			Assertions.assertNull(lr.readMap(-10));
 		}
 		@Test
 		public void readLevelWithMissingLinesTest() {
+			lr = new LevelReader();
 			Assertions.assertNull(lr.readMap(-11));
 		}
 		@Test
 		public void readTooSmallLevelTest() {
+			lr = new LevelReader();
 			Assertions.assertNull(lr.readMap(-12));
 		}
 		
@@ -446,6 +448,7 @@ public class AppTest {
 		
 		@Test
 		void testUndoMovement() throws SameMovementException, CannotUndoMovementException {
+			level.addToHistory();
 			level.moveCar('c', 2, 'D');
 			level.undoMovement();
 			
@@ -454,6 +457,7 @@ public class AppTest {
 		
 		@Test
 		void testUndoMovement2() throws SameMovementException, CannotUndoMovementException {
+			level.addToHistory();
 			level.moveCar('g', 1, 'L');
 			level.undoMovement();
 			
@@ -462,8 +466,11 @@ public class AppTest {
 		
 		@Test
 		void testUndoMovement3() throws SameMovementException, CannotUndoMovementException {
+			level.addToHistory();
 			level.moveCar('e', 1, 'U');
+			level.addToHistory();
 			level.moveCar('g', 3, 'L');
+			level.addToHistory();
 			level.moveCar('c', 1, 'D');
 			level.undoMovement();
 			
@@ -481,8 +488,11 @@ public class AppTest {
 		
 		@Test
 		void testUndoMovement4() throws SameMovementException, CannotUndoMovementException {
+			level.addToHistory();
 			level.moveCar('e', 1, 'U');
+			level.addToHistory();
 			level.moveCar('g', 3, 'L');
+			level.addToHistory();
 			level.moveCar('c', 1, 'D');
 			level.undoMovement();
 			level.undoMovement();
@@ -499,6 +509,7 @@ public class AppTest {
 		
 		@Test
 		void testUndoMovementInvalid2() throws SameMovementException, CannotUndoMovementException {
+			level.addToHistory();
 			level.moveCar('e', 1, 'U');
 			assertDoesNotThrow(() -> level.undoMovement());
 			assertThrows(CannotUndoMovementException.class, () -> level.undoMovement());
@@ -541,53 +552,67 @@ public class AppTest {
 		
 		@Test
 		void testScoreAfter1Move() throws SameMovementException {
-			level.moveCar('e', 1, 'U');
+			if(level.moveCar('e', 1, 'U')!=null)
+				level.increaseScore();
 			
 			assertEquals(1, level.getScore());
 		}
 		
 		@Test
 		void testScoreAfterSomeMoves() throws SameMovementException {
-			level.moveCar('e', 1, 'U');
-			level.moveCar('f', 1, 'R');
-			level.moveCar('c', 1, 'D');
+			if(level.moveCar('e', 1, 'U')!=null)
+				level.increaseScore();
+			if(level.moveCar('f', 1, 'R')!=null)
+				level.increaseScore();
+			if(level.moveCar('c', 1, 'D')!=null)
+				level.increaseScore();
 			
 			assertEquals(3, level.getScore());
 		}
 		
 		@Test
 		void testScoreAfterMoveMoreThanOneTile() throws SameMovementException {
-			level.moveCar('c', 3, 'D');
+			if(level.moveCar('c', 3, 'D')!=null)
+				level.increaseScore();
 			
 			assertEquals(1, level.getScore());
 		}
 		
 		@Test
 		void testScoreAfterInvalidMove() throws SameMovementException {
-			level.moveCar('c', 1, 'U');
+			if(level.moveCar('c', 1, 'U')!=null)
+				level.increaseScore();
 			
 			assertEquals(0, level.getScore());
 		}
 		
 		@Test
 		void testScoreAfterSomeInvalidMoves() throws SameMovementException {
-			level.moveCar('c', 1, 'U');
-			level.moveCar('a', 1, 'R');
+			if(level.moveCar('c', 1, 'U')!=null)
+				level.increaseScore();
+			if(level.moveCar('a', 1, 'R')!=null)
+				level.increaseScore();
 			assertEquals(0, level.getScore());
 		}
 		
 		@Test
 		void testScoreAfterSomeValidAndInvalidMoves() throws SameMovementException {
-			level.moveCar('c', 1, 'U');
-			level.moveCar('e', 1, 'U');
-			level.moveCar('f', 1, 'R');
-			level.moveCar('a', 1, 'L');
+			if(level.moveCar('c', 1, 'U')!=null)
+				level.increaseScore();
+			if(level.moveCar('e', 1, 'U')!=null)
+				level.increaseScore();
+			if(level.moveCar('f', 1, 'R')!=null)
+				level.increaseScore();
+			if(level.moveCar('a', 1, 'L')!=null)
+				level.increaseScore();
 			assertEquals(2, level.getScore());
 		}
 		
 		@Test
 		void testScoreAfterUndo() throws SameMovementException, CannotUndoMovementException {
-			level.moveCar('e', 1, 'U');
+			level.addToHistory();
+			if(level.moveCar('e', 1, 'U')!=null)
+				level.increaseScore();
 			level.undoMovement();
 			
 			assertEquals(0, level.getScore());
@@ -595,9 +620,22 @@ public class AppTest {
 		
 		@Test
 		void testScoreAfterUndo2() throws SameMovementException, CannotUndoMovementException {
-			level.moveCar('e', 1, 'U');
-			level.moveCar('f', 1, 'R');
-			level.moveCar('c', 1, 'D');
+			level.addToHistory();
+			if(level.moveCar('e', 1, 'U')!=null)
+				level.increaseScore();
+			else
+				level.undoMovement(); 
+			level.addToHistory();
+			if(level.moveCar('f', 1, 'R')!=null)
+				level.increaseScore();
+			else
+				level.undoMovement();
+			level.addToHistory();
+			if(level.moveCar('c', 1, 'D')!=null)
+				level.increaseScore();
+			else
+				level.undoMovement();
+			
 			level.undoMovement();
 			
 			assertEquals(2, level.getScore());

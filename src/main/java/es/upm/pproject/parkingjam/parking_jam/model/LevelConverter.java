@@ -25,7 +25,11 @@ public class LevelConverter {
                         if(c.getCoordinates().getY()!=i && c.getLength()==2){
                             c.setOrientation('V');
                         }
-                        else if(c.getCoordinates().getY()!=i && c.getLength()>2 && c.getOrientation()=='H'){
+                        if(c.getCoordinates().getY()!=i && c.getLength()>=2 && c.getOrientation()=='H'){
+                            logger.error("Car '{}' has invalid dimensions.", board[i][j]);
+                            throw new IllegalCarDimensionException();
+                        }
+                        if(c.getCoordinates().getX()!=j && c.getLength()>=2 && c.getOrientation()=='V'){
                             logger.error("Car '{}' has invalid dimensions.", board[i][j]);
                             throw new IllegalCarDimensionException();
                         }
