@@ -1,0 +1,10 @@
+Test level 10 (wrong dim format)
+8 8 8
+++++++++
++aabbbc+
++   * c+
++d  *  +
++d fff +
++de    +
++ e ggg+
+++++@+++

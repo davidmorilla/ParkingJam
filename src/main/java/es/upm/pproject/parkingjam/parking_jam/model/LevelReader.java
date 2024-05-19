@@ -23,7 +23,7 @@ public class LevelReader {
 
             // Leer la primera línea que contiene el nombre del nivel
             String levelName = reader.readLine();
-			
+			 
 			if(levelName != null) {
 				// Leer la segunda línea que contiene las dimensiones del tablero
 				String secondLine = reader.readLine();
@@ -43,19 +43,29 @@ public class LevelReader {
 							}
 							}else {
 								logger.error("The board is missing lines.");
+						        reader.close();
+								return null;
 							}
 						}
 					}else {
 						logger.error("The board is too small.");
+				        reader.close();
+						return null;
 					}
 				}else {
 					logger.error("The dimensions of the board are not in the correct format.");
+			        reader.close();
+					return null;
 				}
 			}else {
 				logger.error("The dimensions of the board are not specified.");
+		        reader.close();
+				return null;
 			}
 		} else {
 			logger.error("The name of the board is not specified.");
+	        reader.close();
+			return null;
 		}
 
             // Cerrar el archivo

@@ -1,0 +1,10 @@
+Test level 1 (no dimensions)
+
+++++++++
++aabbbc+
++   * c+
++d  *  +
++d fff +
++de    +
++ e ggg+
+++++@+++
