@@ -33,7 +33,11 @@
 
     <dependencies>
         <!-- Dependencies -->
-    
+    	<dependency>
+	  		<groupId>org.slf4j</groupId>
+	  		<artifactId>slf4j-reload4j</artifactId>
+	  		<version>1.7.36</version>
+		</dependency>
     
         <!-- Testing dependencies-->
         <dependency>

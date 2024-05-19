@@ -1,12 +1,17 @@
 package es.upm.pproject.parkingjam.parking_jam.view;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MusicPlayer;
 
 import javax.swing.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +28,8 @@ public class MainFrame extends JFrame {
     private JButton resetButton;
     private JButton nextButton;
     private MusicPlayer musicPlayer;
+    
+    private static final Logger logger = LoggerFactory.getLogger(Game.class);
 
     public MainFrame(Controller controller) {
         super("Parking Jam - Programming Project");
@@ -41,6 +48,7 @@ public class MainFrame extends JFrame {
         try {
             icon = new ImageIcon(new URL("https://store-images.s-microsoft.com/image/apps.32576.13852498558802281.02407fd2-7c4b-4af9-a1f0-3b18d41974a0.70dbf666-990b-481d-b089-01bbce54de27?mode=scale&q=90&h=200&w=200&background=%23FFFFFF"));
         } catch (MalformedURLException e) {
+        	logger.error("Could not load game icon");
             e.printStackTrace();
         }
         this.setIconImage(icon.getImage());
@@ -77,10 +85,12 @@ public class MainFrame extends JFrame {
                     gridPanel.setCars(old.getCars());
                     gridPanel.setBoard(oldBoard);
                     gridPanel.repaint();
+                    logger.info("Movement undone");
                     musicPlayer.playErase();
 
                 } catch (CannotUndoMovementException e) {
                     e.printStackTrace();
+                    logger.error("Cannot undo movement, there is none done previously");
                 }
                 updateDataPanel();
             }
@@ -95,6 +105,7 @@ public class MainFrame extends JFrame {
                 gridPanel.setBoard(controller.getBoard());
                 gridPanel.repaint();
                 updateDataPanel();
+                logger.info("Level reset");
                 musicPlayer.playLevelStart();
             }
         });
@@ -117,9 +128,11 @@ public class MainFrame extends JFrame {
                         gridPanel.setCars(controller.getCars());
                         gridPanel.setBoard(controller.getBoard());
                         gridPanel.repaint();
+                        logger.info("Game advanced to next level");
                         musicPlayer.playLevelSuccess();
                     }
                 } catch (Exception e){
+                	logger.error("Could not load next level");
                     e.printStackTrace();
                 }
             }
@@ -127,7 +140,6 @@ public class MainFrame extends JFrame {
 
         add(mainPanel);
 
-        
 
         this.setVisible(true);
         musicPlayer.playLevelStart();
