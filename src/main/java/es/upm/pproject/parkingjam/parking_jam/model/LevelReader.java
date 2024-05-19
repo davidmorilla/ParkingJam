@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 public class LevelReader {
 	public final String LEVEL_FILE_NAME_FORMAT = "src/main/java/es/upm/pproject/parkingjam/parking_jam/levels/level_%d.txt";
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
+    
+    
     public char[][] readMap(int level) {
         String fileName = LEVEL_FILE_NAME_FORMAT;
     	logger.info("Reading map from file: '{}'...",String.format(fileName, level));
@@ -63,8 +65,19 @@ public class LevelReader {
         	logger.error("There was an error while reading the file: {}.", e.getMessage());
             System.err.println("Error al leer el archivo: " + e.getMessage());
         }
-        logger.info("Map has been read.");
+        logger.info("Map has been read: \n {}", charMatrixToString(board));
 		return board;
+    }
+    
+    private String charMatrixToString(char[][] board) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                sb.append(board[i][j]).append(' ');
+            }
+            sb.append('\n'); // New line after each row
+        }
+        return sb.toString();
     }
 
 }

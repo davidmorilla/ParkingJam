@@ -21,9 +21,11 @@ public class Game {
 	private static final Logger logger = LoggerFactory.getLogger(Game.class);
 	
 	public Game() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		logger.info("Creating new game...");
 		acumulatedScore = 0;
 		levelNumber = 0;
-		loadNewLevel();	
+		loadNewLevel();
+		logger.info("New game has been created.");
 	}
 
 	public Pair<Integer, Integer> getDimensions() {
@@ -63,7 +65,7 @@ public class Game {
 	
 	public int getLevelNumber() {
 		logger.info("Getting level number...");
-		logger.info("Level number has been given.");
+		logger.info("Level number has been given (levelNumber: {}).", levelNumber);
 		return levelNumber;
 	}
 

@@ -19,7 +19,7 @@ public class Level {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
 	
     public Level(char[][] board, Map<Character, Car> cars) {
-		logger.info("Creating level ...");
+		logger.info("Creating level...");
         this.score = 0;
         this.board = deepCopy(board); // Copia profunda del tablero inicial
         this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
@@ -29,18 +29,29 @@ public class Level {
         int numRows = board.length;
         int numCols = board[0].length;
         dimensions = new Pair<>(numRows, numCols);
-		logger.info("Level has been created.");
+        
+		logger.info("Level has been created: \n{}.",charMatrixToString(this.boardDefault));
+    }
+    private String charMatrixToString(char[][] board) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                sb.append(board[i][j]).append(' ');
+            }
+            sb.append('\n'); // New line after each row
+        }
+        return sb.toString();
     }
 
     public void increaseScore() {
 		logger.info("Increasing score...");
-		logger.info("Score has been increased by 1 unit.");
+		logger.info("Score has been increased by 1 unit (new score: {}).", score+1);
         score++;
     }
 
     private void decreaseScore() {
 		logger.info("Decreasing score...");
-		logger.info("Score has been decreased by 1 unit.");
+		logger.info("Score has been decreased by 1 unit(new score: {}).", score-1);
         score--;
     }
 
@@ -65,19 +76,19 @@ public class Level {
 
     public Pair<Integer, Integer> getDimensions() {
 		logger.info("Getting dimensions...");
-		logger.info("Dimensions have been given.");
+		logger.info("Dimensions have been given (dimensions: {}x{}).",dimensions.getLeft(),dimensions.getRight());
         return dimensions;
     }
 
     public char[][] getBoard() {
 		logger.info("Getting board...");
-		logger.info("Board has been given.");
+		logger.info("Board has been given: \n{}", charMatrixToString(this.board));
         return this.board;
     }
 
     public int getScore() {
 		logger.info("Getting score...");
-		logger.info("Score has been given.");
+		logger.info("Score has been given (score: {}).", score);
         return score;
     }
 
@@ -106,6 +117,7 @@ public class Level {
     // returns the new board or null if the car does not exist or its not possible
     // to move the car to the specified possition.
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+    	logger.info("Moving car '{}'...", car);
         addToHistory();
         char[][] newBoard = deepCopy(board); // Hacer una copia profunda de la matriz original
         Coordinates coord = null;
@@ -301,10 +313,10 @@ public class Level {
 
     public Map<Character, Car> getCars() {
     	logger.info("Getting all cars...");
-    	logger.info("All cars have been given.");
+    	logger.info("All cars have been given (cars: {} ).",cars.keySet().toString());
         return this.cars;
     }
-
+    
     private boolean isLevelFinished(char[][] board) {
         boolean res = true;
         for (int i = 0; i < board.length && res; i++) {
