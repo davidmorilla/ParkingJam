@@ -96,7 +96,7 @@ public class Level {
             return restoredBoard;
         }
         else{
-        	logger.error("ERROR: There are no movements to undo because no movement has been done before.");
+        	logger.error("There are no movements to undo because no movement has been done before.");
             throw new CannotUndoMovementException();
         }
     }
@@ -112,7 +112,7 @@ public class Level {
         int xCar = 0;
         int yCar = 0;
         if (cars.get(car) == null) {
-        	logger.error("ERROR: Car '{}' does not exist.", car);
+        	logger.error("Car '{}' does not exist.", car);
             return null;
         }
         if (way == 'L' || way == 'R' || way == 'U' || way == 'D') {
@@ -209,7 +209,7 @@ public class Level {
         int xCar = 0;
         int yCar = 0;
         if (cars.get(car) == null) {
-        	logger.error("ERROR: Car '{}' does not exist.", car);
+        	logger.error("Car '{}' does not exist.", car);
             throw new IllegalCarException();
         }
         xCar = cars.get(car).getCoordinates().getX();
@@ -225,11 +225,11 @@ public class Level {
 
     private void addCar(char car, char[][] board, Map<Character, Car> cars, Coordinates coord)
             throws IllegalCarException {
-    	logger.info("Adding car '{}'...");
+    	logger.info("Adding car '{}'...", car);
         int xCar = 0;
         int yCar = 0;
         if (cars.get(car) == null) {
-        	logger.error("ERROR: Car '{}' does not exist.", car);
+        	logger.error("Car '{}' does not exist.", car);
             throw new IllegalCarException();
         }
         xCar = coord.getX();

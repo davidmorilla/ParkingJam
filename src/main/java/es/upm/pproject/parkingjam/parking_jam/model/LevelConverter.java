@@ -26,7 +26,7 @@ public class LevelConverter {
                             c.setOrientation('V');
                         }
                         else if(c.getCoordinates().getY()!=i && c.getLength()>2 && c.getOrientation()=='H'){
-                        	logger.error("ERROR: Car '{}' has invalid dimensions.", board[i][j]);
+                        	logger.error("Car '{}' has invalid dimensions.", board[i][j]);
                             throw new IllegalCarDimensionException();
                         }
                     }
@@ -43,12 +43,12 @@ public class LevelConverter {
         } 
         //If the level has only 1 exit and the dimensions of the car are 2x1 or 1x2 then the level is OK, IOC returns null
         if(numExits!=1){
-        	logger.error("ERROR: There are {} exits. The number of exits must be exactly 1.",numExits);
+        	logger.error("There are {} exits. The number of exits must be exactly 1.",numExits);
             cars= null;
             throw new IllegalExitsNumberException();
         }
         if(cars.get('*').getLength()!=2){
-        	logger.error("ERROR: There red car length is {}. The length of the red car must be exactly 2.",cars.get('*').getLength());
+        	logger.error("There red car length is {}. The length of the red car must be exactly 2.",cars.get('*').getLength());
             cars= null;
             throw new IllegalCarDimensionException();
         }

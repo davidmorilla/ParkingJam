@@ -40,27 +40,27 @@ public class LevelReader {
 								board[i][j] = row.charAt(j);
 							}
 							}else {
-								logger.error("ERROR: The board is missing lines.");
+								logger.error("The board is missing lines.");
 							}
 						}
 					}else {
-						logger.error("ERROR: The board is too small.");
+						logger.error("The board is too small.");
 					}
 				}else {
-					logger.error("ERROR: The dimensions of the board are not in the correct format.");
+					logger.error("The dimensions of the board are not in the correct format.");
 				}
 			}else {
-				logger.error("ERROR: The dimensions of the board are not specified.");
+				logger.error("The dimensions of the board are not specified.");
 			}
 		} else {
-			logger.error("ERROR: The name of the board is not specified.");
+			logger.error("The name of the board is not specified.");
 		}
 
             // Cerrar el archivo
         reader.close();
 
         } catch (Exception e) {
-        	logger.error("ERROR: There was an error while reading the file: {}.", e.getMessage());
+        	logger.error("There was an error while reading the file: {}.", e.getMessage());
             System.err.println("Error al leer el archivo: " + e.getMessage());
         }
         logger.info("Map has been read.");
