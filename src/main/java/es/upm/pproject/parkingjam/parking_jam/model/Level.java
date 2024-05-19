@@ -67,7 +67,7 @@ public class Level {
 
     public OldBoardData undoMovement() throws CannotUndoMovementException {
         if( !history.isEmpty() /*&& !this.isLevelFinished(board)*/){
-
+            
             OldBoardData restoredBoard = history.pop();
             this.board = deepCopy(restoredBoard.getBoard());
             this.cars = deepCopyCars(restoredBoard.getCars());
@@ -143,6 +143,7 @@ public class Level {
                 }
             }
             else{
+                this.history.pop();
                 return null;
             }
         }
@@ -267,7 +268,6 @@ public class Level {
                 }
             }
         }
-        System.out.println(res);
         return res;
     }
 }

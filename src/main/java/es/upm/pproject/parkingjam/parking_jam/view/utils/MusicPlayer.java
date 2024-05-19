@@ -38,6 +38,69 @@ public class MusicPlayer {
         }
     }
 
+    public void playErase() {
+        Clip erase = null;
+        try {
+            URL soundFile = getClass().getClassLoader().getResource("erase.wav");
+            if (soundFile == null) {
+                throw new IllegalArgumentException("Sound file not found: erase.wav" );
+            }
+
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            erase = AudioSystem.getClip();
+            erase.open(audioInputStream);
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+        if (erase != null) {
+            erase.setFramePosition(0);
+            erase.start();
+        }
+    }
+
+    public void playLevelSuccess() {
+        Clip levelSuccess = null;
+        try {
+            URL soundFile = getClass().getClassLoader().getResource("levelSuccess.wav");
+            if (soundFile == null) {
+                throw new IllegalArgumentException("Sound file not found: levelSuccess.wav" );
+            }
+
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            levelSuccess = AudioSystem.getClip();
+            levelSuccess.open(audioInputStream);
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+        if (levelSuccess != null) {
+            levelSuccess.setFramePosition(0);
+            levelSuccess.start();
+        }
+    }
+
+    public void playLevelStart() {
+        Clip restartLevel = null;
+        try {
+            URL soundFile = getClass().getClassLoader().getResource("restartLevel.wav");
+            if (soundFile == null) {
+                throw new IllegalArgumentException("Sound file not found: restartLevel.wav" );
+            }
+
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            restartLevel = AudioSystem.getClip();
+            restartLevel.open(audioInputStream);
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+        if (restartLevel != null) {
+            restartLevel.setFramePosition(0);
+            restartLevel.start();
+        }
+    }
+
     public void stop() {
         if (clip != null && clip.isRunning()) {
             clip.stop();

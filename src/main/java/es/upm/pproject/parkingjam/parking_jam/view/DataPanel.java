@@ -37,7 +37,6 @@ public class DataPanel extends JPanel {
     }
 
     public void updateData(int level, int gamePoints, int levelPoints) {
-        System.out.println("LEVEL: " + level + " GAME SCORE: " + gamePoints + "    LEVEL SCORE: " +levelPoints);
         this.level = level;
         this.totalPoints = gamePoints;
         this.levelPoints = levelPoints;

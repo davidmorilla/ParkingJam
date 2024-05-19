@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPanel;
@@ -22,9 +23,9 @@ public class Grid extends JPanel {
     private char[][] board;
     private boolean levelCompleted;
     private MainFrame mf;
-     
 
-    public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller, MainFrame mf) {
+    public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
+            MainFrame mf) {
         this.rows = dimensions.getLeft();
         this.cols = dimensions.getRight();
         this.board = board;
@@ -32,17 +33,29 @@ public class Grid extends JPanel {
         this.levelCompleted = false;
         this.mf = mf;
         this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
-        this.movableCars = new HashMap<>(); // Inicializar el mapa de MovableCar
+        this.movableCars = new HashMap<>();
 
-        // Crear y añadir el MouseAdapter para cada coche movible
+        // Crear instancias de MovableCar y almacenarlas en el mapa
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
             MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf);
-            movableCars.put(entry.getKey(), movableCar); // Almacenar MovableCar en el mapa
-            MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, movableCar);
-            this.addMouseListener(mouseAdapter);
-            this.addMouseMotionListener(mouseAdapter);
+            movableCars.put(entry.getKey(), movableCar);
         }
+
+        // Añadir un solo MouseAdapter para toda la cuadrícula
+        MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, this);
+        this.addMouseListener(mouseAdapter);
+        this.addMouseMotionListener(mouseAdapter);
+    }
+
+    // Método para obtener el coche en un punto específico
+    public MovableCar getMovableCarAt(Point point) {
+        for (MovableCar car : movableCars.values()) {
+            if (car.contains(point)) {
+                return car;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -63,8 +76,6 @@ public class Grid extends JPanel {
                     g.setColor(Color.WHITE);
                     g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
                 }
-                /* g.setColor(Color.BLACK);
-                g.drawRect(j * squareSize, i * squareSize, squareSize, squareSize); */
             }
         }
 
@@ -72,16 +83,12 @@ public class Grid extends JPanel {
         for (MovableCar movableCar : movableCars.values()) {
             movableCar.draw(g);
         }
-        
-        //dataPanel.addPoint();
 
         if (isLevelCompleted()) {
             g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 30)); // Cambiar la fuente y el tamaño del texto
             g.drawString("LEVEL COMPLETED", (cols * squareSize) / 2 - 100, (rows * squareSize) / 2);
         }
-
-        
 
     }
 
@@ -109,32 +116,29 @@ public class Grid extends JPanel {
 
     public void setCarsMap(Map<Character, Car> cars) {
         // Actualizar las instancias de MovableCar
+        this.movableCars = new HashMap<>();
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, mf);
-            movableCars.put(entry.getKey(), movableCar); // Almacenar MovableCar en el mapa
-            MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, movableCar);
-            this.addMouseListener(mouseAdapter);
-            this.addMouseMotionListener(mouseAdapter);
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf);
+            movableCars.put(entry.getKey(), movableCar);
         }
     }
 
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-        
+
         return controller.moveCar(car, length, way);
     }
 
-    public boolean isLevelCompleted(){
+    public boolean isLevelCompleted() {
         levelCompleted = true;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 char elem = getElemAt(board, j, i);
-                if (elem == '@') 
+                if (elem == '@')
                     levelCompleted = false;
             }
         }
         return this.levelCompleted;
     }
-    
-    
+
 }

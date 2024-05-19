@@ -32,6 +32,12 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setBounds(0, 0, 600, 600);
 
+        // Iniciar la música
+        String musicUrl = "ambience.wav"; // Reemplaza con tu URL de sonido
+        musicPlayer = new MusicPlayer(musicUrl);
+        musicPlayer.play();
+        
+
         try {
             icon = new ImageIcon(new URL("https://store-images.s-microsoft.com/image/apps.32576.13852498558802281.02407fd2-7c4b-4af9-a1f0-3b18d41974a0.70dbf666-990b-481d-b089-01bbce54de27?mode=scale&q=90&h=200&w=200&background=%23FFFFFF"));
         } catch (MalformedURLException e) {
@@ -71,6 +77,8 @@ public class MainFrame extends JFrame {
                     gridPanel.setCars(old.getCars());
                     gridPanel.setBoard(oldBoard);
                     gridPanel.repaint();
+                    musicPlayer.playErase();
+
                 } catch (CannotUndoMovementException e) {
                     e.printStackTrace();
                 }
@@ -87,6 +95,7 @@ public class MainFrame extends JFrame {
                 gridPanel.setBoard(controller.getBoard());
                 gridPanel.repaint();
                 updateDataPanel();
+                musicPlayer.playLevelStart();
             }
         });
 
@@ -108,7 +117,7 @@ public class MainFrame extends JFrame {
                         gridPanel.setCars(controller.getCars());
                         gridPanel.setBoard(controller.getBoard());
                         gridPanel.repaint();
-                        
+                        musicPlayer.playLevelSuccess();
                     }
                 } catch (Exception e){
                     e.printStackTrace();
@@ -118,12 +127,10 @@ public class MainFrame extends JFrame {
 
         add(mainPanel);
 
-        // Iniciar la música
-        String musicUrl = "ambience.wav"; // Reemplaza con tu URL de sonido
-        musicPlayer = new MusicPlayer(musicUrl);
-        musicPlayer.play();
+        
 
         this.setVisible(true);
+        musicPlayer.playLevelStart();
     }
 
     public Grid getGrid() {
