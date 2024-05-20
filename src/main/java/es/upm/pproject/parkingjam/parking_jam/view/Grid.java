@@ -45,11 +45,15 @@ public class Grid extends JPanel {
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
             String[] imagePaths = carImages.get(car.getLength());
-            if (imagePaths != null) {
-                String imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
-                MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
-                movableCars.put(entry.getKey(), movableCar);
+            String imagePath;
+            if(imagePaths == null) { // if is null it means that the length is more than 3
+                imagePath = "longCar";
             }
+            else {
+                imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
+            }
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
+            movableCars.put(entry.getKey(), movableCar);
         }
         System.out.println("fin de imagenes");
         // Añadir un solo MouseAdapter para toda la cuadrícula
@@ -131,7 +135,13 @@ public class Grid extends JPanel {
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
         	Car car = entry.getValue();
         	String[] imagePaths = carImages.get(car.getLength());
-            String imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
+            String imagePath;
+            if(imagePaths == null) { // if is null it means that the length is more than 3
+                imagePath = "longCar";
+            }
+            else {
+                imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
+            }
             MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
             movableCars.put(entry.getKey(), movableCar);
         }
