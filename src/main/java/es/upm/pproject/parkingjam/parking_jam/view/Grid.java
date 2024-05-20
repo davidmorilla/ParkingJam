@@ -4,11 +4,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 import es.upm.pproject.parkingjam.parking_jam.model.Car;
@@ -26,6 +31,7 @@ public class Grid extends JPanel {
     private boolean levelCompleted;
     private MainFrame mf;
     private Map<Integer, String[]> carImages;
+    private Image wallImage;
 
     public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
             MainFrame mf) {
@@ -55,7 +61,10 @@ public class Grid extends JPanel {
             MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
             movableCars.put(entry.getKey(), movableCar);
         }
-        System.out.println("fin de imagenes");
+
+        // Cargar la imagen del muro
+        wallImage = new ImageIcon("path/to/wall/image.png").getImage();
+
         // Añadir un solo MouseAdapter para toda la cuadrícula
         MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, this);
         this.addMouseListener(mouseAdapter);
@@ -80,12 +89,79 @@ public class Grid extends JPanel {
             for (int j = 0; j < cols; j++) {
                 char elem = getElemAt(board, j, i);
                 if (elem == '+') {
-                    g.setColor(Color.BLACK);
-                    g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
+                    try {
+                        String image;
+                        BufferedImage imageToDraw;
+                        String cornerType = getCornerType(j, i);
+                        switch (cornerType) {
+                            case "topLeft":
+                                image = "wall_left_corners.png";
+                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                break;
+                            case "topRight":
+                                image = "wall_right_corners.png";
+                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                break;
+                            case "bottomLeft":
+                                image = "wall_left_corners.png";
+                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                break;
+                            case "bottomRight":
+                                image = "wall_right_corners.png";
+                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                break;
+                            default:
+                                if (isVerticalWall(j, i)) {
+                                    image = "wall_vertical.png";
+                                    imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                    g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, this);
+                                } else {
+                                    image = "wall_horizontal.png";
+                                    imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                    g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, this);
+                                }
+                        }
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 } else if (elem == '@') {
                     levelCompleted = false;
-                    g.setColor(Color.WHITE);
-                    g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
+                    String image;
+                    BufferedImage imageToDraw;
+                    String side = getExitSide(j,i);
+                    try {
+                        switch (side) {
+                            case "top":
+                                image = "exits/exitTop.png";
+                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);  
+                                break;
+                            case "bottom":
+                                image = "exits/exitBottom.png";
+                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                break;
+                            case "left":
+                                image = "exits/exitLeft.png";
+                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                break;
+                            case "right":
+                                image = "exits/exitRight.png";
+                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                break;
+                            default:
+                                break;
+                        }
+                    } catch (IOException e) {
+                        // TODO: handle exception
+                    }
                 } else {
                     g.setColor(Color.GRAY);
                     g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
@@ -104,6 +180,38 @@ public class Grid extends JPanel {
             g.drawString("LEVEL COMPLETED", (cols * squareSize) / 2 - 100, (rows * squareSize) / 2);
         }
 
+    }
+
+    private String getCornerType(int x, int y) {
+        if (x == 0 && y == 0) {
+            return "topLeft";
+        } else if (x == cols - 1 && y == 0) {
+            return "topRight";
+        } else if (x == 0 && y == rows - 1) {
+            return "bottomLeft";
+        } else if (x == cols - 1 && y == rows - 1) {
+            return "bottomRight";
+        } else {
+            return "";
+        }
+    }
+
+    private boolean isVerticalWall(int x, int y) {
+        return x == 0 || x == cols - 1;
+    }
+
+    private String getExitSide(int x, int y) {
+        if (y == 0) {
+            return "top";
+        } else if (y == rows - 1) {
+            return "bottom";
+        } else if (x == 0) {
+            return "left";
+        } else if (x == cols - 1) {
+            return "right";
+        } else {
+            return "";
+        }
     }
 
     private char getElemAt(char[][] board, int row, int col) {
