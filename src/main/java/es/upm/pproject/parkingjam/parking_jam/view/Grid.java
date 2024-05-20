@@ -7,14 +7,11 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
 import javax.swing.JPanel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 import es.upm.pproject.parkingjam.parking_jam.model.Car;
-import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;
@@ -28,9 +25,9 @@ public class Grid extends JPanel {
     private char[][] board;
     private boolean levelCompleted;
     private MainFrame mf;
+    private Map<Integer, String[]> carImages;
+    private Map<Character, String> PathPerCar;
 
-    private static final Logger logger = LoggerFactory.getLogger(Grid.class);
-    
     public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
             MainFrame mf) {
         this.rows = dimensions.getLeft();
@@ -41,13 +38,21 @@ public class Grid extends JPanel {
         this.mf = mf;
         this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
         this.movableCars = new HashMap<>();
+        this.carImages = new HashMap<>();
+        this.PathPerCar = new HashMap<>();
+        carImages.put(2, new String[]{"car2","car4","car7","car9","car10","car11","car12"});
+        carImages.put(3, new String[]{"car3","car5","car6","car8"});
 
         // Crear instancias de MovableCar y almacenarlas en el mapa
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf);
-            movableCars.put(entry.getKey(), movableCar);
-            logger.info("Created the car {}",car.getSymbol());
+            String[] imagePaths = carImages.get(car.getLength());
+            if (imagePaths != null) {
+                String imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
+                PathPerCar.put(car.getSymbol(), imagePath);
+                MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
+                movableCars.put(entry.getKey(), movableCar);
+            }
         }
 
         // Añadir un solo MouseAdapter para toda la cuadrícula
@@ -81,17 +86,15 @@ public class Grid extends JPanel {
                     g.setColor(Color.WHITE);
                     g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
                 } else {
-                    g.setColor(Color.WHITE);
+                    g.setColor(Color.GRAY);
                     g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
                 }
             }
-            logger.info("Board drawn.");
         }
 
         // Dibujar todos los coches movibles
         for (MovableCar movableCar : movableCars.values()) {
             movableCar.draw(g);
-            logger.info("Car {} drawn.", movableCar.getSymbol());
         }
 
         if (isLevelCompleted()) {
@@ -129,12 +132,14 @@ public class Grid extends JPanel {
         this.movableCars = new HashMap<>();
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf);
+            String carImage = PathPerCar.get(car.getSymbol());
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, carImage);
             movableCars.put(entry.getKey(), movableCar);
         }
     }
 
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+
         return controller.moveCar(car, length, way);
     }
 
