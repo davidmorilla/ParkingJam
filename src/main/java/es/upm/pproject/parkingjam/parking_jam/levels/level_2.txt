@@ -1,4 +1,4 @@
-Initial level
+Level 2
 8 8
 ++++++++
 +a  bbb+
