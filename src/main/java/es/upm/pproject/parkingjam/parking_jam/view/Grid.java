@@ -8,8 +8,13 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPanel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 import es.upm.pproject.parkingjam.parking_jam.model.Car;
+import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;
@@ -24,6 +29,8 @@ public class Grid extends JPanel {
     private boolean levelCompleted;
     private MainFrame mf;
 
+    private static final Logger logger = LoggerFactory.getLogger(Grid.class);
+    
     public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
             MainFrame mf) {
         this.rows = dimensions.getLeft();
@@ -40,6 +47,7 @@ public class Grid extends JPanel {
             Car car = entry.getValue();
             MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf);
             movableCars.put(entry.getKey(), movableCar);
+            logger.info("Created the car {}",car.getSymbol());
         }
 
         // Añadir un solo MouseAdapter para toda la cuadrícula
@@ -77,11 +85,13 @@ public class Grid extends JPanel {
                     g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
                 }
             }
+            logger.info("Board drawn.");
         }
 
         // Dibujar todos los coches movibles
         for (MovableCar movableCar : movableCars.values()) {
             movableCar.draw(g);
+            logger.info("Car {} drawn.", movableCar.getSymbol());
         }
 
         if (isLevelCompleted()) {
@@ -125,7 +135,6 @@ public class Grid extends JPanel {
     }
 
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-
         return controller.moveCar(car, length, way);
     }
 

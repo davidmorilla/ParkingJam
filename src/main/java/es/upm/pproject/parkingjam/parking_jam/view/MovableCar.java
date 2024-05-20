@@ -3,6 +3,10 @@ package es.upm.pproject.parkingjam.parking_jam.view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 import es.upm.pproject.parkingjam.parking_jam.model.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
@@ -22,6 +26,8 @@ public class MovableCar {
 	private Controller controller;
 	private MainFrame mf;
 	private boolean dragging;
+	
+	private static final Logger logger = LoggerFactory.getLogger(Grid.class);
 
 	public MovableCar(Car car, int rows, int cols, int squareSize, Grid grid, Controller controller, MainFrame mf) {
 		this.parent = grid;
@@ -119,6 +125,7 @@ public class MovableCar {
 			}
 
 			if (newBoard != null) {
+				logger.info("Car {} moved.", carSymbol);
 				mf.increaseScore();
 				parent.setCars(controller.getCars());
 				parent.setBoard(newBoard);
@@ -173,5 +180,9 @@ public class MovableCar {
 
 	public int getCol() {
 		return col;
+	}
+	
+	public int getSymbol() {
+		return carSymbol;
 	}
 }

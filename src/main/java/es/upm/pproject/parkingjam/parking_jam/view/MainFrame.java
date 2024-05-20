@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
     private JButton nextButton;
     private MusicPlayer musicPlayer;
 
-    private static final Logger logger = LoggerFactory.getLogger(Game.class);
+    private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
     public MainFrame(Controller controller) {
         super("Parking Jam - Programming Project");
@@ -85,11 +85,11 @@ public class MainFrame extends JFrame {
                     gridPanel.setBoard(oldBoard);
                     gridPanel.repaint();
                     musicPlayer.playErase();
-                    logger.info("Movement undone");
+                    logger.info("Movement undone.");
 
                 } catch (CannotUndoMovementException e) {
                     e.printStackTrace();
-                    logger.error("Cannot undo movement, there is none done previously");
+                    logger.error("Cannot undo movement, there is none done previously.");
                 }
                 updateDataPanel();
             }
@@ -104,7 +104,7 @@ public class MainFrame extends JFrame {
                 gridPanel.setBoard(controller.getBoard());
                 gridPanel.repaint();
                 updateDataPanel();
-                logger.info("Level reset");
+                logger.info("Level reset.");
                 musicPlayer.playLevelStart();
             }
         });
@@ -127,11 +127,11 @@ public class MainFrame extends JFrame {
                         gridPanel.setCars(controller.getCars());
                         gridPanel.setBoard(controller.getBoard());
                         gridPanel.repaint();
-                        logger.info("Game advanced to next level");
+                        logger.info("Game advanced to next level.");
                         musicPlayer.playLevelSuccess();
                     }
                 } catch (Exception e){
-                    logger.error("Could not load next level");
+                    logger.error("Could not load next level.");
                     e.printStackTrace();
                 }
             }
@@ -155,9 +155,11 @@ public class MainFrame extends JFrame {
 
     public void updateDataPanel() {
         dataPanel.updateData(controller.getLevelNumber(), controller.getGameScore(), controller.getLevelScore());
+        logger.info("Panel data updated.");
     }
 
     public void increaseScore(){
         dataPanel.addPoint();
+        logger.info("Score increased.");
     }
 }
