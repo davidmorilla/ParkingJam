@@ -26,7 +26,6 @@ public class Grid extends JPanel {
     private boolean levelCompleted;
     private MainFrame mf;
     private Map<Integer, String[]> carImages;
-    private Map<Character, String> PathPerCar;
 
     public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
             MainFrame mf) {
@@ -39,7 +38,6 @@ public class Grid extends JPanel {
         this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
         this.movableCars = new HashMap<>();
         this.carImages = new HashMap<>();
-        this.PathPerCar = new HashMap<>();
         carImages.put(2, new String[]{"car2","car4","car7","car9","car10","car11","car12"});
         carImages.put(3, new String[]{"car3","car5","car6","car8"});
 
@@ -49,12 +47,11 @@ public class Grid extends JPanel {
             String[] imagePaths = carImages.get(car.getLength());
             if (imagePaths != null) {
                 String imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
-                PathPerCar.put(car.getSymbol(), imagePath);
                 MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
                 movableCars.put(entry.getKey(), movableCar);
             }
         }
-
+        System.out.println("fin de imagenes");
         // Añadir un solo MouseAdapter para toda la cuadrícula
         MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, this);
         this.addMouseListener(mouseAdapter);
@@ -130,10 +127,12 @@ public class Grid extends JPanel {
     public void setCarsMap(Map<Character, Car> cars) {
         // Actualizar las instancias de MovableCar
         this.movableCars = new HashMap<>();
+        
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
-            Car car = entry.getValue();
-            String carImage = PathPerCar.get(car.getSymbol());
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, carImage);
+        	Car car = entry.getValue();
+        	String[] imagePaths = carImages.get(car.getLength());
+            String imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
+            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
             movableCars.put(entry.getKey(), movableCar);
         }
     }

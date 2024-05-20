@@ -57,7 +57,6 @@ public class MovableCar {
         try {
             String horizontal_path = "cars/" + image + "_horizontal.png";
             String vertical_path = "cars/" + image + "_vertical.png";
-            System.out.println(vertical_path);
             horizontalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(horizontal_path));
             verticalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(vertical_path));
         } catch (IOException e) {
