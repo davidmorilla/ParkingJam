@@ -8,6 +8,7 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovemen
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
@@ -63,13 +64,9 @@ public class Controller {
 	public void resetLevel(){
 		game.resetLevel();
 	}
-
-	public void increaseScore(){
-		game.increaseScore();
-	}
-
-	public void addToHistory(){
-		game.getLevel().addToHistory();
+	
+	public boolean isMoveValid(char car, Coordinates newCoord, char way) throws SameMovementException {
+		return game.getLevel().checkMovementValidity(car, newCoord, way);
 	}
 	
 }

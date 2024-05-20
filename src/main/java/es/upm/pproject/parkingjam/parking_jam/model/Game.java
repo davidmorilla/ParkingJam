@@ -17,7 +17,6 @@ public class Game {
 	private int acumulatedScore;		// Puntuación conjunta de anteriores niveles del juego
 	private int levelNumber;			// Número del nivel actual del juego
 	private Level level;				// Nivel actual del juego
-
 	private static final Logger logger = LoggerFactory.getLogger(Game.class);
 	
 	public Game() throws IllegalExitsNumberException, IllegalCarDimensionException {
@@ -81,10 +80,6 @@ public class Game {
 
 	public void resetLevel(){
 		level.resetLevel();
-	}
-
-	public void increaseScore(){
-		level.increaseScore();
 	}
 	
 }

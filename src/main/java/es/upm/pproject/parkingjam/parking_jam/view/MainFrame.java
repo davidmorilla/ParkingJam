@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
     private JPanel mainPanel;
     private DataPanel dataPanel;
     private Grid gridPanel;
-    private JButton undoButton;
+    private JButton actionButton;
     private JButton resetButton;
     private JButton nextButton;
     private MusicPlayer musicPlayer;
@@ -62,8 +62,8 @@ public class MainFrame extends JFrame {
 
         // Crear un JPanel para el botón
         JPanel buttonPanel = new JPanel();
-        undoButton = new JButton("UNDO");
-        buttonPanel.add(undoButton);
+        actionButton = new JButton("UNDO");
+        buttonPanel.add(actionButton);
 
         resetButton = new JButton("RESET LEVEL");
         buttonPanel.add(resetButton);
@@ -75,7 +75,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         // Añadir ActionListener al botón UNDO
-        undoButton.addActionListener(new ActionListener() {
+        actionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 try {
@@ -159,9 +159,5 @@ public class MainFrame extends JFrame {
 
     public void increaseScore(){
         dataPanel.addPoint();
-    }
-
-    public Controller getController(){
-        return this.controller;
     }
 }

@@ -240,7 +240,7 @@ public class LevelTest {
 
 		@Test
 		void testUndoMovement() throws SameMovementException, CannotUndoMovementException {
-			level.addToHistory();
+			
 			level.moveCar('c', 2, 'D');
 			level.undoMovement();
 
@@ -249,7 +249,7 @@ public class LevelTest {
 
 		@Test
 		void testUndoMovement2() throws SameMovementException, CannotUndoMovementException {
-			level.addToHistory();
+			
 			level.moveCar('g', 1, 'L');
 			level.undoMovement();
 
@@ -258,11 +258,8 @@ public class LevelTest {
 
 		@Test
 		void testUndoMovement3() throws SameMovementException, CannotUndoMovementException {
-			level.addToHistory();
 			level.moveCar('e', 1, 'U');
-			level.addToHistory();
 			level.moveCar('g', 3, 'L');
-			level.addToHistory();
 			level.moveCar('c', 1, 'D');
 			level.undoMovement();
 
@@ -280,11 +277,8 @@ public class LevelTest {
 
 		@Test
 		void testUndoMovement4() throws SameMovementException, CannotUndoMovementException {
-			level.addToHistory();
 			level.moveCar('e', 1, 'U');
-			level.addToHistory();
 			level.moveCar('g', 3, 'L');
-			level.addToHistory();
 			level.moveCar('c', 1, 'D');
 			level.undoMovement();
 			level.undoMovement();
@@ -301,7 +295,6 @@ public class LevelTest {
 
 		@Test
 		void testUndoMovementInvalid2() throws SameMovementException, CannotUndoMovementException {
-			level.addToHistory();
 			level.moveCar('e', 1, 'U');
 			assertDoesNotThrow(() -> level.undoMovement());
 			assertThrows(CannotUndoMovementException.class, () -> level.undoMovement());
@@ -318,67 +311,53 @@ public class LevelTest {
 
 		@Test
 		void testScoreAfter1Move() throws SameMovementException {
-			if(level.moveCar('e', 1, 'U')!=null)
-				level.increaseScore();
+			level.moveCar('e', 1, 'U');
 
 			assertEquals(1, level.getScore());
 		}
 
 		@Test
 		void testScoreAfterSomeMoves() throws SameMovementException {
-			if(level.moveCar('e', 1, 'U')!=null)
-				level.increaseScore();
-			if(level.moveCar('f', 1, 'R')!=null)
-				level.increaseScore();
-			if(level.moveCar('c', 1, 'D')!=null)
-				level.increaseScore();
+			level.moveCar('e', 1, 'U');
+			level.moveCar('f', 1, 'R');
+			level.moveCar('c', 1, 'D');
 
 			assertEquals(3, level.getScore());
 		}
 
 		@Test
 		void testScoreAfterMoveMoreThanOneTile() throws SameMovementException {
-			if(level.moveCar('c', 3, 'D')!=null)
-				level.increaseScore();
+			level.moveCar('c', 3, 'D');
 
 			assertEquals(1, level.getScore());
 		}
 
 		@Test
 		void testScoreAfterInvalidMove() throws SameMovementException {
-			if(level.moveCar('c', 1, 'U')!=null)
-				level.increaseScore();
+			level.moveCar('c', 1, 'U');
 
 			assertEquals(0, level.getScore());
 		}
 
 		@Test
 		void testScoreAfterSomeInvalidMoves() throws SameMovementException {
-			if(level.moveCar('c', 1, 'U')!=null)
-				level.increaseScore();
-			if(level.moveCar('a', 1, 'R')!=null)
-				level.increaseScore();
+			level.moveCar('c', 1, 'U');
+			level.moveCar('a', 1, 'R');
 			assertEquals(0, level.getScore());
 		}
 
 		@Test
 		void testScoreAfterSomeValidAndInvalidMoves() throws SameMovementException {
-			if(level.moveCar('c', 1, 'U')!=null)
-				level.increaseScore();
-			if(level.moveCar('e', 1, 'U')!=null)
-				level.increaseScore();
-			if(level.moveCar('f', 1, 'R')!=null)
-				level.increaseScore();
-			if(level.moveCar('a', 1, 'L')!=null)
-				level.increaseScore();
+			level.moveCar('c', 1, 'U');
+			level.moveCar('e', 1, 'U');
+			level.moveCar('f', 1, 'R');
+			level.moveCar('a', 1, 'L');
 			assertEquals(2, level.getScore());
 		}
 
 		@Test
 		void testScoreAfterUndo() throws SameMovementException, CannotUndoMovementException {
-			level.addToHistory();
-			if(level.moveCar('e', 1, 'U')!=null)
-				level.increaseScore();
+			level.moveCar('e', 1, 'U');
 			level.undoMovement();
 
 			assertEquals(0, level.getScore());
@@ -386,21 +365,9 @@ public class LevelTest {
 
 		@Test
 		void testScoreAfterUndo2() throws SameMovementException, CannotUndoMovementException {
-			level.addToHistory();
-			if(level.moveCar('e', 1, 'U')!=null)
-				level.increaseScore();
-			else
-				level.undoMovement(); 
-			level.addToHistory();
-			if(level.moveCar('f', 1, 'R')!=null)
-				level.increaseScore();
-			else
-				level.undoMovement();
-			level.addToHistory();
-			if(level.moveCar('c', 1, 'D')!=null)
-				level.increaseScore();
-			else
-				level.undoMovement();
+			level.moveCar('e', 1, 'U');
+			level.moveCar('f', 1, 'R');
+			level.moveCar('c', 1, 'D');
 
 			level.undoMovement();
 
