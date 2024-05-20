@@ -68,5 +68,9 @@ public class Controller {
 	public boolean isMoveValid(char car, Coordinates newCoord, char way) throws SameMovementException {
 		return game.getLevel().checkMovementValidity(car, newCoord, way);
 	}
+
+	public boolean isLevelFinished(){
+		return game.getLevel().isLevelFinished(this.getBoard()); 
+	}
 	
 }

@@ -96,15 +96,12 @@ public class MovableCar {
 				newCol = Math.max(0, Math.min(cols - length, initialCol + dx));
 			}
 			
-			System.out.println("X: " + newCol + "	Y: " + newRow );
-			if (controller.isMoveValid(carSymbol, new Coordinates(newCol, newRow), orientation == 'V' ? (dy > 0 ? 'D' : 'U') : (dx > 0 ? 'R' : 'L'))) {
+			if (!controller.isLevelFinished() && controller.isMoveValid(carSymbol, new Coordinates(newCol, newRow), orientation == 'V' ? (dy > 0 ? 'D' : 'U') : (dx > 0 ? 'R' : 'L'))) {
 				row = newRow;
 				col = newCol;
-				System.out.println("VALIDO");
 				parent.repaint(); // Repintar solo si el movimiento es válido
 			}
 			else{
-				System.out.println("NO VALIDO");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,14 +123,15 @@ public class MovableCar {
 				parent.setCars(controller.getCars());
 				parent.setBoard(newBoard);
 				parent.repaint(); // Repintar el panel después de mover el coche en el modelo
+				for(int i = 0; i<newBoard.length; i++){
+					for(int j = 0; j<newBoard[i].length; j++){
+						System.out.print(newBoard[i][j]);
+					}
+					System.out.println();
+				}
 			}
 
-			for(int i = 0; i<newBoard.length; i++){
-				for(int j = 0; j<newBoard[i].length; j++){
-					System.out.print(newBoard[i][j]);
-				}
-				System.out.println();
-			}
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -96,7 +96,7 @@ public class Level {
 
 	public OldBoardData undoMovement() throws CannotUndoMovementException {
 		logger.info("Undoing movement...");
-		if (!history.isEmpty() /* && !this.isLevelFinished(board) */) {
+		if (!history.isEmpty() && !this.isLevelFinished(board)) {
 
 			OldBoardData restoredBoard = history.pop();
 			this.board = deepCopy(restoredBoard.getBoard());
@@ -119,11 +119,16 @@ public class Level {
 	// to move the car to the specified possition.
 	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
 		logger.info("Moving car '{}'...", car);
+		if (isLevelFinished(board)) {
+			logger.warn("Cannot move car '{}', level is finished", car);
+			return null;
+		}
 		addToHistory();
 		char[][] newBoard = deepCopy(board); // Hacer una copia profunda de la matriz original
 		Coordinates coord = null;
 		int xCar = 0;
 		int yCar = 0;
+		
 		if (cars.get(car) == null) {
 			logger.error("Car '{}' does not exist.", car);
 			return null;
@@ -157,7 +162,7 @@ public class Level {
 			// Verificar si las nuevas coordenadas están dentro de los límites del tablero
 			if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1
 					&& coord.getY() < board.length - 1) {
-				if (checkMovementValidity(car, coord, way) && !this.isLevelFinished(newBoard)) {
+				if (checkMovementValidity(car, coord, way)) {
 					try {
 						deleteCar(car, newBoard, cars);
 						addCar(car, newBoard, cars, coord);
@@ -323,7 +328,7 @@ public class Level {
         return this.cars;
 	}
 
-	private boolean isLevelFinished(char[][] board) {
+	public boolean isLevelFinished(char[][] board) {
 		boolean res = true;
 		for (int i = 0; i < board.length && res; i++) {
 			for (int j = 0; j < board[i].length && res; j++) {
