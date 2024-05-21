@@ -44,18 +44,17 @@ public class Grid extends JPanel {
         this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
         this.movableCars = new HashMap<>();
         this.carImages = new HashMap<>();
-        carImages.put(2, new String[]{"car2","car4","car7","car9","car10","car11","car12"});
-        carImages.put(3, new String[]{"car3","car5","car6","car8"});
+        carImages.put(2, new String[] { "car2", "car4", "car7", "car9", "car10", "car11", "car12" });
+        carImages.put(3, new String[] { "car3", "car5", "car6", "car8" });
 
         // Crear instancias de MovableCar y almacenarlas en el mapa
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
             Car car = entry.getValue();
             String[] imagePaths = carImages.get(car.getLength());
             String imagePath;
-            if(imagePaths == null) { // if is null it means that the length is more than 3
+            if (imagePaths == null) { // if is null it means that the length is more than 3
                 imagePath = "longCar";
-            }
-            else {
+            } else {
                 imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
             }
             MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
@@ -97,32 +96,34 @@ public class Grid extends JPanel {
                             case "topLeft":
                                 image = "wall_left_corners.png";
                                 imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
                                 break;
                             case "topRight":
                                 image = "wall_right_corners.png";
                                 imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
                                 break;
                             case "bottomLeft":
                                 image = "wall_left_corners.png";
                                 imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
                                 break;
                             case "bottomRight":
                                 image = "wall_right_corners.png";
                                 imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
                                 break;
                             default:
                                 if (isVerticalWall(j, i)) {
                                     image = "wall_vertical.png";
                                     imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                    g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, this);
+                                    g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,
+                                            this);
                                 } else {
                                     image = "wall_horizontal.png";
                                     imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                    g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, this);
+                                    g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,
+                                            this);
                                 }
                         }
                     } catch (IOException e) {
@@ -133,28 +134,28 @@ public class Grid extends JPanel {
                     levelCompleted = false;
                     String image;
                     BufferedImage imageToDraw;
-                    String side = getExitSide(j,i);
+                    String side = getExitSide(j, i);
                     try {
                         switch (side) {
                             case "top":
                                 image = "exits/exitTop.png";
                                 imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);  
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
                                 break;
                             case "bottom":
                                 image = "exits/exitBottom.png";
                                 imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
                                 break;
                             case "left":
                                 image = "exits/exitLeft.png";
                                 imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
                                 break;
                             case "right":
                                 image = "exits/exitRight.png";
                                 imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,null);
+                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
                                 break;
                             default:
                                 break;
@@ -175,11 +176,16 @@ public class Grid extends JPanel {
         }
 
         if (isLevelCompleted()) {
-            g.setColor(Color.RED);
+            g.setColor(Color.BLACK); // Cambiar el color del texto a negro
             g.setFont(new Font("Arial", Font.BOLD, 30)); // Cambiar la fuente y el tamaño del texto
-            g.drawString("LEVEL COMPLETED", (cols * squareSize) / 2 - 100, (rows * squareSize) / 2);
+            // Calcular las coordenadas para centrar el texto
+            String message = "LEVEL COMPLETED";
+            int textWidth = g.getFontMetrics().stringWidth(message);
+            int textHeight = g.getFontMetrics().getHeight();
+            int x = (cols * squareSize - textWidth) / 2;
+            int y = (rows * squareSize + textHeight) / 2;
+            g.drawString(message, x, y);
         }
-
     }
 
     private String getCornerType(int x, int y) {
@@ -239,15 +245,14 @@ public class Grid extends JPanel {
     public void setCarsMap(Map<Character, Car> cars) {
         // Actualizar las instancias de MovableCar
         this.movableCars = new HashMap<>();
-        
+
         for (Map.Entry<Character, Car> entry : cars.entrySet()) {
-        	Car car = entry.getValue();
-        	String[] imagePaths = carImages.get(car.getLength());
+            Car car = entry.getValue();
+            String[] imagePaths = carImages.get(car.getLength());
             String imagePath;
-            if(imagePaths == null) { // if is null it means that the length is more than 3
+            if (imagePaths == null) { // if is null it means that the length is more than 3
                 imagePath = "longCar";
-            }
-            else {
+            } else {
                 imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
             }
             MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
