@@ -184,6 +184,11 @@ public class Grid extends JPanel {
             int textHeight = g.getFontMetrics().getHeight();
             int x = (cols * squareSize - textWidth) / 2;
             int y = (rows * squareSize + textHeight) / 2;
+            g.setColor(Color.BLUE);
+            g.fillRect(x-15,y-40, 325, 55);
+            g.setColor(Color.cyan);
+            g.fillRect(x-10,y-35, 315, 45);
+            g.setColor(Color.BLACK);
             g.drawString(message, x, y);
         }
     }
