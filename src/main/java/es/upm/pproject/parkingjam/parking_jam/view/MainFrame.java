@@ -1,7 +1,6 @@
 package es.upm.pproject.parkingjam.parking_jam.view;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
-import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
@@ -43,7 +42,6 @@ public class MainFrame extends JFrame {
         musicPlayer = new MusicPlayer(musicUrl);
         musicPlayer.play();
         
-
         try {
             icon = new ImageIcon(new URL("https://store-images.s-microsoft.com/image/apps.32576.13852498558802281.02407fd2-7c4b-4af9-a1f0-3b18d41974a0.70dbf666-990b-481d-b089-01bbce54de27?mode=scale&q=90&h=200&w=200&background=%23FFFFFF"));
         } catch (MalformedURLException e) {
@@ -51,14 +49,21 @@ public class MainFrame extends JFrame {
             e.printStackTrace();
         }
         this.setIconImage(icon.getImage());
-        mainPanel = new JPanel(new BorderLayout());
+        mainPanel = new JPanel(new GridBagLayout()); // Usar GridBagLayout para centrar el tablero
+        GridBagConstraints gbc = new GridBagConstraints();
 
         Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
         dataPanel = new DataPanel(controller);
-        mainPanel.add(dataPanel, BorderLayout.LINE_END);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTH;
+        mainPanel.add(dataPanel, gbc);
 
         gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, this);
-        mainPanel.add(gridPanel, BorderLayout.CENTER);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        mainPanel.add(gridPanel, gbc);
 
         // Crear un JPanel para el botón
         JPanel buttonPanel = new JPanel();
@@ -72,7 +77,10 @@ public class MainFrame extends JFrame {
         buttonPanel.add(nextButton);
 
         // Añadir el JPanel del botón al mainPanel en la parte inferior
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.SOUTH;
+        mainPanel.add(buttonPanel, gbc);
 
         // Añadir ActionListener al botón UNDO
         actionButton.addActionListener(new ActionListener() {
@@ -139,8 +147,6 @@ public class MainFrame extends JFrame {
 
         add(mainPanel);
 
-        
-
         this.setVisible(true);
         musicPlayer.playLevelStart();
     }
@@ -163,3 +169,4 @@ public class MainFrame extends JFrame {
         logger.info("Score increased.");
     }
 }
+ 
