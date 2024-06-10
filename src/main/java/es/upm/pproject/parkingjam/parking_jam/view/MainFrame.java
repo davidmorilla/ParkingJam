@@ -431,6 +431,7 @@ public class MainFrame extends JFrame {
                 mainPanel.repaint();
                 controller.loadLevel(1);
                 startOnlyOneLevelGame();
+                musicPlayer.playLevelStart();
             }
         });
 
@@ -442,6 +443,7 @@ public class MainFrame extends JFrame {
                 mainPanel.repaint();
                 controller.loadLevel(2);
                 startOnlyOneLevelGame();
+                musicPlayer.playLevelStart();
             }
         });
 
@@ -454,6 +456,7 @@ public class MainFrame extends JFrame {
                 controller.loadLevel(3);
 
                 startOnlyOneLevelGame();
+                musicPlayer.playLevelStart();
             }
         });
 
