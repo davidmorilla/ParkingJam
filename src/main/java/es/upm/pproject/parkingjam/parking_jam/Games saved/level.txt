@@ -1,10 +1,10 @@
-Level 2
+Initial level
 8 8
 ++++++++
-+a  bbb+
-+a  d c+
-+ **dec@
-+ jjjec+
-+  h ff+
-+iihgg +
-++++++++
++daabbb+
++d  *  +
++d  *  +
++  fffc+
++ e   c+
++ e ggg+
+++++@+++

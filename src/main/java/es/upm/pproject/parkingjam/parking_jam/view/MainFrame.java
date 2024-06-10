@@ -53,18 +53,12 @@ public class MainFrame extends JFrame {
         musicPlayer = new MusicPlayer(musicUrl);
         musicPlayer.play();
 
-        try {
-            icon = new ImageIcon(new URL(
-                    "https://store-images.s-microsoft.com/image/apps.32576.13852498558802281.02407fd2-7c4b-4af9-a1f0-3b18d41974a0.70dbf666-990b-481d-b089-01bbce54de27?mode=scale&q=90&h=200&w=200&background=%23FFFFFF"));
-        } catch (MalformedURLException e) {
-            logger.error("Could not load game icon");
-            e.printStackTrace();
-        }
+        icon = new ImageIcon(getClass().getClassLoader().getResource("logo.png"));
+        
         this.setIconImage(icon.getImage());
 
         try {
-            URL imageUrl = new URL(
-                    "https://img.freepik.com/premium-vector/top-view-city-from-streets-roads-houses-cars_70347-4869.jpg");
+            URL imageUrl = getClass().getClassLoader().getResource("background.jpg");
             backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             logger.error("Could not load background image");
