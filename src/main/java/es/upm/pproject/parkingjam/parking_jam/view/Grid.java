@@ -83,6 +83,7 @@ public class Grid extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
         // Dibujar el tablero
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {

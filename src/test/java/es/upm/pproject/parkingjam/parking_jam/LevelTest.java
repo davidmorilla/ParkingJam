@@ -45,7 +45,7 @@ public class LevelTest {
 		cars.put('g', new Car('g',4,6,3,'H'));
 		cars.put('*', new Car('*',4,2,2,'V'));
 
-		level = new Level(level1Board, cars);
+		level = new Level(level1Board, cars, null);
 	}
 
 

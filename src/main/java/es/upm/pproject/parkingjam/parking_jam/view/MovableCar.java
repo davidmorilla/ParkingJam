@@ -29,7 +29,6 @@ public class MovableCar {
     private BufferedImage verticalCarImage;
 
     public MovableCar(Car car, int rows, int cols, int squareSize, Grid grid, Controller controller, MainFrame mf, String image) {
-        System.out.println("coche " + car.getSymbol() + " image " + image);
         this.parent = grid;
         this.carSymbol = car.getSymbol();
         this.row = car.getCoordinates().getY();
@@ -43,14 +42,12 @@ public class MovableCar {
         this.controller = controller;
         this.mf = mf;
         if(car.getSymbol() == '*') {
-            System.out.println("coche rojoooo");
             loadImage("car1");
         }
         else {
             loadImage(image); // Cargar la imagen del coche
 
         }
-        System.out.println("imagen cargada");
     }
 
     private void loadImage(String image) {
@@ -157,12 +154,12 @@ public class MovableCar {
                 parent.setCars(controller.getCars());
                 parent.setBoard(newBoard);
                 parent.repaint(); // Repintar el panel después de mover el coche en el modelo
-                for (int i = 0; i < newBoard.length; i++) {
+                /* for (int i = 0; i < newBoard.length; i++) {
                     for (int j = 0; j < newBoard[i].length; j++) {
                         System.out.print(newBoard[i][j]);
                     }
                     System.out.println();
-                }
+                } */
             }
         } catch (Exception e) {
             e.printStackTrace();

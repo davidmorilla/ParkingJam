@@ -19,7 +19,7 @@ class LevelReaderTest {
 	@Test
 	public void readOKLevelTest() {
 		lr = new LevelReader();
-		char[][] board = lr.readMap(-1);
+		char[][] board = lr.readMap(-1,false);
 		char[][] expectedBoard={{'+','+','+','+','+','+','+','+'},
 				{'+','a','a','b','b','b','c','+'},
 				{'+',' ',' ',' ','*',' ','c','+'},
@@ -33,27 +33,27 @@ class LevelReaderTest {
 	@Test
 	public void readLevelWithNoNameTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-8));
+		Assertions.assertNull(lr.readMap(-8,false));
 	}
 	@Test
 	public void readLevelWithNoDimensionsTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-9));
+		Assertions.assertNull(lr.readMap(-9,false));
 	}
 	@Test
 	public void readLevelWithWrongDimensionsFormatTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-10));
+		Assertions.assertNull(lr.readMap(-10,false));
 	}
 	@Test
 	public void readLevelWithMissingLinesTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-11));
+		Assertions.assertNull(lr.readMap(-11,false));
 	}
 	@Test
 	public void readTooSmallLevelTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-12));
+		Assertions.assertNull(lr.readMap(-12,false));
 	}
 
 }

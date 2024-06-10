@@ -14,72 +14,112 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
 // Game es la clase central del model, gestionando los niveles y la puntuacion
 public class Game {
-	private int acumulatedScore;		// Puntuación conjunta de anteriores niveles del juego
-	private int levelNumber;			// Número del nivel actual del juego
-	private Level level;				// Nivel actual del juego
-	private static final Logger logger = LoggerFactory.getLogger(Game.class);
-	
-	public Game() throws IllegalExitsNumberException, IllegalCarDimensionException {
-		logger.info("Creating new game...");
-		acumulatedScore = 0;
-		levelNumber = 0;
-		loadNewLevel();	
-		logger.info("New game has been created.");
-	}
+    private int acumulatedScore;        // Puntuación conjunta de anteriores niveles del juego
+    private int levelNumber;            // Número del nivel actual del juego
+    private Level level;                // Nivel actual del juego
+    private static final Logger logger = LoggerFactory.getLogger(Game.class);
 
-	public Pair<Integer, Integer> getDimensions() {
-        // We need to return the dimensions of the current level
-		return level.getDimensions();
+    public Game() throws IllegalExitsNumberException, IllegalCarDimensionException {
+        logger.info("Creating new game...");
+        acumulatedScore = 0;
+        levelNumber = 0;
+        loadNewLevel();    
+        logger.info("New game has been created.");
     }
 
-	public char[][] getBoard() {
-		return level.getBoard();
-	}
+    public Pair<Integer, Integer> getDimensions() {
+        // We need to return the dimensions of the current level
+        return level.getDimensions();
+    }
+
+    public char[][] getBoard() {
+        return level.getBoard();
+    }
+
+    public int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
+        logger.info("Loading saved level...");
+        LevelReader lr = new LevelReader();
+        char[][] board = lr.readMap(levelNumber, true);
+        levelNumber = lr.getLevelNumber(); // Obtener el número de nivel del LevelReader
 		
-	public char[][] loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
-		logger.info("Loading level {}...", levelNumber);
-		levelNumber++;
-		acumulatedScore+= level !=null ? level.getScore() : 0;
-		char[][] board = new LevelReader().readMap(levelNumber);
-		level = new Level(board, new LevelConverter().convertLevel(board));
-		logger.info("Level {} has been loaded.", levelNumber);
-		return board;
-	}
-	
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-		return level.moveCar(car, length, way);
-	}
+        level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
+        logger.info("Saved level {} has been loaded.", levelNumber);
+        return levelNumber;
+    }
 
-	public OldBoardData undoMovement() throws CannotUndoMovementException {
-		return level.undoMovement();
-	}
-	
-	public int getGameScore() {
-		return level.getScore() + acumulatedScore;
-	}
-	
-	public int getLevelScore() {
-		return level.getScore();
-	}
-	
-	public int getLevelNumber() {
-		logger.info("Getting level number...");
-		logger.info("Level number has been given (levelNumber: {}).", levelNumber);
-		return levelNumber;
-	}
+    public int loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
+        logger.info("Loading new level...");
+        levelNumber++;
+        acumulatedScore += level != null ? level.getScore() : 0;
+        LevelReader lr = new LevelReader();
+        char[][] board = lr.readMap(levelNumber, false);
+        level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
+        logger.info("New level {} has been loaded.", levelNumber);
+        return levelNumber;
+    }
 
-	public Level getLevel(){
-		logger.info("Getting level...");
-		logger.info("Level has been given.");
-		return level;
-	}
+    public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+        return level.moveCar(car, length, way);
+    }
 
-	public Map<Character,Car> getCars(){
-		return level.getCars();
-	}
+    public OldBoardData undoMovement() throws CannotUndoMovementException {
+        return level.undoMovement();
+    }
 
-	public void resetLevel(){
-		level.resetLevel();
-	}
-	
+    public int getGameScore() {
+        int score = level.getScore();
+        System.out.println("GAME: Level score = " + score);
+        return  score + acumulatedScore;
+    }
+
+    public int getLevelScore() {
+        return level.getScore();
+    }
+
+    public int getLevelNumber() {
+        logger.info("Getting level number...");
+        logger.info("Level number has been given (levelNumber: {}).", levelNumber);
+        return levelNumber;
+    }
+
+    public Level getLevel() {
+        logger.info("Getting level...");
+        logger.info("Level has been given.");
+        return level;
+    }
+
+    public Map<Character, Car> getCars() {
+        return level.getCars();
+    }
+
+    public void resetLevel() {
+        level.resetLevel();
+    }
+
+    public void setGameScore(int totalPoints) {
+        this.acumulatedScore = totalPoints;
+    }
+
+    public void resetOriginalLevel() {
+        level.resetOriginalLevel(levelNumber );
+        
+    }
+
+    public void setLevelScore(int score) {
+        level.setPunctuation(score);
+    }
+
+    public void loadLevel(int levelNumber) {
+        logger.info("Loading level "+levelNumber+"...");
+        
+        LevelReader lr = new LevelReader();
+        char[][] board = lr.readMap(levelNumber, false);
+        try {
+            level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
+        } catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        logger.info("New level {} has been loaded.", levelNumber);
+    }
 }

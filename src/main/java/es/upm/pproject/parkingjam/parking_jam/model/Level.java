@@ -16,12 +16,14 @@ public class Level {
 	private char[][] board, boardDefault; // Mapa con la representación de los vehículos con letras
 	private Pair<Integer, Integer> dimensions;
 	private Stack<OldBoardData> history;
+	private GameSaver gameSaver;
 
 	private static final Logger logger = LoggerFactory.getLogger(Game.class);
 
-	public Level(char[][] board, Map<Character, Car> cars) {
+	public Level(char[][] board, Map<Character, Car> cars, GameSaver gs) {
 		logger.info("Creating level...");
-		this.score = 0;
+		gameSaver = gs;
+
 		this.board = deepCopy(board); // Copia profunda del tablero inicial
 		this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
 		this.history = new Stack<>();
@@ -49,12 +51,14 @@ public class Level {
 		logger.info("Increasing score...");
 		logger.info("Score has been increased by 1 unit (new score: {}).", score + 1);
 		score++;
+		// gameSaver.saveBoard(board);
 	}
 
 	private void decreaseScore() {
 		logger.info("Decreasing score...");
 		logger.info("Score has been decreased by 1 unit(new score: {}).", score - 1);
 		score--;
+		// gameSaver.saveBoard(board);
 	}
 
 	private void addToHistory() {
@@ -128,7 +132,7 @@ public class Level {
 		Coordinates coord = null;
 		int xCar = 0;
 		int yCar = 0;
-		
+
 		if (cars.get(car) == null) {
 			logger.error("Car '{}' does not exist.", car);
 			return null;
@@ -169,9 +173,9 @@ public class Level {
 						this.cars.get(car).setCoordinates(coord.getX(), coord.getY());
 
 						// Add the old map at the top of the stack
-
-						increaseScore();
 						board = newBoard; // No es necesario actualizar la matriz original
+						increaseScore();
+
 					} catch (IllegalCarException e) {
 
 						e.printStackTrace();
@@ -185,15 +189,13 @@ public class Level {
 					this.history.pop();
 					return null;
 				}
-				
+
+			} else {
+				// this.history.pop();
+				logger.warn("Cannot move car '{}', new movement is out of reach.", car);
+				return null;
 			}
-			else {
-                //this.history.pop();
-                logger.warn("Cannot move car '{}', new movement is out of reach.", car);
-                return null;
-            }
-		}
-		else{
+		} else {
 			logger.warn("Invalid movement orientation.");
 			return null;
 		}
@@ -221,16 +223,17 @@ public class Level {
 		this.board = deepCopy(boardDefault); // Restaurar la copia profunda del tablero inicial
 		this.cars = deepCopyCars(carsDefault); // Restaurar la copia profunda de los coches iniciales
 		logger.info("Level has been reset.");
+		// this.updateGameSaved();
 	}
 
 	private void deleteCar(char car, char[][] board, Map<Character, Car> cars) throws IllegalCarException {
 		logger.info("Deleting car '{}'...", car);
 		int xCar = 0;
 		int yCar = 0;
-		if (cars.get(car) == null){
-            logger.error("Car '{}' does not exist.", car);
-            throw new IllegalCarException();
-        }
+		if (cars.get(car) == null) {
+			logger.error("Car '{}' does not exist.", car);
+			throw new IllegalCarException();
+		}
 
 		xCar = cars.get(car).getCoordinates().getX();
 		yCar = cars.get(car).getCoordinates().getY();
@@ -248,10 +251,10 @@ public class Level {
 		logger.info("Adding car '{}'...", car);
 		int xCar = 0;
 		int yCar = 0;
-		if (cars.get(car) == null){
-        	logger.error("Car '{}' does not exist.", car);
-            throw new IllegalCarException();
-        }
+		if (cars.get(car) == null) {
+			logger.error("Car '{}' does not exist.", car);
+			throw new IllegalCarException();
+		}
 
 		xCar = coord.getX();
 		yCar = coord.getY();
@@ -266,8 +269,9 @@ public class Level {
 
 	public boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way)
 			throws SameMovementException {
-		logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...",carChar,newCoordinates.getX(), newCoordinates.getY(),way);
-        
+		logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...", carChar,
+				newCoordinates.getX(), newCoordinates.getY(), way);
+
 		Car car = cars.get(carChar);
 		Coordinates carCoordinates = car.getCoordinates();
 		int carLength = car.getLength();
@@ -279,19 +283,23 @@ public class Level {
 		if (newCoordinates.getX() < 0 || newCoordinates.getX() >= boardWidth || newCoordinates.getY() < 0
 				|| newCoordinates.getY() >= boardHeight) {
 			logger.warn("Invalid movement: Trying to move out of board limits.");
-                
+
 			return false;
 		}
 
 		// Verificar si las coordenadas del coche están dentro del tablero
 		if (carOrientation == 'V') {
-			if (newCoordinates.getY() < 0 || newCoordinates.getY() + carLength > boardHeight || newCoordinates.getX()!=carCoordinates.getX()) {
-				logger.warn("Invalid movement: Trying to move out of board limits or make a horizontal move in an vertical car.");
+			if (newCoordinates.getY() < 0 || newCoordinates.getY() + carLength > boardHeight
+					|| newCoordinates.getX() != carCoordinates.getX()) {
+				logger.warn(
+						"Invalid movement: Trying to move out of board limits or make a horizontal move in an vertical car.");
 				return false;
 			}
 		} else { // carOrientation == 'H'
-			if (newCoordinates.getX() < 0 || newCoordinates.getX() + carLength > boardWidth || newCoordinates.getY()!=carCoordinates.getY()) {
-				logger.warn("Invalid movement: Trying to move out of board limits or make a vertical move in an horizontal car.");
+			if (newCoordinates.getX() < 0 || newCoordinates.getX() + carLength > boardWidth
+					|| newCoordinates.getY() != carCoordinates.getY()) {
+				logger.warn(
+						"Invalid movement: Trying to move out of board limits or make a vertical move in an horizontal car.");
 				return false;
 			}
 		}
@@ -324,8 +332,8 @@ public class Level {
 
 	public Map<Character, Car> getCars() {
 		logger.info("Getting all cars...");
-    	logger.info("All cars have been given (cars: {} ).",cars.keySet().toString());
-        return this.cars;
+		logger.info("All cars have been given (cars: {} ).", cars.keySet().toString());
+		return this.cars;
 	}
 
 	public boolean isLevelFinished(char[][] board) {
@@ -339,5 +347,36 @@ public class Level {
 			}
 		}
 		return res;
+	}
+
+	public void updateGameSaved() {
+		this.gameSaver.saveBoard(this.board);
+	}
+
+	public void setPunctuation(int score) {
+		System.out.println("LEVEL: Poniendo puntuación a: " +score);
+		this.score = score;
+	}
+
+	public void resetOriginalLevel(int levelNumber) {
+		logger.info("Resetting original level...");
+		addToHistory();
+		LevelReader lr = new LevelReader();
+		char[][] board = lr.readMap(levelNumber, false);
+		try {
+
+			this.board = deepCopy(board); // Copia profunda del tablero inicial
+			this.cars = deepCopyCars(new LevelConverter().convertLevel(board)); // Copia profunda de los coches
+																				// iniciales
+
+			this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
+			this.carsDefault = deepCopyCars(new LevelConverter().convertLevel(board)); // Guardar una copia profunda del
+																						// estado inicial de los coches
+			
+		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
+			e.printStackTrace();
+		}
+		logger.info("Level {} has been resetted.", levelNumber);
+
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import es.upm.pproject.parkingjam.parking_jam.model.Car;
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
+import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
@@ -16,14 +17,21 @@ import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
 public class Controller {
 	private MainFrame mframe; 
 	private Game game; 
+	private GameSaver gameSaver;
 	
 	public Controller() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		game = new Game();
 		mframe = new MainFrame(this);
+		gameSaver = new GameSaver();
 	}
 	
 	public void loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		game.loadNewLevel();
+		
+	}
+
+	public int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		return game.loadSavedLevel();
 		
 	}
 	
@@ -71,6 +79,31 @@ public class Controller {
 
 	public boolean isLevelFinished(){
 		return game.getLevel().isLevelFinished(this.getBoard()); 
+	}
+
+	public void setPunctuation(int score) {
+		game.getLevel().setPunctuation(score);
+	}
+
+	public void saveGame() {
+		gameSaver.savePunctuation(game.getGameScore(), this.getLevelScore());
+		game.getLevel().updateGameSaved();
+	}
+
+	public void setGameScore(int totalPoints) {
+		game.setGameScore(totalPoints);
+	}
+
+	public void resetOriginalLevel() {
+		int newGamePunctuation = game.getGameScore() - game.getLevelScore();
+		game.setGameScore(newGamePunctuation);
+		game.setLevelScore(0);
+		System.out.println("En controller: " + this.getGameScore());
+		game.resetOriginalLevel();
+	}
+
+	public void loadLevel(int levelNumber) {
+		game.loadLevel(levelNumber);
 	}
 	
 }
