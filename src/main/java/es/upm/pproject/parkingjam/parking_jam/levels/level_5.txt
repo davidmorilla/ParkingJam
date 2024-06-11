@@ -1,0 +1,10 @@
+Level 5
+8 8
+++++++++
++aabbbc+
++  d* c+
++  d*  +
++  deee+
++fghhh +
++fgiijj+
+++++@+++
