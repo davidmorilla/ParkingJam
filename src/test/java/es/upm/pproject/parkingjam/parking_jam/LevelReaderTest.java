@@ -12,8 +12,6 @@ import es.upm.pproject.parkingjam.parking_jam.model.LevelReader;
 @DisplayName ("Tests related to testing the class LevelReader")
 @Nested
 class LevelReaderTest {
-
-
 	private LevelReader lr;
 
 	@Test
@@ -30,26 +28,31 @@ class LevelReaderTest {
 				{'+','+','+','+','@','+','+','+'}};
 		assertArrayEquals(board, expectedBoard);
 	}
+	
 	@Test
 	public void readLevelWithNoNameTest() {
 		lr = new LevelReader();
 		Assertions.assertNull(lr.readMap(-8,false));
 	}
+	
 	@Test
 	public void readLevelWithNoDimensionsTest() {
 		lr = new LevelReader();
 		Assertions.assertNull(lr.readMap(-9,false));
 	}
+	
 	@Test
 	public void readLevelWithWrongDimensionsFormatTest() {
 		lr = new LevelReader();
 		Assertions.assertNull(lr.readMap(-10,false));
 	}
+	
 	@Test
 	public void readLevelWithMissingLinesTest() {
 		lr = new LevelReader();
 		Assertions.assertNull(lr.readMap(-11,false));
 	}
+	
 	@Test
 	public void readTooSmallLevelTest() {
 		lr = new LevelReader();

@@ -29,12 +29,13 @@ class LevelConverterTest {
 		lr = new LevelReader();
 		lc = new LevelConverter();
 	}
+	
 	@Test
 	public void convertOKLevelTest() {
 		try { 
 			char[][] board = lr.readMap(-1,false);
 			Map<Character, Car>	map = lc.convertLevel(board);
-			Map<Character, Car> expectedMap = new<Character, Car> HashMap();;
+			Map<Character, Car> expectedMap = new<Character, Car> HashMap();
 			expectedMap.put('a', new Car('a', 1, 1, 2, 'H'));
 			expectedMap.put('b', new Car('b', 3, 1, 3, 'H'));
 			expectedMap.put('c', new Car('c', 6, 1, 2, 'V'));
@@ -56,31 +57,37 @@ class LevelConverterTest {
 
 		} catch (Exception e) {} 
 	}
+	
 	@Test
 	public void convertLevelWithNoExitsTest() {
 		char[][] board = lr.readMap(-2,false);
 		Assertions.assertThrows(IllegalExitsNumberException.class, () -> lc.convertLevel(board));
 	}
+	
 	@Test
 	public void convertLevelWithTwoExitsTest() {
 		char[][] board = lr.readMap(-3,false);
 		Assertions.assertThrows(IllegalExitsNumberException.class, () -> lc.convertLevel(board));
 	}
+	
 	@Test
 	public void convertLevelWithInvalidCarDimensionsTest() {
 		char[][] board = lr.readMap(-4,false);
 		Assertions.assertThrows(IllegalCarDimensionException.class, () -> lc.convertLevel(board));
 	}
+	
 	@Test
 	public void convertLevelWithInvalidRedCarDimensionsTest1() {
 		char[][] board = lr.readMap(-5,false);
 		Assertions.assertThrows(IllegalCarDimensionException.class, () -> lc.convertLevel(board));
 	}
+	
 	@Test
 	public void convertLevelWithInvalidRedCarDimensionsTest2() {
 		char[][] board = lr.readMap(-6,false);
 		Assertions.assertThrows(IllegalCarDimensionException.class, () -> lc.convertLevel(board));
 	}
+	
 	@Test
 	public void convertLevelWithInvalidRedCarDimensionsTest3() {
 		char[][] board = lr.readMap(-7,false);

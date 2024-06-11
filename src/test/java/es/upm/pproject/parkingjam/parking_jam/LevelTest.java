@@ -48,10 +48,10 @@ public class LevelTest {
 		level = new Level(level1Board, cars, null);
 	}
 
-
 	@DisplayName ("Tests related to testing the movement of the cars")
 	@Nested
 	class MovementTests {
+		
 		@Test
 		void testMove1TileLeft() throws SameMovementException {
 			char[][] newBoard = level.moveCar('g',1,'L');

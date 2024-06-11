@@ -18,7 +18,15 @@ public class Game {
     private int levelNumber;            // Número del nivel actual del juego
     private Level level;                // Nivel actual del juego
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
-
+    
+    public Game(int numLevel) throws IllegalExitsNumberException, IllegalCarDimensionException {
+    	logger.info("Creating new game...");
+        acumulatedScore = 0;
+        levelNumber = numLevel - 1;
+        loadNewLevel();    
+        logger.info("New game has been created.");
+    }
+    
     public Game() throws IllegalExitsNumberException, IllegalCarDimensionException {
         logger.info("Creating new game...");
         acumulatedScore = 0;
