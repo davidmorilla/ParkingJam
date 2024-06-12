@@ -107,7 +107,6 @@ public class Level {
 			this.cars = deepCopyCars(restoredBoard.getCars());
 			decreaseScore();
 			if (score == -1) {
-				System.out.println("---------------------------- " + oldScore);
 				score = oldScore;
 			}
 			logger.info("Movement has been undone.");

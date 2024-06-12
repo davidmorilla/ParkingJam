@@ -109,4 +109,8 @@ public class DataPanel extends JPanel {
             e.printStackTrace();
         }
     }
+
+    public int getGameScore(){
+        return this.totalPoints;
+    }
 }

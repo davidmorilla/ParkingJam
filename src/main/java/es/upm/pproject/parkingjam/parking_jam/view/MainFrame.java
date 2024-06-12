@@ -259,8 +259,12 @@ public class MainFrame extends JFrame {
                     congratsLabel.setForeground(Color.BLACK);
 
                     JLabel congratsLabel2 = new JLabel("All levels passed!", SwingConstants.CENTER);
-                    congratsLabel.setFont(new Font("Impact", Font.PLAIN, 40));
-                    congratsLabel.setForeground(Color.BLACK);
+                    congratsLabel2.setFont(new Font("Impact", Font.PLAIN, 40));
+                    congratsLabel2.setForeground(Color.BLACK);
+
+                    JLabel totalScore = new JLabel("TOTAL SCORE: " + dataPanel.getGameScore(), SwingConstants.CENTER);
+                    totalScore.setFont(new Font("Impact", Font.PLAIN, 40));
+                    totalScore.setForeground(Color.BLACK);
 
                     mainPanel.setLayout(new GridBagLayout());
                     GridBagConstraints gbc = new GridBagConstraints();
@@ -272,6 +276,10 @@ public class MainFrame extends JFrame {
                     gbc.gridy = 1;
 
                     mainPanel.add(congratsLabel2, gbc);
+
+                    gbc.gridy = 2;
+
+                    mainPanel.add(totalScore, gbc);
                     mainPanel.revalidate();
                     mainPanel.repaint();
 

@@ -100,7 +100,6 @@ public class Controller {
 		game.getLevel().setOldScore(game.getLevelScore());
 		
 		game.setLevelScore(0);
-		System.out.println(game.getLevel().getOldScore());
 		game.resetOriginalLevel();
 	}
 
