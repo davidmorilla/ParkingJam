@@ -41,7 +41,7 @@ public class MainFrame extends JFrame {
 
     private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
-    public MainFrame(Controller controller) {
+    public MainFrame(final Controller controller) {
         super("Parking Jam - Programming Project");
         this.controller = controller;
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -75,7 +75,7 @@ public class MainFrame extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         mainPanel.add(titleLabel, gbc);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         startButton = new JButton("NEW GAME");
         buttonPanel.add(startButton);
 
