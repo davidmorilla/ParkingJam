@@ -2,7 +2,7 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - sonar
 
-maven_build:
+maven_test:
   stage: test
   image: maven:3.6.3-jdk-11
   script:
