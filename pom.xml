@@ -86,26 +86,14 @@
                 <artifactId>maven-install-plugin</artifactId>
                 <version>3.0.0-M1</version>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven.shade}</version>
-                <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                    <goal>shade</goal>
-                    </goals>
-                    <configuration>
-                    <transformers>
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                        <mainClass>es.upm.pproject.parkingjam.parking_jam.App</mainClass>
-                        </transformer>
-                    </transformers>
-                    </configuration>
-                </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<mainClass>es.upm.pproject.parkingjam.parking_jam.App</mainClass>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
 </project>
