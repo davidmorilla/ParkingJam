@@ -76,8 +76,12 @@ public class Game {
 
     public int getGameScore() {
         int score = level.getScore();
-        System.out.println("GAME: Level score = " + score);
         return  score + acumulatedScore;
+    }
+
+    public int getAccumulatedScore() {
+        
+        return  acumulatedScore;
     }
 
     public int getLevelScore() {

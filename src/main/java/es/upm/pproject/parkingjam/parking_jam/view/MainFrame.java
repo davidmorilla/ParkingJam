@@ -44,6 +44,10 @@ public class MainFrame extends JFrame {
     public MainFrame(final Controller controller) {
         super("Parking Jam - Programming Project");
         this.controller = controller;
+        mainMenu();
+    }
+
+    private void mainMenu() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -54,7 +58,7 @@ public class MainFrame extends JFrame {
         musicPlayer.play();
 
         icon = new ImageIcon(getClass().getClassLoader().getResource("logo.png"));
-        
+
         this.setIconImage(icon.getImage());
 
         try {
@@ -116,6 +120,7 @@ public class MainFrame extends JFrame {
                     dataPanel = new DataPanel(controller);
                     dataPanel.loadPunctuation();
                     startGame();
+                    musicPlayer.playLevelStart();
                 } catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
                     e.printStackTrace();
                 }
@@ -226,7 +231,6 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (!levelSavedLoaded) {
-                    System.out.println("Level not saved restarted");
                     controller.resetLevel();
                     gridPanel.setCars(controller.getCars());
                     gridPanel.setBoard(controller.getBoard());
@@ -265,8 +269,34 @@ public class MainFrame extends JFrame {
                         musicPlayer.playLevelSuccess();
                     }
                 } catch (Exception e) {
-                    logger.error("Could not load next level.");
-                    e.printStackTrace();
+                    logger.error("All levels finished.");
+                    mainPanel.removeAll();
+                    mainPanel.revalidate();
+                    mainPanel.repaint();
+
+                    JLabel congratsLabel = new JLabel("Congratulations!", SwingConstants.CENTER);
+                    congratsLabel.setFont(new Font("Impact", Font.PLAIN, 50));
+                    congratsLabel.setForeground(Color.BLACK);
+
+                    JLabel congratsLabel2 = new JLabel("All levels passed!", SwingConstants.CENTER);
+                    congratsLabel.setFont(new Font("Impact", Font.PLAIN, 40));
+                    congratsLabel.setForeground(Color.BLACK);
+
+                    mainPanel.setLayout(new GridBagLayout());
+                    GridBagConstraints gbc = new GridBagConstraints();
+                    gbc.gridx = 0;
+                    gbc.gridy = 0;
+                    gbc.anchor = GridBagConstraints.CENTER;
+
+                    mainPanel.add(congratsLabel, gbc);
+                    gbc.gridy = 1;
+
+                    mainPanel.add(congratsLabel2, gbc);
+                    mainPanel.revalidate();
+                    mainPanel.repaint();
+
+                    logger.info("Congratulations message displayed.");
+                    musicPlayer.playLevelSuccess();
                 }
             }
         });
@@ -281,7 +311,6 @@ public class MainFrame extends JFrame {
     }
 
     public void updateDataPanel() {
-        System.out.println(controller.getGameScore());
         dataPanel.updateData(controller.getLevelNumber(), controller.getGameScore(), controller.getLevelScore());
         logger.info("Panel data updated.");
     }
@@ -369,7 +398,6 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (!levelSavedLoaded) {
-                    System.out.println("Level not saved restarted");
                     controller.resetLevel();
                     gridPanel.setCars(controller.getCars());
                     gridPanel.setBoard(controller.getBoard());
@@ -409,6 +437,8 @@ public class MainFrame extends JFrame {
         JButton level1Button = new JButton("Level 1");
         JButton level2Button = new JButton("Level 2");
         JButton level3Button = new JButton("Level 3");
+        JButton level4Button = new JButton("Level 4");
+        JButton level5Button = new JButton("Level 5");
         JButton backButton = new JButton("GO TO MAIN MENU");
 
         backButton.addActionListener(new ActionListener() {
@@ -460,25 +490,54 @@ public class MainFrame extends JFrame {
             }
         });
 
-        levelPanel.add(backButton);
+        level4Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.removeAll();
+                mainPanel.revalidate();
+                mainPanel.repaint();
+                controller.loadLevel(4);
+
+                startOnlyOneLevelGame();
+                musicPlayer.playLevelStart();
+            }
+        });
+
+        level5Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.removeAll();
+                mainPanel.revalidate();
+                mainPanel.repaint();
+                controller.loadLevel(5);
+
+                startOnlyOneLevelGame();
+                musicPlayer.playLevelStart();
+            }
+        });
+
         levelPanel.add(level1Button);
         levelPanel.add(level2Button);
         levelPanel.add(level3Button);
+        levelPanel.add(level4Button);
+        levelPanel.add(level5Button);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.CENTER;
         mainPanel.add(levelPanel, gbc);
+        gbc.gridy = 2;
+        mainPanel.add(backButton, gbc);
 
         mainPanel.revalidate();
         mainPanel.repaint();
     }
 
     private void showMainButtons() {
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)); 
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         buttonPanel.setOpaque(false);
-        
+
         titleLabel = createTitleLabel("PARKING JAM");
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -487,13 +546,13 @@ public class MainFrame extends JFrame {
         mainPanel.add(titleLabel, gbc);
         JButton newGameButton = new JButton("NEW GAME");
         buttonPanel.add(newGameButton);
-    
+
         JButton loadLastGameButton = new JButton("LOAD LAST GAME");
         buttonPanel.add(loadLastGameButton);
-    
+
         JButton selectLevelButton = new JButton("SELECT LEVEL");
         buttonPanel.add(selectLevelButton);
-    
+
         // Agregar ActionListeners a los botones principales
         newGameButton.addActionListener(new ActionListener() {
             @Override
@@ -505,7 +564,7 @@ public class MainFrame extends JFrame {
                 musicPlayer.playLevelStart();
             }
         });
-    
+
         loadLastGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -515,7 +574,7 @@ public class MainFrame extends JFrame {
                 try {
                     levelSavedLoaded = true;
                     controller.loadSavedLevel();
-    
+
                     dataPanel = new DataPanel(controller);
                     dataPanel.loadPunctuation();
                     startGame();
@@ -524,7 +583,7 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-    
+
         selectLevelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -534,7 +593,7 @@ public class MainFrame extends JFrame {
                 showLevelButtons();
             }
         });
-    
+
         gbc.gridy = 1;
         mainPanel.add(buttonPanel, gbc);
         mainPanel.revalidate();

@@ -99,7 +99,7 @@ public class DataPanel extends JPanel {
             levelPoints = Integer.parseInt(reader.readLine());
 
             controller.setPunctuation(levelPoints);
-            controller.setGameScore(totalPoints);
+            controller.setGameScore(totalPoints-levelPoints);
 
             updateData(controller.getLevelNumber(), totalPoints, levelPoints);
 

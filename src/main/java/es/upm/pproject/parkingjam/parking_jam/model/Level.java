@@ -354,7 +354,6 @@ public class Level {
 	}
 
 	public void setPunctuation(int score) {
-		System.out.println("LEVEL: Poniendo puntuación a: " +score);
 		this.score = score;
 	}
 

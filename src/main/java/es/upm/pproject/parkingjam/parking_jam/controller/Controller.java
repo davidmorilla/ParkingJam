@@ -95,10 +95,9 @@ public class Controller {
 	}
 
 	public void resetOriginalLevel() {
-		int newGamePunctuation = game.getGameScore() - game.getLevelScore();
-		game.setGameScore(newGamePunctuation);
+		int newGamePunctuation = game.getAccumulatedScore();
+		this.setGameScore(newGamePunctuation);
 		game.setLevelScore(0);
-		System.out.println("En controller: " + this.getGameScore());
 		game.resetOriginalLevel();
 	}
 
