@@ -150,26 +150,6 @@ public class MainFrame extends JFrame {
         gbc.gridy = 1;
         mainPanel.add(buttonPanel, gbc);
 
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Options");
-        JMenuItem saveMenuItem = new JMenuItem("Save game");
-
-        saveMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    controller.saveGame();
-                    JOptionPane.showMessageDialog(MainFrame.this, "Partida guardada con éxito.");
-                } catch (Exception ex) {
-                    logger.error("Error al guardar la partida", ex);
-                    JOptionPane.showMessageDialog(MainFrame.this, "Error al guardar la partida.");
-                }
-            }
-        });
-
-        menu.add(saveMenuItem);
-        menuBar.add(menu);
-        setJMenuBar(menuBar);
 
         add(mainPanel);
         this.setVisible(true);
@@ -300,6 +280,27 @@ public class MainFrame extends JFrame {
                 }
             }
         });
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Options");
+        JMenuItem saveMenuItem = new JMenuItem("Save game");
+
+        saveMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    controller.saveGame();
+                    JOptionPane.showMessageDialog(MainFrame.this, "Partida guardada con éxito.");
+                } catch (Exception ex) {
+                    logger.error("Error al guardar la partida", ex);
+                    JOptionPane.showMessageDialog(MainFrame.this, "Error al guardar la partida.");
+                }
+            }
+        });
+
+        menu.add(saveMenuItem);
+        menuBar.add(menu);
+        setJMenuBar(menuBar);
     }
 
     public Grid getGrid() {

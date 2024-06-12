@@ -107,6 +107,7 @@ public class Level {
 			this.cars = deepCopyCars(restoredBoard.getCars());
 			decreaseScore();
 			if (score == -1) {
+				System.out.println("---------------------------- " + oldScore);
 				score = oldScore;
 			}
 			logger.info("Movement has been undone.");
@@ -357,8 +358,17 @@ public class Level {
 		this.score = score;
 	}
 
+	public void setOldScore(int score){
+		this.oldScore =score;
+	}
+
+	public int getOldScore(){
+		return this.oldScore;
+	}
+
 	public void resetOriginalLevel(int levelNumber) {
 		logger.info("Resetting original level...");
+		
 		addToHistory();
 		LevelReader lr = new LevelReader();
 		char[][] board = lr.readMap(levelNumber, false);

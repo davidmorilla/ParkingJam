@@ -97,7 +97,10 @@ public class Controller {
 	public void resetOriginalLevel() {
 		int newGamePunctuation = game.getAccumulatedScore();
 		this.setGameScore(newGamePunctuation);
+		game.getLevel().setOldScore(game.getLevelScore());
+		
 		game.setLevelScore(0);
+		System.out.println(game.getLevel().getOldScore());
 		game.resetOriginalLevel();
 	}
 
