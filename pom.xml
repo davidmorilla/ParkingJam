@@ -15,9 +15,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.compiler.release>${java.version}</maven.compiler.release>
 
         <junit>5.6.2</junit>
         
@@ -29,6 +26,15 @@
         <maven.surefire>3.0.0-M5</maven.surefire>
         <maven.jar>3.2.0</maven.jar>
         <maven.install>3.0.0-M1</maven.install>
+
+        <sonar.language>java</sonar.language>
+		<sonar.host.url>https://costa.ls.fi.upm.es/sonar</sonar.host.url>
+		<sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+		<sonar.projectName>parkingjam-210047</sonar.projectName>
+		<sonar.projectKey>es.upm.pproject.parkingjam:parking-jam:parkingjam:210047</sonar.projectKey>
+		<jacoco.version>0.8.6</jacoco.version>
+		<sonar.scm.provider>git</sonar.scm.provider>
+
     </properties>
 
     <dependencies>
