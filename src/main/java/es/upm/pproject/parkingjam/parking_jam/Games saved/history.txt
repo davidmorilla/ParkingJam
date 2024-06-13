@@ -1,0 +1,27 @@
+++++++++
++aabbbc+
++   * c+
++d  *  +
++d fff +
++de    +
++ e ggg+
+++++@+++
+END_BOARD
+++++++++
++aabbb +
++   * c+
++d  * c+
++d fff +
++de    +
++ e ggg+
+++++@+++
+END_BOARD
+++++++++
++aabbb +
++   *  +
++d  *  +
++d fffc+
++de   c+
++ e ggg+
+++++@+++
+END_BOARD

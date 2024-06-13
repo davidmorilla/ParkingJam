@@ -31,7 +31,7 @@ public class Controller {
 	}
 
 	public int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
-		return game.loadSavedLevel();
+		return game.loadSavedLevel(gameSaver);
 		
 	}
 	
@@ -86,8 +86,8 @@ public class Controller {
 	}
 
 	public void saveGame() {
-		gameSaver.savePunctuation(game.getGameScore(), this.getLevelScore());
-		game.getLevel().updateGameSaved();
+		game.saveGame(gameSaver);
+		
 	}
 
 	public void setGameScore(int totalPoints) {

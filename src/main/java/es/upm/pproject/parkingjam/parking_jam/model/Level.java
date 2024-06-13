@@ -47,6 +47,10 @@ public class Level {
 		return sb.toString();
 	}
 
+	public Stack<OldBoardData> getHistory(){
+		return this.history;
+	}
+
 	private void increaseScore() {
 		logger.info("Increasing score...");
 		logger.info("Score has been increased by 1 unit (new score: {}).", score + 1);
@@ -387,4 +391,8 @@ public class Level {
 		logger.info("Level {} has been resetted.", levelNumber);
 
 	}
+
+    public void setHistory(Stack<OldBoardData> history) {
+        this.history = history;
+    }
 }

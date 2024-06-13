@@ -1,6 +1,7 @@
 package es.upm.pproject.parkingjam.parking_jam.model;
 
 import java.util.Map;
+import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,13 +45,18 @@ public class Game {
         return level.getBoard();
     }
 
-    public int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
+    public int loadSavedLevel(GameSaver gs) throws IllegalExitsNumberException, IllegalCarDimensionException {
         logger.info("Loading saved level...");
         LevelReader lr = new LevelReader();
         char[][] board = lr.readMap(levelNumber, true);
         levelNumber = lr.getLevelNumber(); // Obtener el número de nivel del LevelReader
 		
         level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
+        int cols = level.getDimensions().getRight();
+        int rows = level.getDimensions().getLeft();
+        Stack<OldBoardData>history = gs.loadHistory(cols, rows);
+        level.setHistory(history);
+        
         logger.info("Saved level {} has been loaded.", levelNumber);
         return levelNumber;
     }
@@ -129,9 +135,14 @@ public class Game {
         try {
             level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
         } catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         logger.info("New level {} has been loaded.", levelNumber);
+    }
+
+    public void saveGame(GameSaver gameSaver) {
+        gameSaver.saveHistory(level.getHistory());
+        gameSaver.savePunctuation(this.getGameScore(), this.getLevelScore());
+		this.getLevel().updateGameSaved();
     }
 }
