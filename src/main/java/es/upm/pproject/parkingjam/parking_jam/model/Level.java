@@ -138,6 +138,7 @@ public class Level {
 	 * 
 	 * @return the restored board state.
 	 * @throws CannotUndoMovementException if there are no movements to undo.
+	 * @throws SameMovementException if the movement is to the same position.
 	 */
 	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException {
 		logger.info("Undoing movement...");
@@ -166,6 +167,7 @@ public class Level {
 	 * @param car the symbol of the car to move.
 	 * @param length the number of tiles to move.
 	 * @param way the direction to move ('L', 'R', 'U', 'D').
+	 * @param undo boolean indicating whether the movement is a new movement or an undo movement.
 	 * @return the new board state or null if the move is not possible.
 	 * @throws SameMovementException if the same movement is repeated.
 	 */
@@ -534,7 +536,7 @@ public class Level {
 	}
     /**
     * Retrieves the 'GameSaver' instance used to save the game state.
-    * 
+    * @return the 'GameSaver' instance. 
     */
 	public GameSaver getGameSaver() {
 		return this.gameSaver;

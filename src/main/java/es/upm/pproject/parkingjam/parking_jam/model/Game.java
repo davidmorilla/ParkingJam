@@ -125,6 +125,7 @@ public class Game {
      *
      * @return an 'OldBoardData' object representing the board state before the last movement.
      * @throws CannotUndoMovementException if there is no movement to undo.
+     * @throws SameMovementException if the movement is to the same place.
      */
 	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException {
 		return level.undoMovement();
@@ -200,7 +201,7 @@ public class Game {
     /**
      * Resets the original configuration of the current level.
      *
-     * @param levelNumber the level number to reset.
+     * 
      */
 	public void resetOriginalLevel() {
 		level.resetOriginalLevel(levelNumber );

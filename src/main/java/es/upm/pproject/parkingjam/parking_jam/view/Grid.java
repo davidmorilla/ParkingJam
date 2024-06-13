@@ -270,7 +270,7 @@ public class Grid extends JPanel {
 	 * @param length the length of the car
 	 * @param way the orientation of the car, vertical or horizontal
 	 * @return the new board if the movement was successful
-	 * @throws SameMovementException
+	 * @throws SameMovementException if the movement is to the same place.
 	 */
 	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
 		return controller.moveCar(car, length, way);
