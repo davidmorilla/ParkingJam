@@ -81,8 +81,8 @@ public class Car {
      *
      * @param length a positive integer equal to or greater than 2 that determines the new number of tiles that the car occupies.
      */
-    public void setLength(int l){
-        this.length = l;
+    public void setLength(int length){
+        this.length = length;
     }
     /**
      * Retrieves the orientation of the car.
@@ -97,8 +97,8 @@ public class Car {
      *
      * @param orientation a char that represents the new orientation that the car has. It must be either 'V' for vertical or 'H' for horizontal.
      */
-    public void setOrientation(char o){
-        this.orientation = o;
+    public void setOrientation(char orientation){
+        this.orientation = orientation;
     }
     
     /**
