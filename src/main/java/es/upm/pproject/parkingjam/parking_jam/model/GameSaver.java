@@ -1,15 +1,15 @@
 package es.upm.pproject.parkingjam.parking_jam.model;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.ArrayList;
 
-import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
-import es.upm.pproject.parkingjam.parking_jam.model.Car;
+import java.util.List;
+
+
+import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
 public class GameSaver {
-    private File level, punctuation, history, cars;
+    private File level, punctuation, history;
     private String levelName;
     private String dimensions;
 
@@ -17,7 +17,6 @@ public class GameSaver {
         level = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/level.txt");
         punctuation = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/punctuation.txt");
         history = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/history.txt");
-        cars = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/cars.txt");
         try {
             if (!level.exists()) {
                 level.getParentFile().mkdirs();
@@ -31,13 +30,15 @@ public class GameSaver {
                 history.getParentFile().mkdirs();
                 history.createNewFile();
             }
-            if (!cars.exists()) {
-                cars.getParentFile().mkdirs();
-                cars.createNewFile();
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void saveGame(List<Pair<Character, Pair<Integer, Character>>> history, int total, int level, char[][] board) {
+    	saveHistory(history);
+        savePunctuation(total, level);
+        saveBoard(board);
     }
 
     public void saveLevelName(String levelName) {
@@ -74,71 +75,35 @@ public class GameSaver {
         }
     }
 
-    public void saveHistory(Stack<OldBoardData> stack) {
+    public void saveHistory(List<Pair<Character, Pair<Integer, Character>>> list) {
         // Save history
-        try (BufferedWriter boardWriter = new BufferedWriter(new FileWriter(history));
-             BufferedWriter carsWriter = new BufferedWriter(new FileWriter(cars))) {
+        try (BufferedWriter movWriter = new BufferedWriter(new FileWriter(history))) {
 
-            for (OldBoardData data : stack) {
-                // Save board
-                char[][] board = data.getBoard();
-                for (char[] row : board) {
-                    boardWriter.write(row);
-                    boardWriter.newLine();
-                }
-                boardWriter.write("END_BOARD");
-                boardWriter.newLine();
-
-                // Save cars
-                Map<Character, Car> carMap = data.getCars();
-                for (Car car : carMap.values()) {
-                    carsWriter.write(car.getSymbol() + "," + car.getCoordinates().getX() + "," +
-                                     car.getCoordinates().getY() + "," + car.getLength() + "," + car.getOrientation());
-                    carsWriter.newLine();
-                }
-                carsWriter.write("END_CARS");
-                carsWriter.newLine();
+            for (Pair<Character, Pair<Integer, Character>> mov : list) {
+            	movWriter.write(mov.getLeft() + " " + mov.getRight().getLeft() + " " + mov.getRight().getRight());
+                movWriter.newLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Stack<OldBoardData> loadHistory(int cols, int rows) {
-        Stack<OldBoardData> stack = new Stack<>();
+    public List<Pair<Character, Pair<Integer,Character>>> loadHistory(int cols, int rows) {
+    	List<Pair<Character, Pair<Integer,Character>>> list = new ArrayList<>();
 
-        try (BufferedReader boardReader = new BufferedReader(new FileReader(history));
-             BufferedReader carsReader = new BufferedReader(new FileReader(cars))) {
-
+        try (BufferedReader boardReader = new BufferedReader(new FileReader(history))) {
             String line;
             while ((line = boardReader.readLine()) != null) {
-                // Load board
-                char[][] board = new char[cols][rows];
-                int row = 0; 
-                while (!line.equals("END_BOARD")) {
-                    board[row++] = line.toCharArray();
-                    line = boardReader.readLine();
-                }
-
-                // Load cars
-                Map<Character, Car> carMap = new HashMap<>();
-                while ((line = carsReader.readLine()) != null && !line.equals("END_CARS")) {
-                    String[] carData = line.split(",");
-                    char symbol = carData[0].charAt(0);
-                    int x = Integer.parseInt(carData[1]);
-                    int y = Integer.parseInt(carData[2]);
-                    int length = Integer.parseInt(carData[3]);
-                    char orientation = carData[4].charAt(0);
-                    Car car = new Car(symbol, x, y, length, orientation);
-                    carMap.put(symbol, car);
-                }
-
-                stack.push(new OldBoardData(board, carMap));
+                String[] moveData = line.split(" ");
+                char car = moveData[0].charAt(0);
+                int length = Integer.parseInt(moveData[1]);
+                char way = moveData[2].charAt(0);
+                list.add(new Pair<>(car, new Pair<>(length, way)));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return stack;
+        return list;
     }
 }

@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 
@@ -14,7 +13,7 @@ import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
-import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.BackgroundPanel;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MusicPlayer;
@@ -191,9 +190,8 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 try {
-                    OldBoardData old = controller.undoMovement();
-                    char[][] oldBoard = old.getBoard();
-                    gridPanel.setCars(old.getCars());
+                	char[][] oldBoard = controller.undoMovement();
+                    gridPanel.setCars(controller.getCars());
                     gridPanel.setBoard(oldBoard);
                     gridPanel.repaint();
                     musicPlayer.playErase();
@@ -201,7 +199,10 @@ public class MainFrame extends JFrame {
                 } catch (CannotUndoMovementException e) {
                     e.printStackTrace();
                     logger.error("Cannot undo movement, there is none done previously.");
-                }
+                } catch (SameMovementException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 updateDataPanel();
             }
         });
@@ -387,9 +388,8 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 try {
-                    OldBoardData old = controller.undoMovement();
-                    char[][] oldBoard = old.getBoard();
-                    gridPanel.setCars(old.getCars());
+                	char[][] oldBoard = controller.undoMovement();
+                    gridPanel.setCars(controller.getCars());
                     gridPanel.setBoard(oldBoard);
                     gridPanel.repaint();
                     musicPlayer.playErase();
@@ -397,7 +397,10 @@ public class MainFrame extends JFrame {
                 } catch (CannotUndoMovementException e) {
                     e.printStackTrace();
                     logger.error("Cannot undo movement, there is none done previously.");
-                }
+                } catch (SameMovementException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 updateDataPanel();
             }
         });

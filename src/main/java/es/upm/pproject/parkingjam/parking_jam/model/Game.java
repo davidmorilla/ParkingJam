@@ -1,7 +1,7 @@
 package es.upm.pproject.parkingjam.parking_jam.model;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovemen
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
-import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
 // Game es la clase central del model, gestionando los niveles y la puntuacion
@@ -54,8 +53,9 @@ public class Game {
         level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
         int cols = level.getDimensions().getRight();
         int rows = level.getDimensions().getLeft();
-        Stack<OldBoardData>history = gs.loadHistory(cols, rows);
+        List<Pair<Character, Pair<Integer,Character>>> history = gs.loadHistory(cols, rows);
         level.setHistory(history);
+        System.out.println(history.size());
         
         logger.info("Saved level {} has been loaded.", levelNumber);
         return levelNumber;
@@ -73,10 +73,10 @@ public class Game {
     }
 
     public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-        return level.moveCar(car, length, way);
+        return level.moveCar(car, length, way, false);
     }
 
-    public OldBoardData undoMovement() throws CannotUndoMovementException {
+    public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException {
         return level.undoMovement();
     }
 
@@ -139,10 +139,12 @@ public class Game {
         }
         logger.info("New level {} has been loaded.", levelNumber);
     }
+    
+    public GameSaver getGameSaver() {
+    	return level.getGameSaver();
+    }
 
     public void saveGame(GameSaver gameSaver) {
-        gameSaver.saveHistory(level.getHistory());
-        gameSaver.savePunctuation(this.getGameScore(), this.getLevelScore());
-		this.getLevel().updateGameSaved();
+    	gameSaver.saveGame(level.getHistory(), this.getGameScore(), this.getLevelScore(), getBoard());
     }
 }

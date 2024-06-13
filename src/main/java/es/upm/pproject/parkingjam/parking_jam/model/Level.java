@@ -1,8 +1,9 @@
 package es.upm.pproject.parkingjam.parking_jam.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ public class Level {
 	private Map<Character, Car> cars, carsDefault; // Coches del tablero
 	private char[][] board, boardDefault; // Mapa con la representación de los vehículos con letras
 	private Pair<Integer, Integer> dimensions;
-	private Stack<OldBoardData> history;
+	private List<Pair<Character, Pair<Integer,Character>>> history;
 	private GameSaver gameSaver;
 
 	private static final Logger logger = LoggerFactory.getLogger(Game.class);
@@ -26,7 +27,7 @@ public class Level {
 
 		this.board = deepCopy(board); // Copia profunda del tablero inicial
 		this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
-		this.history = new Stack<>();
+		this.history = new ArrayList<>();
 		this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
 		this.carsDefault = deepCopyCars(cars); // Guardar una copia profunda del estado inicial de los coches
 		int numRows = board.length;
@@ -47,7 +48,7 @@ public class Level {
 		return sb.toString();
 	}
 
-	public Stack<OldBoardData> getHistory(){
+	public List<Pair<Character, Pair<Integer,Character>>> getHistory(){
 		return this.history;
 	}
 
@@ -63,14 +64,6 @@ public class Level {
 		logger.info("Score has been decreased by 1 unit(new score: {}).", score - 1);
 		score--;
 		// gameSaver.saveBoard(board);
-	}
-
-	private void addToHistory() {
-		Map<Character, Car> carsCopy = deepCopyCars(cars); // Copia profunda de los coches
-		char[][] boardCopy = deepCopy(board); // Copia profunda del tablero
-		OldBoardData copy = new OldBoardData(boardCopy, carsCopy);
-
-		history.push(copy);
 	}
 
 	private Map<Character, Car> deepCopyCars(Map<Character, Car> original) {
@@ -102,19 +95,20 @@ public class Level {
 		return score;
 	}
 
-	public OldBoardData undoMovement() throws CannotUndoMovementException {
+	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException {
 		logger.info("Undoing movement...");
 		if (!history.isEmpty() && !this.isLevelFinished(board)) {
 
-			OldBoardData restoredBoard = history.pop();
-			this.board = deepCopy(restoredBoard.getBoard());
-			this.cars = deepCopyCars(restoredBoard.getCars());
+			Pair<Character, Pair<Integer, Character>> mov = history.get(history.size() - 1);
+			history.remove(history.size() - 1);
+			
+			char[][] board = moveCar(mov.getLeft(),mov.getRight().getLeft(), mov.getRight().getRight(), true);
 			decreaseScore();
 			if (score == -1) {
 				score = oldScore;
 			}
 			logger.info("Movement has been undone.");
-			return restoredBoard;
+			return board;
 		} else {
 			logger.error("There are no movements to undo because no movement has been done before.");
 			throw new CannotUndoMovementException();
@@ -125,13 +119,20 @@ public class Level {
 	// uploads the current board,
 	// returns the new board or null if the car does not exist or its not possible
 	// to move the car to the specified possition.
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+	public char[][] moveCar(char car, int length, char way, boolean undo) throws SameMovementException {
 		logger.info("Moving car '{}'...", car);
 		if (isLevelFinished(board)) {
 			logger.warn("Cannot move car '{}', level is finished", car);
 			return null;
 		}
-		addToHistory();
+		if(!undo) { // Si no es undo tenemos que guardar el movimiento en la lista de movimientos
+			char undoWay = opposite(way);
+			Pair<Character, Pair<Integer, Character>> mov 
+			= new Pair<>(car, new Pair<Integer,Character>(length,undoWay));
+			
+			history.add(mov);
+		}
+		
 		char[][] newBoard = deepCopy(board); // Hacer una copia profunda de la matriz original
 		Coordinates coord = null;
 		int xCar = 0;
@@ -178,7 +179,9 @@ public class Level {
 
 						// Add the old map at the top of the stack
 						board = newBoard; // No es necesario actualizar la matriz original
-						increaseScore();
+						
+						if(!undo)
+							increaseScore();
 
 					} catch (IllegalCarException e) {
 
@@ -190,7 +193,7 @@ public class Level {
 					} else {
 						logger.warn("Cannot move car '{}', there's an obstacle", car);
 					}
-					this.history.pop();
+					this.history.remove(history.size() - 1);
 					return null;
 				}
 
@@ -205,6 +208,16 @@ public class Level {
 		}
 		logger.info("Car '{}' has been moved.", car);
 		return newBoard;
+	}
+	
+	private char opposite(char way) {
+		if(way == 'L')
+			return 'R';
+		if(way == 'R')
+			return 'L';
+		if(way == 'U')
+			return 'D';
+		return 'U';
 	}
 
 	private char[][] deepCopy(char[][] original) {
@@ -222,7 +235,8 @@ public class Level {
 	public void resetLevel() {
 		logger.info("Resetting level...");
 		oldScore = score;
-		addToHistory();
+		
+		history = new ArrayList<>();
 		this.score = 0;
 		this.board = deepCopy(boardDefault); // Restaurar la copia profunda del tablero inicial
 		this.cars = deepCopyCars(carsDefault); // Restaurar la copia profunda de los coches iniciales
@@ -353,10 +367,6 @@ public class Level {
 		return res;
 	}
 
-	public void updateGameSaved() {
-		this.gameSaver.saveBoard(this.board);
-	}
-
 	public void setPunctuation(int score) {
 		this.score = score;
 	}
@@ -372,7 +382,7 @@ public class Level {
 	public void resetOriginalLevel(int levelNumber) {
 		logger.info("Resetting original level...");
 		
-		addToHistory();
+		history = new ArrayList<>();
 		LevelReader lr = new LevelReader();
 		char[][] board = lr.readMap(levelNumber, false);
 		try {
@@ -392,7 +402,11 @@ public class Level {
 
 	}
 
-    public void setHistory(Stack<OldBoardData> history) {
+    public void setHistory(List<Pair<Character, Pair<Integer, Character>>> history) {
         this.history = history;
+    }
+    
+    public GameSaver getGameSaver() {
+    	return this.gameSaver;
     }
 }

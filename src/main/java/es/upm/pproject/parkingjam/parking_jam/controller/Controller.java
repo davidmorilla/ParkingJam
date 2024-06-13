@@ -10,7 +10,6 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensi
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
-import es.upm.pproject.parkingjam.parking_jam.utilities.OldBoardData;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
 
@@ -18,49 +17,48 @@ public class Controller {
 	private MainFrame mframe; 
 	private Game game; 
 	private GameSaver gameSaver;
-	
+
 	public Controller() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		game = new Game();
 		mframe = new MainFrame(this);
-		gameSaver = new GameSaver();
+		gameSaver = game.getGameSaver();
 	}
-	
+
 	public void loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		game.loadNewLevel();
-		
+
 	}
 
 	public int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		return game.loadSavedLevel(gameSaver);
-		
+
 	}
-	
+
 	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
 		return game.moveCar(car, length, way);
 	}
-	
-	public OldBoardData undoMovement() throws CannotUndoMovementException {
-		
+
+	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException {
 		return game.undoMovement();
 	}
-	
+
 	public char[][] getBoard(){
 		return game.getBoard();
 	}
 
 	public Pair<Integer, Integer> getBoardDimensions() {
-        // This will return the board dimensions of the current level
+		// This will return the board dimensions of the current level
 		return game.getDimensions();
-    }
-	
+	}
+
 	public Map<Character,Car> getCars(){
 		return game.getCars();
 	}
-	
+
 	public int getGameScore() {
 		return game.getGameScore();
 	}
-	
+
 	public int getLevelScore() {
 		return game.getLevelScore();
 	}
@@ -72,7 +70,7 @@ public class Controller {
 	public void resetLevel(){
 		game.resetLevel();
 	}
-	
+
 	public boolean isMoveValid(char car, Coordinates newCoord, char way) throws SameMovementException {
 		return game.getLevel().checkMovementValidity(car, newCoord, way);
 	}
@@ -87,7 +85,7 @@ public class Controller {
 
 	public void saveGame() {
 		game.saveGame(gameSaver);
-		
+
 	}
 
 	public void setGameScore(int totalPoints) {
@@ -98,7 +96,7 @@ public class Controller {
 		int newGamePunctuation = game.getAccumulatedScore();
 		this.setGameScore(newGamePunctuation);
 		game.getLevel().setOldScore(game.getLevelScore());
-		
+
 		game.setLevelScore(0);
 		game.resetOriginalLevel();
 	}
@@ -106,5 +104,5 @@ public class Controller {
 	public void loadLevel(int levelNumber) {
 		game.loadLevel(levelNumber);
 	}
-	
+
 }
