@@ -25,7 +25,7 @@ public class GameSaver {
      */
     public GameSaver() {
         level = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/level.txt");
-        score = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/score.txt");
+        score = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/punctuation.txt");
         history = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/history.txt");
         try {
             if (!level.exists()) {
