@@ -7,18 +7,36 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The 'LevelReader' class is responsible for reading level data from text files.
+ * It reads the level name, dimensions, and the board configuration from a specified file.
+ */
 public class LevelReader {
+	
+	// File name formats for level data and saved game data
     public final String LEVEL_FILE_NAME_FORMAT = "src/main/java/es/upm/pproject/parkingjam/parking_jam/levels/level_%d.txt";
     public final String LEVEL_SAVED_FILE_NAME_FORMAT = "src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/level.txt";
 
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
     private GameSaver gameSaver = new GameSaver();
-    private int levelNumber; // Añadido para guardar el número del nivel
+    private int levelNumber;  // Added to store the level number
 
+    /**
+     * Gets the current level number.
+     * 
+     * @return the level number.
+     */
     public int getLevelNumber() {
         return levelNumber;
     }
 
+    /**
+     * Reads the map configuration for a given level.
+     * 
+     * @param level the level number to read.
+     * @param loadSaved flag indicating whether to load a saved game.
+     * @return a 2D char array representing the board configuration.
+     */
     public char[][] readMap(int level, boolean loadSaved) {
         String fileName = loadSaved ? LEVEL_SAVED_FILE_NAME_FORMAT : LEVEL_FILE_NAME_FORMAT;
         logger.info("Reading map from file: '{}'...", String.format(fileName, level));
@@ -26,16 +44,16 @@ public class LevelReader {
         char[][] board = null;
 
         try {
-            // Abrir el archivo
+        	// Open the file
             reader = new BufferedReader(new FileReader(String.format(fileName, level)));
 
-            // Leer la primera línea que contiene el nombre del nivel
+            // Read the first line containing the level name
             String levelName = reader.readLine();
             if (levelName != null) {
                 gameSaver.saveLevelName(levelName);
-                levelNumber = extractLevelNumber(levelName); // Extraer y guardar el número de nivel
+                levelNumber = extractLevelNumber(levelName); // Extract and store the level number
 
-                // Leer la segunda línea que contiene las dimensiones del tablero
+             // Read the second line containing the board dimensions
                 String secondLine = reader.readLine();
                 if (secondLine != null) {
                     gameSaver.saveLevelDimensions(secondLine);
@@ -44,9 +62,10 @@ public class LevelReader {
                         int nRows = Integer.parseInt(dimensiones[0]);
                         int nColumns = Integer.parseInt(dimensiones[1]);
                         if (nRows >= 3 && nColumns >= 3) {
+                        	
                             int realRows = 0;
                             int realCols = 0;
-                            // Leer las siguientes nRows líneas que contienen los elementos del tablero
+                            // Read the next nRows lines containing the board elements
                             board = new char[nRows][nColumns];
                             for (int i = 0; i < nRows; i++) {
                                 String row = reader.readLine();
@@ -56,8 +75,10 @@ public class LevelReader {
                                 }
                                 realRows++;
                             }
+                            
+                            // Check if each row matches the specified number of columns
                             if (realCols != nColumns || realRows != nRows) {
-                                logger.error("The dimensions of the board does not match the ones specified in the file.");
+                                logger.error("The dimensions of the board do not match the ones specified in the file.");
                                 reader.close();
                                 return null;
                             }
@@ -74,7 +95,7 @@ public class LevelReader {
                 logger.error("The name of the board is not specified.");
             }
 
-            // Cerrar el archivo
+            // Close the file
             reader.close();
 
         } catch (Exception e) {
@@ -86,14 +107,22 @@ public class LevelReader {
             }
             return null;
         }
+        
+     // Log the read map if successfully read
         if (board != null)
             logger.info("Map has been read: \n {}", charMatrixToString(board));
         return board;
     }
 
+    /**
+     * Extracts the level number from the level name string.
+     * 
+     * @param levelName the name of the level.
+     * @return the extracted level number, or -1 if it cannot be extracted.
+     */
     private int extractLevelNumber(String levelName) {
 		if(levelName.equals("Initial level"))
-			return 1;
+			return 1; // Special case for the initial level
         String[] parts = levelName.split(" ");
         if (parts.length > 1 && parts[0].equalsIgnoreCase("Level")) {
             try {
@@ -104,7 +133,12 @@ public class LevelReader {
         }
         return -1; // Error case
     }
-
+    /**
+     * Converts a 2D char array board to a string representation.
+     * 
+     * @param board the board to convert.
+     * @return a string representation of the board.
+     */
     private String charMatrixToString(char[][] board) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < board.length; i++) {
@@ -115,7 +149,11 @@ public class LevelReader {
         }
         return sb.toString();
     }
-
+    /**
+     * Gets the GameSaver instance.
+     * 
+     * @return the GameSaver instance.
+     */
     public GameSaver getGameSaver() {
         return gameSaver;
     }
