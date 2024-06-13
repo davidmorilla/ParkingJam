@@ -8,23 +8,33 @@ import java.util.List;
 
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
+/**
+ * The GameSaver class is responsible for saving and loading the game state, including the level,
+ * score, and move history. It handles the creation and management of necessary files.
+ */
 public class GameSaver {
-    private File level, punctuation, history;
-    private String levelName;
-    private String dimensions;
+    private File level;       // File for saving the current level state
+    private File score; 	  // File for saving the punctuation (score)
+    private File history;     // File for saving the move history
+    private String levelName; // The name of the current level
+    private String dimensions;// The dimensions of the current level
 
+    /**
+     * Initializes file objects for saving level, score, and history.
+     * Creates the files if they do not exist.
+     */
     public GameSaver() {
         level = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/level.txt");
-        punctuation = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/punctuation.txt");
+        score = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/score.txt");
         history = new File("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/history.txt");
         try {
             if (!level.exists()) {
                 level.getParentFile().mkdirs();
                 level.createNewFile();
             }
-            if (!punctuation.exists()) {
-                punctuation.getParentFile().mkdirs();
-                punctuation.createNewFile();
+            if (!score.exists()) {
+                score.getParentFile().mkdirs();
+                score.createNewFile();
             }
             if (!history.exists()) {
                 history.getParentFile().mkdirs();
@@ -34,21 +44,43 @@ public class GameSaver {
             e.printStackTrace();
         }
     }
-    
+    /**
+     * Saves the entire game state including history, score, and board configuration.
+     * 
+     * @param history the list of move history.
+     * @param total the total score.
+     * @param level the current level number.
+     * @param board the current board configuration.
+     */
     public void saveGame(List<Pair<Character, Pair<Integer, Character>>> history, int total, int level, char[][] board) {
     	saveHistory(history);
-        savePunctuation(total, level);
+        saveScore(total, level);
         saveBoard(board);
     }
 
+    /**
+     * Saves the level name to be used when saving the board.
+     * 
+     * @param levelName the name of the level.
+     */
     public void saveLevelName(String levelName) {
         this.levelName = levelName;
     }
 
+    /**
+     * Saves the level dimensions to be used when saving the board.
+     * 
+     * @param dimensions the dimensions of the level.
+     */
     public void saveLevelDimensions(String dimensions) {
         this.dimensions = dimensions;
     }
 
+    /**
+     * Saves the current board configuration to a file.
+     * 
+     * @param board the current board configuration.
+     */
     public void saveBoard(char[][] board) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(level))) {
             writer.write(this.levelName);
@@ -64,8 +96,14 @@ public class GameSaver {
         }
     }
 
-    public void savePunctuation(int total, int level) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(punctuation))) {
+    /**
+     * Saves the current score and level number to a file.
+     * 
+     * @param total the total score.
+     * @param level the current level number.
+     */
+    public void saveScore(int total, int level) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(score))) {
             writer.write("" + total);
             writer.newLine();
             writer.write("" + level);
@@ -75,6 +113,11 @@ public class GameSaver {
         }
     }
 
+    /**
+     * Saves the movements history to a file.
+     * 
+     * @param list the list of move history.
+     */
     public void saveHistory(List<Pair<Character, Pair<Integer, Character>>> list) {
         // Save history
         try (BufferedWriter movWriter = new BufferedWriter(new FileWriter(history))) {
@@ -88,6 +131,13 @@ public class GameSaver {
         }
     }
 
+    /**
+     * Loads the move history from a file.
+     * 
+     * @param cols the number of columns in the board (unused).
+     * @param rows the number of rows in the board (unused).
+     * @return the list of move history.
+     */
     public List<Pair<Character, Pair<Integer,Character>>> loadHistory(int cols, int rows) {
     	List<Pair<Character, Pair<Integer,Character>>> list = new ArrayList<>();
 
