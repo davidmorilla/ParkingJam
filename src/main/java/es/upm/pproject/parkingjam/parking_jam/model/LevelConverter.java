@@ -6,8 +6,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
+import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalCarDimensionException;
+import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalExitsNumberException;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 
 public class LevelConverter {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);

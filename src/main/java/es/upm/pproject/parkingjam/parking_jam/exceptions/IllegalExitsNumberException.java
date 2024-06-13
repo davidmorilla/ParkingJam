@@ -1,4 +1,4 @@
-package es.upm.pproject.parkingjam.parking_jam.model.exceptions;
+package es.upm.pproject.parkingjam.parking_jam.exceptions;
 
 public class IllegalExitsNumberException extends Exception{
     public IllegalExitsNumberException(){

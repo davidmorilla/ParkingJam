@@ -14,10 +14,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import es.upm.pproject.parkingjam.parking_jam.model.Car;
+import es.upm.pproject.parkingjam.parking_jam.exceptions.CannotUndoMovementException;
+import es.upm.pproject.parkingjam.parking_jam.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
 public class LevelTest {

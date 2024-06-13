@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import es.upm.pproject.parkingjam.parking_jam.model.Car;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 
 @DisplayName ("Tests related to testing the class Car")
 @Nested

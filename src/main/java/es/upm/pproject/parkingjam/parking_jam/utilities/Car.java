@@ -1,8 +1,6 @@
-package es.upm.pproject.parkingjam.parking_jam.model;
+package es.upm.pproject.parkingjam.parking_jam.utilities;
 
 import java.util.Objects;
-
-import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 
 public class Car {
 	// X e Y representan la 1a posición leída del coche en el fichero del mapa

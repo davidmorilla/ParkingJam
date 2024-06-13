@@ -12,12 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import es.upm.pproject.parkingjam.parking_jam.exceptions.CannotUndoMovementException;
+import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalCarDimensionException;
+import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalExitsNumberException;
+import es.upm.pproject.parkingjam.parking_jam.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 
 public class GameTest {
 	Game game;

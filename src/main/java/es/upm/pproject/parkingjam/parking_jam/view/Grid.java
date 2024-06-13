@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,274 +12,285 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
-import es.upm.pproject.parkingjam.parking_jam.model.Car;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;
 
+/**
+ * Represents the grid where the game is displayed, including cars, walls, and exits.
+ * Extends JPanel to provide graphical rendering capabilities.
+ */
 public class Grid extends JPanel {
-    private int rows;
-    private int cols;
-    private int squareSize = 50;
-    private Map<Character, MovableCar> movableCars; // Almacenar las instancias de MovableCar
-    private Controller controller;
-    private char[][] board;
-    private boolean levelCompleted;
-    private MainFrame mf;
-    private Map<Integer, String[]> carImages;
-    private Image wallImage;
+	private int rows;
+	private int cols;
+	private int squareSize = 50;
+	private Map<Character, MovableCar> movableCars; // Stores the drawable cars
+	private Controller controller;
+	private char[][] board;
+	private boolean levelCompleted;
+	private MainFrame mf;
+	private Map<Integer, String[]> carImages;
 
-    public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
-            MainFrame mf) {
-        this.rows = dimensions.getLeft();
-        this.cols = dimensions.getRight();
-        this.board = board;
-        this.controller = controller;
-        this.levelCompleted = false;
-        this.mf = mf;
-        this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
-        this.movableCars = new HashMap<>();
-        this.carImages = new HashMap<>();
-        carImages.put(2, new String[] { "car2", "car4", "car7", "car9", "car10", "car11", "car12" });
-        carImages.put(3, new String[] { "car3", "car5", "car6", "car8" });
+	/**
+	 * Constructor for Grid class.
+	 * Initializes the grid with given dimensions, cars, board layout, controller, and main frame reference.
+	 * @param dimensions Pair object representing grid dimensions (rows, columns)
+	 * @param cars Map of characters to Car objects representing movable cars in the game
+	 * @param board 2D char array representing the initial layout of the game board
+	 * @param controller Controller object to handle game logic
+	 * @param mf MainFrame object representing the main application frame
+	 */
+	public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
+			MainFrame mf) {
+		this.rows = dimensions.getLeft();
+		this.cols = dimensions.getRight();
+		this.board = board;
+		this.controller = controller;
+		this.levelCompleted = false;
+		this.mf = mf;
+		this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
+		this.carImages = new HashMap<>();
+		carImages.put(2, new String[] { "car2", "car4", "car7", "car9", "car10", "car11", "car12" });
+		carImages.put(3, new String[] { "car3", "car5", "car6", "car8" });
 
-        // Crear instancias de MovableCar y almacenarlas en el mapa
-        for (Map.Entry<Character, Car> entry : cars.entrySet()) {
-            Car car = entry.getValue();
-            String[] imagePaths = carImages.get(car.getLength());
-            String imagePath;
-            if (imagePaths == null) { // if is null it means that the length is more than 3
-                imagePath = "longCar";
-            } else {
-                imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
-            }
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
-            movableCars.put(entry.getKey(), movableCar);
-        }
+		// Create drawable cars equivalent instances (MovableCar) and store them
+		setCarsMap(cars);
 
-        // Cargar la imagen del muro
-        wallImage = new ImageIcon("path/to/wall/image.png").getImage();
+		// Add a mouse adapter for all the grid
+		MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, this);
+		this.addMouseListener(mouseAdapter);
+		this.addMouseMotionListener(mouseAdapter);
+	}
 
-        // Añadir un solo MouseAdapter para toda la cuadrícula
-        MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, this);
-        this.addMouseListener(mouseAdapter);
-        this.addMouseMotionListener(mouseAdapter);
-    }
+	/**
+	 * Retrieves the movable car at a specific point in the grid
+	 * @param point Point object representing the coordinates of the point
+	 * @return MovableCar object at the specified point, or null if no car is found
+	 */
+	public MovableCar getMovableCarAt(Point point) {
+		for (MovableCar car : movableCars.values()) {
+			if (car.contains(point)) {
+				return car;
+			}
+		}
+		return null;
+	}
 
-    // Método para obtener el coche en un punto específico
-    public MovableCar getMovableCarAt(Point point) {
-        for (MovableCar car : movableCars.values()) {
-            if (car.contains(point)) {
-                return car;
-            }
-        }
-        return null;
-    }
+	/**
+	 * Paint the board and the cars, plus the level completed message on top if level is finished
+	 */
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        // Dibujar el tablero
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                char elem = getElemAt(board, j, i);
-                if (elem == '+') {
-                    try {
-                        String image;
-                        BufferedImage imageToDraw;
-                        String cornerType = getCornerType(j, i);
-                        switch (cornerType) {
-                            case "topLeft":
-                                image = "wall_left_corners.png";
-                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-                                break;
-                            case "topRight":
-                                image = "wall_right_corners.png";
-                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-                                break;
-                            case "bottomLeft":
-                                image = "wall_left_corners.png";
-                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-                                break;
-                            case "bottomRight":
-                                image = "wall_right_corners.png";
-                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-                                break;
-                            default:
-                                if (isVerticalWall(j, i)) {
-                                    image = "wall_vertical.png";
-                                    imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                    g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,
-                                            this);
-                                } else {
-                                    image = "wall_horizontal.png";
-                                    imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                    g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize,
-                                            this);
-                                }
-                        }
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                } else if (elem == '@') {
-                    levelCompleted = false;
-                    String image;
-                    BufferedImage imageToDraw;
-                    String side = getExitSide(j, i);
-                    try {
-                        switch (side) {
-                            case "top":
-                                image = "exits/exitTop.png";
-                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-                                break;
-                            case "bottom":
-                                image = "exits/exitBottom.png";
-                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-                                break;
-                            case "left":
-                                image = "exits/exitLeft.png";
-                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-                                break;
-                            case "right":
-                                image = "exits/exitRight.png";
-                                imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
-                                g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-                                break;
-                            default:
-                                break;
-                        }
-                    } catch (IOException e) {
-                        // TODO: handle exception
-                    }
-                } else {
-                    g.setColor(Color.GRAY);
-                    g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
-                }
-            }
-        }
+		HashMap<String,BufferedImage> wallTypeMap = new HashMap<>();
+		try {
+			wallTypeMap.put("topLeft", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_left_corners.png")));
+			wallTypeMap.put("topRight", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_right_corners.png")));
+			wallTypeMap.put("bottomLeft", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_left_corners.png")));
+			wallTypeMap.put("bottomRight", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_right_corners.png")));
+			wallTypeMap.put("vertical", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_vertical.png")));
+			wallTypeMap.put("horizontal", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_horizontal.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        // Dibujar todos los coches movibles
-        for (MovableCar movableCar : movableCars.values()) {
-            movableCar.draw(g);
-        }
+		// Paint the board
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				char elem = board[i][j];
+				if (elem == '+') {
+					String cornerType = getCornerType(j, i);
+					switch (cornerType) {
+					case "topLeft": // If wall is top left corner
+						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
+						break;
+					case "topRight": // If wall is top right corner
+						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
+						break;
+					case "bottomLeft": // If wall is bottom left corner
+						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
+						break;
+					case "bottomRight": // If wall is bottom right corner
+						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
+						break;
+					default:
+						if (j == 0 || j == cols - 1) { // If wall is vertical
+							g.drawImage(wallTypeMap.get("vertical"), j * squareSize, i * squareSize, squareSize, squareSize, this);
+						} else { // If wall is horizontal
+							g.drawImage(wallTypeMap.get("horizontal"), j * squareSize, i * squareSize, squareSize, squareSize, this);
+						}
+					}
+				} else if (elem == '@') {
+					levelCompleted = false;
+					// Paint wall if on exit side
+					String side = getExitSide(j, i);
+					if(side != null) {
+						try {
+						BufferedImage imageToDraw = ImageIO.read(
+								getClass().getClassLoader().getResourceAsStream("exits/exit" + side + ".png"));
+						
+						g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				} else {
+					// Paint gray the cell
+					g.setColor(Color.GRAY);
+					g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
+				}
+			}
+		}
 
-        if (isLevelCompleted()) {
-            g.setColor(Color.BLACK); // Cambiar el color del texto a negro
-            g.setFont(new Font("Arial", Font.BOLD, 30)); // Cambiar la fuente y el tamaño del texto
-            // Calcular las coordenadas para centrar el texto
-            String message = "LEVEL COMPLETED";
-            int textWidth = g.getFontMetrics().stringWidth(message);
-            int textHeight = g.getFontMetrics().getHeight();
-            int x = (cols * squareSize - textWidth) / 2;
-            int y = (rows * squareSize + textHeight) / 2;
-            g.setColor(Color.BLUE);
-            g.fillRect(x-15,y-40, 325, 55);
-            g.setColor(Color.cyan);
-            g.fillRect(x-10,y-35, 315, 45);
-            g.setColor(Color.BLACK);
-            g.drawString(message, x, y);
-        }
-    }
+		// Paint all cars
+		for (MovableCar movableCar : movableCars.values()) {
+			movableCar.draw(g);
+		}
 
-    private String getCornerType(int x, int y) {
-        if (x == 0 && y == 0) {
-            return "topLeft";
-        } else if (x == cols - 1 && y == 0) {
-            return "topRight";
-        } else if (x == 0 && y == rows - 1) {
-            return "bottomLeft";
-        } else if (x == cols - 1 && y == rows - 1) {
-            return "bottomRight";
-        } else {
-            return "";
-        }
-    }
+		if (isLevelCompleted()) {
+			// Show the level completed message
+			g.setColor(Color.BLACK);
+			g.setFont(new Font("Arial", Font.BOLD, 30));
+			String message = "LEVEL COMPLETED";
+			int textWidth = g.getFontMetrics().stringWidth(message);
+			int textHeight = g.getFontMetrics().getHeight();
+			int x = (cols * squareSize - textWidth) / 2;
+			int y = (rows * squareSize + textHeight) / 2;
+			g.setColor(Color.BLUE);
+			g.fillRect(x-15,y-40, 325, 55);
+			g.setColor(Color.cyan);
+			g.fillRect(x-10,y-35, 315, 45);
+			g.setColor(Color.BLACK);
+			g.drawString(message, x, y);
+		}
+	}
 
-    private boolean isVerticalWall(int x, int y) {
-        return x == 0 || x == cols - 1;
-    }
+	/**
+	 * Returns which type of corner is the cell given
+	 * 
+	 * @param x horizontal coordinate of the cell
+	 * @param y vertical coordinate of the cell
+	 * @return bottomLeft, bottomRight, topLeft or topRight depending on which side is the cell
+	 */
+	private String getCornerType(int x, int y) {
+		if (x == 0 && y == 0) {
+			return "topLeft";
+		} else if (x == cols - 1 && y == 0) {
+			return "topRight";
+		} else if (x == 0 && y == rows - 1) {
+			return "bottomLeft";
+		} else if (x == cols - 1 && y == rows - 1) {
+			return "bottomRight";
+		} else {
+			return "";
+		}
+	}
 
-    private String getExitSide(int x, int y) {
-        if (y == 0) {
-            return "top";
-        } else if (y == rows - 1) {
-            return "bottom";
-        } else if (x == 0) {
-            return "left";
-        } else if (x == cols - 1) {
-            return "right";
-        } else {
-            return "";
-        }
-    }
+	/**
+	 * Returns in which side of the board is the exit
+	 * 
+	 * @param x horizontal coordinate of the exit
+	 * @param y vertical coordinate of the exit
+	 * @return Top, Bottom, Left or Right depending on which side is the exit, null if not on a side
+	 */
+	private String getExitSide(int x, int y) {
+		if (y == 0) {
+			return "Top";
+		} else if (y == rows - 1) {
+			return "Bottom";
+		} else if (x == 0) {
+			return "Left";
+		} else if (x == cols - 1) {
+			return "Right";
+		} else {
+			return null;
+		}
+	}
 
-    private char getElemAt(char[][] board, int row, int col) {
-        return board[col][row];
-    }
+	/**
+	 * Gets the board
+	 * @return the board
+	 */
+	public char[][] getBoard() {
+		return this.board;
+	}
 
-    public void setBoard(char[][] board) {
-        this.board = board;
-    }
+	/**
+	 * Sets the board to a new one
+	 * @param board the new board
+	 */
+	public void setBoard(char[][] board) {
+		this.board = board;
+	}
 
-    public char[][] getBoard() {
-        return this.board;
-    }
+	/**
+	 * Update the position of all the cars in the map
+	 * 
+	 * @param cars a map of cars
+	 */
+	public void setCars(Map<Character, Car> cars) {
+		for (Map.Entry<Character, Car> entry : cars.entrySet()) {
+			MovableCar movableCar = movableCars.get(entry.getKey());
+			if (movableCar != null) {
+				movableCar.updatePosition(entry.getValue().getCoordinates());
+			}
+		}
+	}
 
-    public void setCars(Map<Character, Car> cars) {
-        // Actualizar las instancias de MovableCar
-        for (Map.Entry<Character, Car> entry : cars.entrySet()) {
-            MovableCar movableCar = movableCars.get(entry.getKey());
-            if (movableCar != null) {
-                movableCar.updateCar(entry.getValue());
-            }
-        }
-    }
+	/**
+	 * Create drawable cars equivalent instances (MovableCar) and store them
+	 * 
+	 * @param cars map of cars to create their drawable instances
+	 */
+	public void setCarsMap(Map<Character, Car> cars) {
+		this.movableCars = new HashMap<>();
 
-    public void setCarsMap(Map<Character, Car> cars) {
-        // Actualizar las instancias de MovableCar
-        this.movableCars = new HashMap<>();
+		for (Map.Entry<Character, Car> entry : cars.entrySet()) {
+			Car car = entry.getValue();
+			String[] imagePaths = carImages.get(car.getLength());
+			String imagePath;
+			if (imagePaths == null) { // if null means that the length is more than 3
+				imagePath = "longCar";
+			} else {
+				imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
+			}
+			MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
+			movableCars.put(entry.getKey(), movableCar);
+		}
+	}
 
-        for (Map.Entry<Character, Car> entry : cars.entrySet()) {
-            Car car = entry.getValue();
-            String[] imagePaths = carImages.get(car.getLength());
-            String imagePath;
-            if (imagePaths == null) { // if is null it means that the length is more than 3
-                imagePath = "longCar";
-            } else {
-                imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
-            }
-            MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
-            movableCars.put(entry.getKey(), movableCar);
-        }
-    }
+	/**
+	 * Triest to move the car. If successful, returns the new board result of the movement
+	 * 
+	 * @param car the car symbol, which represents the car that will try to move
+	 * @param length the length of the car
+	 * @param way the orientation of the car, vertical or horizontal
+	 * @return the new board if the movement was successful
+	 * @throws SameMovementException
+	 */
+	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+		return controller.moveCar(car, length, way);
+	}
 
-    public char[][] moveCar(char car, int length, char way) throws SameMovementException {
-
-        return controller.moveCar(car, length, way);
-    }
-
-    public boolean isLevelCompleted() {
-        levelCompleted = true;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                char elem = getElemAt(board, j, i);
-                if (elem == '@')
-                    levelCompleted = false;
-            }
-        }
-        return this.levelCompleted;
-    }
+	/**
+	 * Returns whether or not the level is completed
+	 * 
+	 * @return true when @ symbol is not found, false otherwhise
+	 */
+	public boolean isLevelCompleted() {
+		levelCompleted = true;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				char elem = board[i][j];
+				if (elem == '@')
+					levelCompleted = false;
+			}
+		}
+		return this.levelCompleted;
+	}
 
 }
