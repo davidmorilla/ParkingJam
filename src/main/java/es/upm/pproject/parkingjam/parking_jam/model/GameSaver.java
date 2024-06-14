@@ -157,4 +157,19 @@ public class GameSaver {
 
         return list;
     }
+    
+    /**
+    * Retrieves the dimensions of the board.
+    * @returns the board dimensions (NxM)
+    */
+    public String getDimensions() {
+        	return dimensions;
+        }
+    /**
+    * Retrieves the name of the level.
+    * @returns the name of the level
+    */
+    public String getLevelName() {
+        	return levelName;
+        }
 }
