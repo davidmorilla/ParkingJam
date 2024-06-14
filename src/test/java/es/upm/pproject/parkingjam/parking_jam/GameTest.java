@@ -1,12 +1,19 @@
 package es.upm.pproject.parkingjam.parking_jam;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,7 +24,9 @@ import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalCarDimensionExce
 import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalExitsNumberException;
 import es.upm.pproject.parkingjam.parking_jam.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
+import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
 public class GameTest {
 	Game game;
@@ -112,6 +121,28 @@ public class GameTest {
 			Level level = game.getLevel();
 			assertNotNull(level);
 		}
+		
+		void getCarsTest() throws IllegalExitsNumberException, IllegalCarDimensionException {
+            game = new Game(1);
+            assertNotNull(game.getCars());
+        }
+		
+		 void resetLevelTest() throws IllegalExitsNumberException, IllegalCarDimensionException, SameMovementException {
+	            game = new Game(1);
+	            game.moveCar('c', 1, 'L');
+	            game.resetLevel();
+	            char[][] initialBoard = {
+	                {'+', '+', '+', '+', '+', '+', '+', '+'},
+	                {'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
+	                {'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
+	                {'+', 'd', ' ', ' ', '*', ' ', ' ', '+'},
+	                {'+', 'd', ' ', 'f', 'f', 'f', ' ', '+'},
+	                {'+', 'd', 'e', ' ', ' ', ' ', ' ', '+'},
+	                {'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
+	                {'+', '+', '+', '+', '@', '+', '+', '+'}
+	            };
+	            assertArrayEquals(initialBoard, game.getBoard());
+	        }
 
 	}
 
@@ -128,7 +159,8 @@ public class GameTest {
 		void testMove1TileLeft() throws SameMovementException {
 			char[][] newBoard = game.moveCar('g',1,'L');
 
-			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+			char expectedBoard[][] =	{
+					{'+', '+', '+', '+', '+', '+', '+', '+'},
 					{'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
 					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
 					{'+', 'd', ' ', ' ', '*', ' ', ' ', '+'},
@@ -143,7 +175,8 @@ public class GameTest {
 		void testMove1TileRight() throws SameMovementException {
 			char[][] newBoard = game.moveCar('f',1,'R');
 
-			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+			char expectedBoard[][] =	{
+					{'+', '+', '+', '+', '+', '+', '+', '+'},
 					{'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
 					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
 					{'+', 'd', ' ', ' ', '*', ' ', ' ', '+'},
@@ -159,7 +192,8 @@ public class GameTest {
 		void testMove1TileUp() throws SameMovementException {
 			char[][] newBoard = game.moveCar('e',1,'U');
 
-			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+			char expectedBoard[][] =	{
+					{'+', '+', '+', '+', '+', '+', '+', '+'},
 					{'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
 					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
 					{'+', 'd', ' ', ' ', '*', ' ', ' ', '+'},
@@ -170,7 +204,22 @@ public class GameTest {
 
 			assertArrayEquals(expectedBoard, newBoard);
 		}
+		@Test
+        void testMove1TileDown() throws SameMovementException {
+            char[][] newBoard = game.moveCar('c', 1, 'D');
 
+			char expectedBoard[][] =	{
+					{'+', '+', '+', '+', '+', '+', '+', '+'},
+					{'+', 'a', 'a', 'b', 'b', 'b', ' ', '+'},
+					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
+					{'+', 'd', ' ', ' ', '*', ' ', 'c', '+'},
+					{'+', 'd', ' ', 'f', 'f', 'f', ' ', '+'},
+					{'+', 'd', 'e', ' ', ' ', ' ', ' ', '+'},
+					{'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
+					{'+', '+', '+', '+', '@', '+', '+', '+'}};
+     
+            assertArrayEquals(expectedBoard, newBoard);
+        }
 		@Test
 		void testMove2TilesLeft() throws SameMovementException {
 			// To do this tests we need to move another vehicle first to make space for the 2-tiles left movement
@@ -178,7 +227,8 @@ public class GameTest {
 			char[][] newBoard = game.moveCar('g', 2, 'L');
 
 
-			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+			char expectedBoard[][] =	{
+					{'+', '+', '+', '+', '+', '+', '+', '+'},
 					{'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
 					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
 					{'+', 'd', ' ', ' ', '*', ' ', ' ', '+'},
@@ -197,7 +247,8 @@ public class GameTest {
 			char[][] newBoard = game.moveCar('f', 2, 'R');
 
 
-			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+			char expectedBoard[][] =	{
+					{'+', '+', '+', '+', '+', '+', '+', '+'},
 					{'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
 					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
 					{'+', 'd', ' ', ' ', '*', ' ', ' ', '+'},
@@ -213,7 +264,8 @@ public class GameTest {
 		void testMove2TilesUp() throws SameMovementException {
 			char[][] newBoard = game.moveCar('e', 2, 'U');
 
-			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+			char expectedBoard[][] =	{
+					{'+', '+', '+', '+', '+', '+', '+', '+'},
 					{'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
 					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
 					{'+', 'd', 'e', ' ', '*', ' ', ' ', '+'},
@@ -229,7 +281,8 @@ public class GameTest {
 		void testMove2TilesDown() throws SameMovementException {
 			char[][] newBoard = game.moveCar('c', 2, 'D');
 
-			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+			char expectedBoard[][] =	{
+					{'+', '+', '+', '+', '+', '+', '+', '+'},
 					{'+', 'a', 'a', 'b', 'b', 'b', ' ', '+'},
 					{'+', ' ', ' ', ' ', '*', ' ', ' ', '+'},
 					{'+', 'd', ' ', ' ', '*', ' ', 'c', '+'},
@@ -432,6 +485,19 @@ public class GameTest {
 			game.moveCar('c', 2, 'D');
 			assertEquals(6, game.getGameScore());
 		}
+		
+		@Test
+        void testScoreAfterUndo() throws SameMovementException, CannotUndoMovementException {
+            game.moveCar('*', 1, 'R');
+            game.undoMovement();
+            assertEquals(0, game.getLevelScore());
+        }
 	}
+	@DisplayName("Tests related to saving and loading game state")
+    @Nested
+    class GameSaveLoadTests {
+	    GameSaver gameSaver;
+	    
+    }
 
 }
