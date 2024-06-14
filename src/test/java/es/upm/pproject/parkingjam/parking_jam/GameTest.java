@@ -121,12 +121,12 @@ public class GameTest {
 			Level level = game.getLevel();
 			assertNotNull(level);
 		}
-		
+		@Test
 		void getCarsTest() throws IllegalExitsNumberException, IllegalCarDimensionException {
             game = new Game(1);
             assertNotNull(game.getCars());
         }
-		
+		@Test
 		 void resetLevelTest() throws IllegalExitsNumberException, IllegalCarDimensionException, SameMovementException {
 	            game = new Game(1);
 	            game.moveCar('c', 1, 'L');
