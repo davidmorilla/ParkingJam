@@ -86,7 +86,6 @@ public class Game {
 		int rows = level.getDimensions().getLeft();
 		List<Pair<Character, Pair<Integer,Character>>> history = gs.loadHistory(cols, rows);
 		level.setHistory(history);
-		System.out.println(history.size());
 
 		logger.info("Saved level {} has been loaded.", levelNumber);
 		return levelNumber;
@@ -221,7 +220,8 @@ public class Game {
      * @param levelNumber the number of the level to load.
      */
 	public void loadLevel(int levelNumber) {
-		logger.info("Loading level "+levelNumber+"...");
+		String msgLog = "Loading level "+levelNumber+"...";
+		logger.info(msgLog);
 
 		LevelReader lr = new LevelReader();
 		char[][] board = lr.readMap(levelNumber, false);
@@ -245,6 +245,6 @@ public class Game {
     * @param gameSaver the 'GameSaver' instance used to save the game state.
     */
 	public void saveGame(GameSaver gameSaver) {
-		gameSaver.saveGame(level.getHistory(), this.getGameScore(), this.getLevelScore(), getBoard());
+		gameSaver.saveGame(level.getHistory(), this.getGameScore(), this.getLevelScore(), getBoard(), "Level " + levelNumber);
 	}
 }

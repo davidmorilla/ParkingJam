@@ -15,14 +15,18 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.*;
  * A level contains a board, cars, a score, and supports various operations such as moving cars, undoing movements, and resetting the level.
  */
 public class Level {
-	private int score, oldScore; // Score of the level
-	private Map<Character, Car> cars, carsDefault; // Map of chat to 'Car' instances on the board
-	private char[][] board, boardDefault; // 2D matrix representation of the board
+	private int score;								// Score of the level
+	private int oldScore; 
+	private Map<Character, Car> cars;				// Map of chat to 'Car' instances on the board
+	private Map<Character, Car> carsDefault; 					
+	private char[][] board;							// 2D matrix representation of the board
+	private char[][] boardDefault; 		
 	private Pair<Integer, Integer> dimensions;
 	private List<Pair<Character, Pair<Integer,Character>>> history;
 	private GameSaver gameSaver;
+	String msgLog;
 
-	private static final Logger logger = LoggerFactory.getLogger(Game.class);
+	private static final Logger logger = LoggerFactory.getLogger(Level.class);
 	/**
 	 * Creates a new level with the given board and cars.
 	 * 
@@ -43,7 +47,8 @@ public class Level {
 		int numCols = board[0].length;
 		dimensions = new Pair<>(numRows, numCols);
 
-		logger.info("Level has been created: \n{}.", charMatrixToString(this.boardDefault));
+		msgLog = "Level has been created: \n" + charMatrixToString(this.boardDefault);
+		logger.info(msgLog);
 	}
 	/**
 	 * Converts a char matrix to a string representation.
@@ -76,7 +81,6 @@ public class Level {
 		logger.info("Increasing score...");
 		logger.info("Score has been increased by 1 unit (new score: {}).", score + 1);
 		score++;
-		// gameSaver.saveBoard(board);
 	}
 	/**
 	 * Decreases the score by 1.
@@ -85,7 +89,6 @@ public class Level {
 		logger.info("Decreasing score...");
 		logger.info("Score has been decreased by 1 unit(new score: {}).", score - 1);
 		score--;
-		// gameSaver.saveBoard(board);
 	}
 	/**
 	 * Creates a deep copy of the given car map.
@@ -120,7 +123,8 @@ public class Level {
 	 */
 	public char[][] getBoard() {
 		logger.info("Getting board...");
-		logger.info("Board has been given: \n{}", charMatrixToString(this.board));
+		msgLog = "Board has been given: \n" + charMatrixToString(this.board);
+		logger.info(msgLog);
 		return this.board;
 	}
 	/**
@@ -147,13 +151,13 @@ public class Level {
 			Pair<Character, Pair<Integer, Character>> mov = history.get(history.size() - 1);
 			history.remove(history.size() - 1);
 
-			char[][] board = moveCar(mov.getLeft(),mov.getRight().getLeft(), mov.getRight().getRight(), true);
+			char[][] boardAfterUndo = moveCar(mov.getLeft(),mov.getRight().getLeft(), mov.getRight().getRight(), true);
 			decreaseScore();
 			if (score == -1) {
 				score = oldScore;
 			}
 			logger.info("Movement has been undone.");
-			return board;
+			return boardAfterUndo;
 		} else {
 			logger.error("There are no movements to undo because no movement has been done before.");
 			throw new CannotUndoMovementException();
@@ -194,7 +198,8 @@ public class Level {
 
 		// Check if the car exists in the game
 		if (cars.get(car) == null) {
-			logger.error("Car '{}' does not exist.", car);
+			msgLog = "Car " + car + " does not exist.";
+			logger.error(msgLog);
 			return null;
 		}
 
@@ -455,7 +460,8 @@ public class Level {
      */
 	public Map<Character, Car> getCars() {
 		logger.info("Getting all cars...");
-		logger.info("All cars have been given (cars: {} ).", cars.keySet().toString());
+		msgLog = "All cars have been given (cars: " + cars.keySet().toString() + ").";
+		logger.info(msgLog);
 		return this.cars;
 	}
 	/**
