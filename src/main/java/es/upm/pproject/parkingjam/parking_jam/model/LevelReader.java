@@ -27,6 +27,8 @@ public class LevelReader {
      * @return the level number.
      */
     public int getLevelNumber() {
+    	logger.info("Getting level number...");
+    	logger.info("Level number = {} has been obtained", levelNumber);
         return levelNumber;
     }
 
@@ -163,6 +165,8 @@ public class LevelReader {
      * @return the GameSaver instance.
      */
     public GameSaver getGameSaver() {
+		logger.info("Getting GameSaver...");
+		logger.info("GameSaver has been obtained.");
         return gameSaver;
     }
 }

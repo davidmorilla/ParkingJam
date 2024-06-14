@@ -15,7 +15,7 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
  * of exits and the dimensions of the cars.
  *  */
 public class LevelConverter {
-    private static final Logger logger = LoggerFactory.getLogger(Game.class);
+    private static final Logger logger = LoggerFactory.getLogger(LevelConverter.class);
     
     
     /**
