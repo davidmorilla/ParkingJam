@@ -80,7 +80,6 @@ public class Game {
 		LevelReader lr = new LevelReader();
 		char[][] board = lr.readMap(levelNumber, true);
 		levelNumber = lr.getLevelNumber(); // Get the level number from LevelReader
-
 		level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
 		int cols = level.getDimensions().getRight();
 		int rows = level.getDimensions().getLeft();
@@ -199,7 +198,6 @@ public class Game {
 	}
     /**
      * Resets the original configuration of the current level.
-     *
      * 
      */
 	public void resetOriginalLevel() {
@@ -220,12 +218,14 @@ public class Game {
      * @param levelNumber the number of the level to load.
      */
 	public void loadLevel(int levelNumber) {
+		
 		String msgLog = "Loading level "+levelNumber+"...";
 		logger.info(msgLog);
 
 		LevelReader lr = new LevelReader();
 		char[][] board = lr.readMap(levelNumber, false);
 		try {
+			this.levelNumber = levelNumber;
 			level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
 		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
 			e.printStackTrace();
