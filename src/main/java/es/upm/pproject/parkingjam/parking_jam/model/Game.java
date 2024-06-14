@@ -134,7 +134,9 @@ public class Game {
      * @return the total game score.
      */
 	public int getGameScore() {
+		logger.info("Getting game score...");
 		int score = level.getScore();
+		logger.info("Game score: {} has been given.", score + acumulatedScore);
 		return  score + acumulatedScore;
 	}
     /**
@@ -143,7 +145,8 @@ public class Game {
      * @return the accumulated score.
      */ 
 	public int getAccumulatedScore() {
-
+		logger.info("Getting acumulated score...");
+		logger.info("Acumulated score: {} has been given.",acumulatedScore);
 		return  acumulatedScore;
 	}
 	/**
@@ -161,7 +164,7 @@ public class Game {
      */
 	public int getLevelNumber() {
 		logger.info("Getting level number...");
-		logger.info("Level number has been given (levelNumber: {}).", levelNumber);
+		logger.info("Level number: {} has been given.", levelNumber);
 		return levelNumber;
 	}
     /**
@@ -194,6 +197,8 @@ public class Game {
      * @param totalPoints the total points to set as accumulated score.
      */
 	public void setGameScore(int totalPoints) {
+		logger.info("Setting game score = {}...", totalPoints );
+		logger.info("Game score = {} successfully set.", totalPoints );
 		this.acumulatedScore = totalPoints;
 	}
     /**
