@@ -1,4 +1,4 @@
-Level 11 (missing 1 line)
+Level X (wrong level number format)
 8 8
 ++++++++
 +aabbbc+
@@ -6,4 +6,5 @@ Level 11 (missing 1 line)
 +d  *  +
 +d fff +
 +de    +
++ e ggg+
 ++++@+++

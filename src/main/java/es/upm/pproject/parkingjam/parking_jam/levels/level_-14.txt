@@ -1,5 +1,5 @@
-Level 10 (wrong dim format)
-8 8 8
+Level 14 (dimensions different from specified [greater])
+14 14
 ++++++++
 +aabbbc+
 +   * c+

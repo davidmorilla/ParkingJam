@@ -1,4 +1,4 @@
-Test level 1 (ok level)
+Level 1 (ok level)
 8 8
 ++++++++
 +aabbbc+

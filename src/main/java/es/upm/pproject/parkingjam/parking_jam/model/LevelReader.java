@@ -52,7 +52,9 @@ public class LevelReader {
             if (levelName != null) {
                 gameSaver.saveLevelName(levelName);
                 levelNumber = extractLevelNumber(levelName); // Extract and store the level number
-
+                if(levelNumber == -1) {
+                	return null;
+                }
              // Read the second line containing the board dimensions
                 String secondLine = reader.readLine();
                 if (secondLine != null) {
@@ -71,7 +73,13 @@ public class LevelReader {
                                 String row = reader.readLine();
                                 realCols = row.length();
                                 for (int j = 0; j < nColumns; j++) {
+                                	try {
                                     board[i][j] = row.charAt(j);
+                                	}catch(IndexOutOfBoundsException e) {
+                                		logger.error("The dimensions of the board do not match the ones specified in the file.");
+                                        reader.close();
+                                        return null;
+                                	}
                                 }
                                 realRows++;
                             }
@@ -102,7 +110,7 @@ public class LevelReader {
             logger.error("There was an error while reading the file: {}.", e.getMessage());
             try {
                 reader.close();
-            } catch (IOException e1) {
+            } catch (Exception e1) {
                 e1.printStackTrace();
             }
             return null;

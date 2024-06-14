@@ -34,7 +34,12 @@ class LevelReaderTest {
 		lr = new LevelReader();
 		Assertions.assertNull(lr.readMap(-8,false));
 	}
-	
+	@Test
+	public void getLevelNumberTest() {
+		lr = new LevelReader();
+		lr.readMap(-1,false);
+		Assertions.assertEquals(1, lr.getLevelNumber());
+	}
 	@Test
 	public void readLevelWithNoDimensionsTest() {
 		lr = new LevelReader();
@@ -58,5 +63,36 @@ class LevelReaderTest {
 		lr = new LevelReader();
 		Assertions.assertNull(lr.readMap(-12,false));
 	}
-
+	
+	@Test
+	public void readLevelWithNonConcordantGreaterDimensionsTest() {
+		lr = new LevelReader();
+		Assertions.assertNull(lr.readMap(-14,false));
+	}
+	
+	@Test
+	public void readLevelWithNonConcordantSmallerDimensionsTest() {
+		lr = new LevelReader();
+		Assertions.assertNull(lr.readMap(-15,false));
+	}
+	@Test
+	public void readNonExistentLevel() {
+		lr = new LevelReader();
+		Assertions.assertNull(lr.readMap(-150,false));
+	}
+	@Test
+	public void readLevelWithWrongLevelNumberFormat1() {
+		lr = new LevelReader();
+		Assertions.assertNull(lr.readMap(-16,false));
+	}
+	@Test
+	public void readLevelWithWrongLevelNumberFormat2() {
+		lr = new LevelReader();
+		Assertions.assertNull(lr.readMap(-17,false));
+	}
+	@Test
+	public void readLevelWithWrongLevelNumberFormat3() {
+		lr = new LevelReader();
+		Assertions.assertNull(lr.readMap(-18,false));
+	}
 }

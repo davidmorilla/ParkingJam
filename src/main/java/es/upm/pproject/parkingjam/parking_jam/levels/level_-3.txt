@@ -1,4 +1,4 @@
-Test level 3 (2 exits)
+Level 3 (2 exits)
 8 8
 ++++@+++
 +aabbbc+

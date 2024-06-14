@@ -1,4 +1,4 @@
-Test level 6 (wrong red car dimensions)
+Level 6 (wrong red car dimensions)
 8 8
 ++++++++
 +aabbbc+

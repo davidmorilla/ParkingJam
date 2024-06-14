@@ -1,4 +1,4 @@
-Test level 2 (no exits)
+Level 2 (no exits)
 8 8
 ++++++++
 +aabbbc+
