@@ -81,6 +81,8 @@ public class Level {
 	 * @return the history stack list.
 	 */
 	public List<Pair<Character, Pair<Integer, Character>>> getHistory() {
+		logger.info("Getting history...");
+		logger.info("The history has been given.");
 		return this.history;
 	}
 
@@ -159,6 +161,8 @@ public class Level {
 	 * @param score
 	 */
 	public void setPreviousScore(int score){
+		logger.info("Setting previous score = {}...", score);
+		logger.info("The previous score = {} has been given...", score);
 		previousScore = score;
 	}
 
@@ -288,7 +292,8 @@ public class Level {
 							increaseScore();
 
 					} catch (IllegalCarException e) {
-
+						msgLog = "Car " + car + " does not exist.";
+						logger.error(msgLog);
 						e.printStackTrace();
 					}
 				} else {
@@ -496,7 +501,7 @@ public class Level {
 				// Check if the cell is empty or occupied by the car itself or an exit '@'
 				if (board[y][carCoordinates.getX()] != ' ' && board[y][carCoordinates.getX()] != carChar
 						&& board[y][carCoordinates.getX()] != '@') {
-					logger.warn("Invalid movement: Trying to move to a not valid cell.");
+					logger.warn("Invalid movement: Trying to move to an invalid cell.");
 					return false;
 				}
 			}
@@ -507,7 +512,7 @@ public class Level {
 				// Check if the cell is empty or occupied by the car itself or an exit '@'
 				if (board[carCoordinates.getY()][x] != ' ' && board[carCoordinates.getY()][x] != carChar
 						&& board[carCoordinates.getY()][x] != '@') {
-					logger.warn("Invalid movement: Trying to move to a not valid cell.");
+					logger.warn("Invalid movement: Trying to move to an invalid cell.");
 					return false;
 				}
 			}
@@ -536,6 +541,7 @@ public class Level {
 	 * @return true if the level is finished, false otherwise.
 	 */
 	public boolean isLevelFinished(char[][] board) {
+		logger.info("Getting finishing state of level...");
 		boolean res = true;
 		for (int i = 0; i < board.length && res; i++) {
 			for (int j = 0; j < board[i].length && res; j++) {
@@ -545,6 +551,7 @@ public class Level {
 				}
 			}
 		}
+		logger.info("Finishing state has been obtained. Level is finished: {}", res);
 		return res;
 	}
 
@@ -554,7 +561,9 @@ public class Level {
 	 * @param score the new score to set.
 	 */
 	public void setPunctuation(int score) {
+		logger.info("Setting level score = {}...", score);
 		this.score = score;
+		logger.info("Level score = {} has been set.", score);
 	}
 
 	/**
@@ -563,7 +572,9 @@ public class Level {
 	 * @param score the new old score to set.
 	 */
 	public void setOldScore(int score) {
+		logger.info("Setting old level score = {}...", score);
 		this.oldScore = score;
+		logger.info("Level old score = {} has been set.", score);
 	}
 
 	/**
@@ -572,6 +583,8 @@ public class Level {
 	 * @return the old score.
 	 */
 	public int getOldScore() {
+		logger.info("Getting old level score...");
+		logger.info("Level old score = {} has been obtained.", oldScore);
 		return this.oldScore;
 	}
 
@@ -602,9 +615,10 @@ public class Level {
 			this.carsDefault = deepCopyCars(new LevelConverter().convertLevel(board)); // deep copy of the initial cars
 
 		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
+			logger.error("There was an error resetting the original level: {}", e.getLocalizedMessage());
 			e.printStackTrace();
 		}
-		logger.info("Level {} has been resetted.", levelNumber);
+		logger.info("Original level {} has been resetted.", levelNumber);
 
 	}
 
@@ -614,7 +628,9 @@ public class Level {
 	 * @param history the new list representing the movement history.
 	 */
 	public void setHistory(List<Pair<Character, Pair<Integer, Character>>> history) {
+		logger.info("Setting history ...");
 		this.history = history;
+		logger.info("History has been set.");
 	}
 
 	/**
@@ -623,6 +639,8 @@ public class Level {
 	 * @return the 'GameSaver' instance.
 	 */
 	public GameSaver getGameSaver() {
+		logger.info("Getting GameSaver...");
+		logger.info("GameSaver has been obtained.");
 		return this.gameSaver;
 	}
 }
