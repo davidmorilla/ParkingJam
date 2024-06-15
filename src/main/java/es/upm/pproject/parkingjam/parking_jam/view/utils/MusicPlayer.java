@@ -35,7 +35,6 @@ public class MusicPlayer {
             }
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
         }
     }
 
@@ -63,7 +62,6 @@ public class MusicPlayer {
             erase.open(audioInputStream);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
         }
         if (erase != null) {
             erase.setFramePosition(0);
@@ -86,7 +84,6 @@ public class MusicPlayer {
             levelSuccess.open(audioInputStream);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
         }
         if (levelSuccess != null) {
             levelSuccess.setFramePosition(0);
@@ -109,7 +106,6 @@ public class MusicPlayer {
             restartLevel.open(audioInputStream);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
         }
         if (restartLevel != null) {
             restartLevel.setFramePosition(0);

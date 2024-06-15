@@ -68,7 +68,6 @@ public class GameSaver {
 		} catch (IOException e) {
 			msgLog = "There was a problem creating GameSaver: " + e.getLocalizedMessage();
 			logger.error(msgLog);
-			e.printStackTrace();
 		}
 	}
 	/**
@@ -128,7 +127,6 @@ public class GameSaver {
 		} catch (IOException e) {
 			msgLog = "There was an error saving the board: " + e.getLocalizedMessage();
 			logger.error(msgLog);
-			e.printStackTrace();
 		}
 	}
 
@@ -149,7 +147,6 @@ public class GameSaver {
 		} catch (IOException e) {
 			msgLog = "There was an error saving the score: " + e.getLocalizedMessage();
 			logger.error(msgLog);
-			e.printStackTrace();
 		}
 	}
 
@@ -171,7 +168,6 @@ public class GameSaver {
 		} catch (IOException e) {
 			msgLog = "There was an error saving the history: " + e.getLocalizedMessage();
 			logger.error(msgLog);
-			e.printStackTrace();
 		}
 	}
 
@@ -198,7 +194,6 @@ public class GameSaver {
 		} catch (IOException e) {
 			msgLog = "There was an error loading the history: " + e.getLocalizedMessage();
 			logger.error(msgLog);
-			e.printStackTrace();
 		}
 
 		return list;

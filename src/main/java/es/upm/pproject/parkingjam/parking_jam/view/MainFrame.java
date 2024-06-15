@@ -70,7 +70,6 @@ public class MainFrame extends JFrame {
 			backgroundImage = ImageIO.read(imageUrl);
 		} catch (IOException e) {
 			logger.error("Could not load background image");
-			e.printStackTrace();
 		}
 
 		mainPanel = new BackgroundPanel(backgroundImage);
@@ -135,10 +134,11 @@ public class MainFrame extends JFrame {
 					musicPlayer.playErase();
 					logger.info("Movement undone.");
 				} catch (CannotUndoMovementException e) {
-					e.printStackTrace();
 					logger.error("Cannot undo movement, there is none done previously.");
 				} catch (SameMovementException e) {
-					e.printStackTrace();
+					logger.error("Cannot undo movement");
+				} catch (IllegalDirectionException e) {
+					logger.error("Cannot undo movement, the direction is not valid");
 				}
 				updateDataPanel();
 			}
@@ -332,10 +332,11 @@ public class MainFrame extends JFrame {
 					musicPlayer.playErase();
 					logger.info("Movement undone.");
 				} catch (CannotUndoMovementException e) {
-					e.printStackTrace();
 					logger.error("Cannot undo movement, there is none done previously.");
 				} catch (SameMovementException e) {
-					e.printStackTrace();
+					logger.error("Cannot undo movement");
+				} catch (IllegalDirectionException e) {
+					logger.error("Cannot undo movement, the direction is not valid");
 				}
 				updateDataPanel();
 			}
@@ -559,7 +560,7 @@ public class MainFrame extends JFrame {
 					startGame();
 					musicPlayer.playLevelStart();
 				} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
-					e.printStackTrace();
+					logger.error("Cannot load saved game. The number of exists and/or car dimensions are wrong");
 				}
 			}
 		});

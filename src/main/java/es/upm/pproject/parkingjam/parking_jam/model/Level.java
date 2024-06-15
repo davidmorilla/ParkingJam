@@ -172,8 +172,9 @@ public class Level {
 	 * @return the restored board state.
 	 * @throws CannotUndoMovementException if there are no movements to undo.
 	 * @throws SameMovementException       if the movement is to the same position.
+	 * @throws IllegalDirectionException 
 	 */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException {
+	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException {
 		logger.info("Undoing movement...");
         if (!history.isEmpty() && !this.isLevelFinished(board)) {
             Pair<Character, Pair<Integer, Character>> mov = history.get(history.size() - 1);
@@ -220,8 +221,9 @@ public class Level {
 	 *               undo movement.
 	 * @return the new board state or null if the move is not possible.
 	 * @throws SameMovementException if the same movement is repeated.
+	 * @throws IllegalDirectionException 
 	 */
-	public char[][] moveCar(char car, int length, char way, boolean undo) throws SameMovementException {
+	public char[][] moveCar(char car, int length, char way, boolean undo) throws SameMovementException, IllegalDirectionException {
 		logger.info("Moving car '{}'...", car);
 
 		// Check if the level is already finished
@@ -268,7 +270,7 @@ public class Level {
 					logger.info("Moving car '{}' {} units up...", car, length);
 					coord = new Coordinates(xCar, yCar - Math.abs(length));
 					break;
-				case 'D': // Move down
+				default: // Move down
 					logger.info("Moving car '{}' {} units down...", car, length);
 					coord = new Coordinates(xCar, yCar + Math.abs(length));
 					break;
@@ -294,7 +296,6 @@ public class Level {
 					} catch (IllegalCarException e) {
 						msgLog = "Car " + car + " does not exist.";
 						logger.error(msgLog);
-						e.printStackTrace();
 					}
 				} else {
 					// Handle invalid movement due to obstacles or if the level is finished
@@ -314,8 +315,9 @@ public class Level {
 			}
 		} else {
 			// Handle invalid movement direction
-			logger.warn("Invalid movement orientation.");
-			return null;
+			msgLog = "The direction '" + way + "' is not valid";
+			logger.error(msgLog);
+			throw new IllegalDirectionException();
 		}
 		logger.info("Car '{}' has been moved.", car);
 		return newBoard; // Return the new board state after the move
@@ -616,7 +618,6 @@ public class Level {
 
 		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
 			logger.error("There was an error resetting the original level: {}", e.getLocalizedMessage());
-			e.printStackTrace();
 		}
 		logger.info("Original level {} has been resetted.", levelNumber);
 

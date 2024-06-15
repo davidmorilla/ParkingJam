@@ -113,7 +113,6 @@ public class LevelReader {
             try {
                 reader.close();
             } catch (Exception e1) {
-                e1.printStackTrace();
             }
             return null;
         }

@@ -134,7 +134,6 @@ public class DataPanel extends JPanel {
             this.revalidate();
             this.repaint();
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

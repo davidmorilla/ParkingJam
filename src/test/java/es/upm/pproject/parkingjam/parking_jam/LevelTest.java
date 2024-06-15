@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
@@ -53,7 +54,7 @@ public class LevelTest {
 	class MovementTests {
 		
 		@Test
-		void testMove1TileLeft() throws SameMovementException {
+		void testMove1TileLeft() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('g',1,'L', false);
 
 			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
@@ -68,7 +69,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testMove1TileRight() throws SameMovementException {
+		void testMove1TileRight() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('f',1,'R', false);
 
 			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
@@ -84,7 +85,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testMove1TileUp() throws SameMovementException {
+		void testMove1TileUp() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('e',1,'U', false);
 
 			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
@@ -100,7 +101,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testMove2TilesLeft() throws SameMovementException {
+		void testMove2TilesLeft() throws SameMovementException, IllegalDirectionException {
 			// To do this tests we need to move another vehicle first to make space for the 2-tiles left movement
 			level.moveCar('e',1,'U', false);
 			char[][] newBoard = level.moveCar('g', 2, 'L', false);
@@ -119,7 +120,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testMove2TilesRight() throws SameMovementException {
+		void testMove2TilesRight() throws SameMovementException, IllegalDirectionException {
 			// To do this tests we need to move t vehicle first to make space for the 2-tiles left movement
 			level.moveCar('f',1,'L', false);
 			char[][] newBoard = level.moveCar('f', 2, 'R', false);
@@ -138,7 +139,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testMove2TilesUp() throws SameMovementException {
+		void testMove2TilesUp() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('e', 2, 'U', false);
 
 			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
@@ -154,7 +155,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testMove2TilesDown() throws SameMovementException {
+		void testMove2TilesDown() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('c', 2, 'D', false);
 
 			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
@@ -170,59 +171,64 @@ public class LevelTest {
 		}
 
 		@Test
-		void testMoveAgainstLeftWall() throws SameMovementException {
+		void testMoveAgainstLeftWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('c', 1, 'U', false);
 
 			assertNull(newBoard);
 		}
 
 		@Test
-		void testMoveAgainstRightWall() throws SameMovementException {
+		void testMoveAgainstRightWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('g', 5, 'R', false);
 
 			assertNull(newBoard);
 		}
 
 		@Test
-		void testMoveAgainstUpperWall() throws SameMovementException {
+		void testMoveAgainstUpperWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('a', 1, 'L', false);
 
 			assertNull(newBoard);
 		}
 
 		@Test
-		void testMoveAgainstBottomWall() throws SameMovementException {
+		void testMoveAgainstBottomWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('d', 5, 'D', false);
 
 			assertNull(newBoard);
 		}
 
 		@Test
-		void testMoveInvalidDirection() throws SameMovementException {
+		void testMoveInvalidDirection() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('d', 1, 'R', false);
 
 			assertNull(newBoard);
 		}
 
 		@Test
-		void testMoveInvalidDirection2() throws SameMovementException {
+		void testMoveInvalidDirection2() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('a', 1, 'D', false);
 
 			assertNull(newBoard);
 		}
 
 		@Test
-		void testMoveAgainstOtherCar() throws SameMovementException {
+		void testMoveAgainstOtherCar() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('a', 1, 'R', false);
 
 			assertNull(newBoard);
 		}
 
 		@Test
-		void testMoveAgainstOtherCar2() throws SameMovementException {
+		void testMoveAgainstOtherCar2() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('*', 1, 'D', false);
 
 			assertNull(newBoard);
+		}
+		
+		@Test
+		void testInvalidDirection() throws SameMovementException, IllegalDirectionException {
+			assertThrows(IllegalDirectionException.class, () -> level.moveCar('*', 1, 'Q', false));
 		}
 	}
 
@@ -239,7 +245,7 @@ public class LevelTest {
 				{'+', '+', '+', '+', '@', '+', '+', '+'}};
 
 		@Test
-		void testUndoMovement() throws SameMovementException, CannotUndoMovementException {
+		void testUndoMovement() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
 			
 			level.moveCar('c', 2, 'D', false);
 			level.undoMovement();
@@ -248,7 +254,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testUndoMovement2() throws SameMovementException, CannotUndoMovementException {
+		void testUndoMovement2() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
 			
 			level.moveCar('g', 1, 'L', false);
 			level.undoMovement();
@@ -257,7 +263,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testUndoMovement3() throws SameMovementException, CannotUndoMovementException {
+		void testUndoMovement3() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
 			level.moveCar('e', 1, 'U', false);
 			level.moveCar('g', 3, 'L', false);
 			level.moveCar('c', 1, 'D', false);
@@ -276,7 +282,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testUndoMovement4() throws SameMovementException, CannotUndoMovementException {
+		void testUndoMovement4() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
 			level.moveCar('e', 1, 'U', false);
 			level.moveCar('g', 3, 'L', false);
 			level.moveCar('c', 1, 'D', false);
@@ -294,7 +300,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testUndoMovementInvalid2() throws SameMovementException, CannotUndoMovementException {
+		void testUndoMovementInvalid2() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
 			level.moveCar('e', 1, 'U', false);
 			assertDoesNotThrow(() -> level.undoMovement());
 			assertThrows(CannotUndoMovementException.class, () -> level.undoMovement());
@@ -310,14 +316,14 @@ public class LevelTest {
 		}
 
 		@Test
-		void testScoreAfter1Move() throws SameMovementException {
+		void testScoreAfter1Move() throws SameMovementException, IllegalDirectionException {
 			level.moveCar('e', 1, 'U', false);
 
 			assertEquals(1, level.getScore());
 		}
 
 		@Test
-		void testScoreAfterSomeMoves() throws SameMovementException {
+		void testScoreAfterSomeMoves() throws SameMovementException, IllegalDirectionException {
 			level.moveCar('e', 1, 'U', false);
 			level.moveCar('f', 1, 'R', false);
 			level.moveCar('c', 1, 'D', false);
@@ -326,28 +332,28 @@ public class LevelTest {
 		}
 
 		@Test
-		void testScoreAfterMoveMoreThanOneTile() throws SameMovementException {
+		void testScoreAfterMoveMoreThanOneTile() throws SameMovementException, IllegalDirectionException {
 			level.moveCar('c', 3, 'D', false);
 
 			assertEquals(1, level.getScore());
 		}
 
 		@Test
-		void testScoreAfterInvalidMove() throws SameMovementException {
+		void testScoreAfterInvalidMove() throws SameMovementException, IllegalDirectionException {
 			level.moveCar('c', 1, 'U', false);
 
 			assertEquals(0, level.getScore());
 		}
 
 		@Test
-		void testScoreAfterSomeInvalidMoves() throws SameMovementException {
+		void testScoreAfterSomeInvalidMoves() throws SameMovementException, IllegalDirectionException {
 			level.moveCar('c', 1, 'U', false);
 			level.moveCar('a', 1, 'R', false);
 			assertEquals(0, level.getScore());
 		}
 
 		@Test
-		void testScoreAfterSomeValidAndInvalidMoves() throws SameMovementException {
+		void testScoreAfterSomeValidAndInvalidMoves() throws SameMovementException, IllegalDirectionException {
 			level.moveCar('c', 1, 'U', false);
 			level.moveCar('e', 1, 'U', false);
 			level.moveCar('f', 1, 'R', false);
@@ -356,7 +362,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testScoreAfterUndo() throws SameMovementException, CannotUndoMovementException {
+		void testScoreAfterUndo() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
 			level.moveCar('e', 1, 'U', false);
 			level.undoMovement();
 
@@ -364,7 +370,7 @@ public class LevelTest {
 		}
 
 		@Test
-		void testScoreAfterUndo2() throws SameMovementException, CannotUndoMovementException {
+		void testScoreAfterUndo2() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
 			level.moveCar('e', 1, 'U', false);
 			level.moveCar('f', 1, 'R', false);
 			level.moveCar('c', 1, 'D', false);

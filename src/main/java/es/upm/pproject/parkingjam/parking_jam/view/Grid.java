@@ -14,6 +14,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
@@ -95,7 +96,6 @@ public class Grid extends JPanel {
 			wallTypeMap.put("vertical", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_vertical.png")));
 			wallTypeMap.put("horizontal", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_horizontal.png")));
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
 		// Paint the board
@@ -135,7 +135,6 @@ public class Grid extends JPanel {
 						
 						g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
 						} catch (IOException e) {
-							e.printStackTrace();
 						}
 					}
 				} else {
@@ -271,8 +270,9 @@ public class Grid extends JPanel {
 	 * @param way the orientation of the car, vertical or horizontal
 	 * @return the new board if the movement was successful
 	 * @throws SameMovementException if the movement is to the same place.
+	 * @throws IllegalDirectionException 
 	 */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException {
 		return controller.moveCar(car, length, way);
 	}
 

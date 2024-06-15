@@ -190,7 +190,6 @@ public class MovableCar {
 				parent.repaint();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -219,7 +218,6 @@ public class MovableCar {
 				parent.repaint();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -236,7 +234,6 @@ public class MovableCar {
 			horizontalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(horizontal_path));
 			verticalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(vertical_path));
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

@@ -57,8 +57,9 @@ public class Controller {
      * @param way the direction to move the car
      * @return the updated board state after the move
      * @throws SameMovementException if the same movement is attempted consecutively
+	 * @throws IllegalDirectionException 
      */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException {
 		return game.moveCar(car, length, way);
 	}
 	/**
@@ -67,8 +68,9 @@ public class Controller {
      * @return the updated board state after undoing the move
      * @throws CannotUndoMovementException if no movements can be undone
      * @throws SameMovementException if the same movement is attempted consecutively
+	 * @throws IllegalDirectionException 
      */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException {
+	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException {
 		return game.undoMovement();
 	}
 	/**

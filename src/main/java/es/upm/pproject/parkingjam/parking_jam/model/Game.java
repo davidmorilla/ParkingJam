@@ -111,8 +111,9 @@ public class Game {
      * @param way the direction (either 'H' for horizontal or 'V' for vertical) to move the car.
      * @return a 2D char array representing the updated board configuration after the movement.
      * @throws SameMovementException if the same movement has been attempted twice consecutively.
+     * @throws IllegalDirectionException 
      */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException {
+	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException {
 		return level.moveCar(car, length, way, false);
 	}
     /**
@@ -121,8 +122,9 @@ public class Game {
      * @return an 'OldBoardData' object representing the board state before the last movement.
      * @throws CannotUndoMovementException if there is no movement to undo.
      * @throws SameMovementException if the movement is to the same place.
+     * @throws IllegalDirectionException 
      */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException {
+	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException {
 		return level.undoMovement();
 	}
     /**
@@ -230,7 +232,7 @@ public class Game {
 			this.levelNumber = levelNumber;
 			level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
 		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
-			e.printStackTrace();
+			logger.error("Cannot load level. The number of exists and/or car dimensions are not valid");
 		}
 		logger.info("New level {} has been loaded.", levelNumber);
 	}
