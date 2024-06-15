@@ -7,21 +7,15 @@ import es.upm.pproject.parkingjam.parking_jam.view.Grid;
 import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
 
 public class MyMouseAdapter extends MouseAdapter {
-    private boolean dragging;
     private int squareSize;
     private Grid grid;
     private MovableCar movableSquare;
-    private Point click;
-    private int lastDx;
-    private int lastDy;
     private int initialRow;
     private int initialCol;
 
     public MyMouseAdapter(int squareSize, Grid grid) {
         this.squareSize = squareSize;
         this.grid = grid;
-        this.lastDx = 0;
-        this.lastDy = 0;
     }
 
     @Override

@@ -2,7 +2,6 @@ package es.upm.pproject.parkingjam.parking_jam.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,8 +117,10 @@ public class LevelReader {
         }
         
      // Log the read map if successfully read
-        if (board != null)
-            logger.info("Map has been read: \n {}", charMatrixToString(board));
+        if (board != null) {
+        	String boardString = "Map has been read: \n " + charMatrixToString(board);
+            logger.info(boardString);
+        }
         return board;
     }
 

@@ -6,9 +6,17 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.model.LevelConverter;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
 /**
  * MovableCar represents a car that can be moved on the board.
@@ -24,13 +32,16 @@ public class MovableCar {
 	private Color color;
 	private int initialCol; // Columna inicial al empezar a arrastrar
 	private int initialRow; // Fila inicial al empezar a arrastrar
-	private char orientation, carSymbol;
+	private char orientation;
+	private char carSymbol;
 	private int length;
 	private Controller controller;
 	private MainFrame mf;
 	private boolean dragging;
 	private BufferedImage horizontalCarImage;
 	private BufferedImage verticalCarImage;
+    private static final Logger logger = LoggerFactory.getLogger(MovableCar.class);
+
 
 	/**
 	 * MovableCar's Constructor
@@ -44,14 +55,13 @@ public class MovableCar {
 	 * @param mf         	The mainframe of the application
 	 * @param image      	Name of the car's image
 	 */
-	public MovableCar(Car car, int rows, int cols, int squareSize, Grid grid, Controller controller, MainFrame mf, String image) {
+	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, Grid grid, Controller controller, MainFrame mf, String image) {
 		this.parent = grid;
 		this.carSymbol = car.getSymbol();
 		this.row = car.getCoordinates().getY();
 		this.col = car.getCoordinates().getX();
-		this.color = chooseColor(carSymbol);
-		this.rows = rows;
-		this.cols = cols;
+		this.rows = dimensions.getLeft();
+		this.cols = dimensions.getRight();
 		this.squareSize = squareSize;
 		this.orientation = car.getOrientation();
 		this.length = car.getLength();
@@ -183,13 +193,21 @@ public class MovableCar {
 		}
 		
 		try {
+			// Determine the direction based on orientation and movement
+		    char direction;
+		    if (orientation == 'V') {
+		        direction = (dy > 0) ? 'D' : 'U';
+		    } else {
+		        direction = (dx > 0) ? 'R' : 'L';
+		    }
 			// Update to the new position and repaint only if level is not finished and the move is valid
-			if (!controller.isLevelFinished() && controller.isMoveValid(carSymbol, new Coordinates(newCol, newRow), orientation == 'V' ? (dy > 0 ? 'D' : 'U') : (dx > 0 ? 'R' : 'L'))) {
+			if (!controller.isLevelFinished() && controller.isMoveValid(carSymbol, new Coordinates(newCol, newRow), direction)) {
 				row = newRow;
 				col = newCol;
 				parent.repaint();
 			}
 		} catch (Exception e) {
+			logger.error("ERROR: The position of the car could not be updated and repainted");
 		}
 	}
 
@@ -217,7 +235,8 @@ public class MovableCar {
 				// Repaint the board after moving the car on the model
 				parent.repaint();
 			}
-		} catch (Exception e) {
+		} catch (SameMovementException | IllegalDirectionException e) {
+			logger.error("ERROR: The movement of the car is the same or the direction is not valid");
 		}
 	}
 	
@@ -229,46 +248,12 @@ public class MovableCar {
 	private void loadImage(String image) {
 		try {
 			// Path for such resources
-			String horizontal_path = "cars/" + image + "_horizontal.png";
-			String vertical_path = "cars/" + image + "_vertical.png";
-			horizontalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(horizontal_path));
-			verticalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(vertical_path));
+			String horizontalPath = "cars/" + image + "_horizontal.png";
+			String verticalPath = "cars/" + image + "_vertical.png";
+			horizontalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(horizontalPath));
+			verticalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(verticalPath));
 		} catch (IOException e) {
+			logger.error("ERROR: Could not load car image");
 		}
-	}
-
-	/**
-	 * Chooses a color for the car based on the symbol
-	 *
-	 * @param c car's symbol
-	 * @return the corresponding color chosen by an algorithm
-	 */
-	private static Color chooseColor(char c) {
-		// The red (main) car has always to be red
-		if (c == '*')
-			return Color.RED;
-		else if (c >= 'a' && c <= 'z') {
-			switch ((c - 97) % 9) {
-			case 0:
-				return Color.PINK;
-			case 1:
-				return Color.BLUE;
-			case 2:
-				return Color.GREEN;
-			case 3:
-				return Color.ORANGE;
-			case 4:
-				return Color.GRAY;
-			case 5:
-				return Color.CYAN;
-			case 6:
-				return Color.YELLOW;
-			case 7:
-				return Color.MAGENTA;
-			case 8:
-				return Color.DARK_GRAY;
-			}
-		}
-		return null;
 	}
 }

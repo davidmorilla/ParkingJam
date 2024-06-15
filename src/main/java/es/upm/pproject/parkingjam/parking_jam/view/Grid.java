@@ -257,7 +257,7 @@ public class Grid extends JPanel {
 			} else {
 				imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
 			}
-			MovableCar movableCar = new MovableCar(car, rows, cols, squareSize, this, controller, this.mf, imagePath);
+			MovableCar movableCar = new MovableCar(car, new Pair<>(rows, cols), squareSize, this, controller, this.mf, imagePath);
 			movableCars.put(entry.getKey(), movableCar);
 		}
 	}

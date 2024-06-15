@@ -5,7 +5,6 @@ import javax.sound.sampled.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
 
 import java.io.IOException;
 import java.net.URL;
