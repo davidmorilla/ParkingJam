@@ -435,6 +435,8 @@ public class MainFrame extends JFrame {
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
+
 				mainPanel.remove(startButton);
 				mainPanel.remove(buttonPanel);
 				mainPanel.remove(selectLevel);
@@ -452,14 +454,7 @@ public class MainFrame extends JFrame {
 		loadGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				mainPanel.remove(startButton);
-				mainPanel.remove(selectLevel);
-				buttonPanel.remove(selectLevel);
-				buttonPanel.remove(startButton);
-				buttonPanel.remove(loadGameButton);
-				mainPanel.remove(titleLabel);
-				mainPanel.revalidate();
-				mainPanel.repaint();
+				clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
 				try {
 					levelSavedLoaded = true;
 					controller.loadSavedLevel();
@@ -478,15 +473,7 @@ public class MainFrame extends JFrame {
 		selectLevel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				mainPanel.remove(startButton);
-				mainPanel.remove(selectLevel);
-				buttonPanel.remove(selectLevel);
-				buttonPanel.remove(startButton);
-				buttonPanel.remove(loadGameButton);
-				mainPanel.remove(titleLabel);
-				mainPanel.revalidate();
-				mainPanel.repaint();
-
+				clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
 				// Show select level screen
 				showLevelButtons();
 			}
@@ -496,6 +483,17 @@ public class MainFrame extends JFrame {
 		mainPanel.add(buttonPanel, gbc);
 		mainPanel.revalidate();
 		mainPanel.repaint();
+	}
+	
+	private void clearMainPanel(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton, JLabel titleLabel) {
+	    mainPanel.remove(startButton);
+	    mainPanel.remove(selectLevel);
+	    buttonPanel.remove(selectLevel);
+	    buttonPanel.remove(startButton);
+	    buttonPanel.remove(loadGameButton);
+	    mainPanel.remove(titleLabel);
+	    mainPanel.revalidate();
+	    mainPanel.repaint();
 	}
 
 	/**
