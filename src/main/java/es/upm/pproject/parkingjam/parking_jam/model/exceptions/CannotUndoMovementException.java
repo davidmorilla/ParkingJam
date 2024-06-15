@@ -1,4 +1,4 @@
-package es.upm.pproject.parkingjam.parking_jam.exceptions;
+package es.upm.pproject.parkingjam.parking_jam.model.exceptions;
 
 public class CannotUndoMovementException extends Exception {
     public CannotUndoMovementException(){

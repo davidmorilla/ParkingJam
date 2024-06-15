@@ -14,7 +14,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;

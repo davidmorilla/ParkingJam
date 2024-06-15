@@ -8,7 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.upm.pproject.parkingjam.parking_jam.exceptions.*;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.*;
 
 /**
@@ -232,7 +232,7 @@ public class Level {
 		if (!undo) { // If it's not an undo movement we must save the movement to the history list
 			char undoWay = opposite(way);
 			Pair<Character, Pair<Integer, Character>> mov = new Pair<>(car,
-					new Pair<Integer, Character>(length, undoWay));
+					new Pair<>(length, undoWay));
 			// Save the current movement to history for undo functionality
 			history.add(mov);
 		}

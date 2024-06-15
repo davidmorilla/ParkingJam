@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameSaverTest {
     private GameSaver gameSaver;
-    private final String levelFilePath = "src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/level.txt";
-    private final String scoreFilePath = "src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/punctuation.txt";
-    private final String historyFilePath = "src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/history.txt";
+    private final String levelFilePath = "src/main/resources/savedGame/level.txt";
+    private final String scoreFilePath = "src/main/resources/savedGame/punctuation.txt";
+    private final String historyFilePath = "src/main/resources/savedGame/history.txt";
 
     @BeforeEach
     void setUp() {

@@ -12,8 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalCarDimensionException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalExitsNumberException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalExitsNumberException;
 import es.upm.pproject.parkingjam.parking_jam.model.LevelConverter;
 import es.upm.pproject.parkingjam.parking_jam.model.LevelReader;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;

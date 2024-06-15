@@ -122,7 +122,7 @@ public class DataPanel extends JPanel {
      * Loads the score from a saved file and updates the panel.
      */
     public void loadPunctuation() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/punctuation.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/savedGame/punctuation.txt"))) {
             totalPoints = Integer.parseInt(reader.readLine());
             levelPoints = Integer.parseInt(reader.readLine());
 

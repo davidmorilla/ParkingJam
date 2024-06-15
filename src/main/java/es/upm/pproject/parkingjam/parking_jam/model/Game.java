@@ -6,10 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.upm.pproject.parkingjam.parking_jam.exceptions.CannotUndoMovementException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalCarDimensionException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalExitsNumberException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 

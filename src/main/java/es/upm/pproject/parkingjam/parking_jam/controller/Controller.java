@@ -2,10 +2,7 @@ package es.upm.pproject.parkingjam.parking_jam.controller;
 
 import java.util.Map;
 
-import es.upm.pproject.parkingjam.parking_jam.exceptions.CannotUndoMovementException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalCarDimensionException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalExitsNumberException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;

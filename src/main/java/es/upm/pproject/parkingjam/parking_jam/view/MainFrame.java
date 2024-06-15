@@ -10,10 +10,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.CannotUndoMovementException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalCarDimensionException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.IllegalExitsNumberException;
-import es.upm.pproject.parkingjam.parking_jam.exceptions.SameMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.BackgroundPanel;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MusicPlayer;

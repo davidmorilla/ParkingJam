@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 public class LevelReader {
 	
 	// File name formats for level data and saved game data
-    public static final String LEVEL_FILE_NAME_FORMAT = "src/main/java/es/upm/pproject/parkingjam/parking_jam/levels/level_%d.txt";
-    public static final String LEVEL_SAVED_FILE_NAME_FORMAT = "src/main/java/es/upm/pproject/parkingjam/parking_jam/Games saved/level.txt";
+    public static final String LEVEL_FILE_NAME_FORMAT = "src/main/resources/levels/level_%d.txt";
+    public static final String LEVEL_SAVED_FILE_NAME_FORMAT = "src/main/resources/savedGame/level.txt";
 
     private static final Logger logger = LoggerFactory.getLogger(LevelReader.class);
     private GameSaver gameSaver = new GameSaver();
