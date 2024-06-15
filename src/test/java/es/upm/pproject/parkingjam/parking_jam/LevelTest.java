@@ -1,12 +1,9 @@
 package es.upm.pproject.parkingjam.parking_jam;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -389,6 +386,38 @@ public class LevelTest {
 			Pair<Integer,Integer> dimensions = level.getDimensions();
 			assertEquals(8, dimensions.getLeft());
 			assertEquals(8, dimensions.getRight());
+		}
+	}
+	
+	@DisplayName ("Tests related to testing the getter of the movements' history")
+	@Nested
+	class HistoryTests {
+		@Test
+		void testGetHistoryOneMovement() throws SameMovementException, IllegalDirectionException {
+			level.moveCar('g',1,'L', false);
+			List<Pair<Character,Pair<Integer,Character>>> movements = level.getHistory();
+			assertEquals(1, movements.size());
+			Pair<Character,Pair<Integer,Character>> movement = movements.get(0);
+			
+			// When saving the movement, we save the opposite direction to the move done (if 'L' we save 'R')
+			assertTrue('g' == movement.getLeft() && 1 == movement.getRight().getLeft() && 'R' == movement.getRight().getRight());
+		}
+		
+		@Test
+		void testGetHistoryVariousMovements() throws SameMovementException, IllegalDirectionException {
+			level.moveCar('e', 1, 'U', false);
+			level.moveCar('g', 3, 'L', false);
+			List<Pair<Character,Pair<Integer,Character>>> movements = level.getHistory();
+			
+			assertTrue('e' == movements.get(0).getLeft() && 1 == movements.get(0).getRight().getLeft() && 'D' == movements.get(0).getRight().getRight());
+			assertTrue('g' == movements.get(1).getLeft() && 3 == movements.get(1).getRight().getLeft() && 'R' == movements.get(1).getRight().getRight());
+
+		}
+		
+		@Test
+		void testGetHistoryNoMovements() throws SameMovementException, IllegalDirectionException {
+			List<Pair<Character,Pair<Integer,Character>>> movements = level.getHistory();
+			assertEquals(0, movements.size());
 		}
 	}
 }

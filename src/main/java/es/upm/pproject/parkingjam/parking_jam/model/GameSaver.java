@@ -83,6 +83,7 @@ public class GameSaver {
 		saveLevelName(levelName);
 		saveHistory(history);
 		saveScore(total, level);
+		saveLevelDimensions(board.length + " " + board[0].length);
 		saveBoard(board);
 		logger.info("The game has been saved.");
 	}
