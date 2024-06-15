@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
 	private JPanel mainPanel;
 	private DataPanel dataPanel;
 	private Grid gridPanel;
-	
+
 	private boolean levelSavedLoaded = false;
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
@@ -87,42 +87,151 @@ public class MainFrame extends JFrame {
 	 * Starts the game by initializing the game components and adding them to the main panel
 	 */
 	private void startGame() {
-		GridBagConstraints gbc = new GridBagConstraints();
+		initializeGameComponents(false); // false because it's not just one level
+	}
 
-		// Add level and scores panel
+	/**
+	 * Starts an only level game by initializing the game components and adding them to the main panel
+	 */
+	private void startOnlyOneLevelGame() {
+		initializeGameComponents(true); // true because it's only one level
+	}
+
+	/**
+	 * Initialize the components depending on whether it's a full game or a single level game
+	 */
+	private void initializeGameComponents(boolean onlyOneLevel) {
+		GridBagConstraints gbc = new GridBagConstraints();
 		Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
-		if (dataPanel == null)
+
+		if (dataPanel == null) {
 			dataPanel = new DataPanel(controller);
+		}
+
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(dataPanel, gbc);
 
-		// Add the board
 		gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, this);
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.CENTER;
 		mainPanel.add(gridPanel, gbc);
 
-		// Create a button panel and add the undo, reset level and next level buttons
 		JPanel buttonPanel = new JPanel();
-		
 		JButton actionButton = new JButton("UNDO");
 		buttonPanel.add(actionButton);
 
 		JButton resetButton = new JButton("RESET LEVEL");
 		buttonPanel.add(resetButton);
 
-		JButton nextButton = new JButton("NEXT LEVEL");
-		buttonPanel.add(nextButton);
+		// Different buttons based on whether it's only one level or not
+		if (onlyOneLevel) {
+			JButton backToMenu = new JButton("BACK TO MENU");
+			buttonPanel.add(backToMenu);
+
+			backToMenu.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					mainPanel.removeAll();
+					mainPanel.revalidate();
+					mainPanel.repaint();
+					showLevelButtons();
+				}
+			});
+		} else {
+			JButton nextButton = new JButton("NEXT LEVEL");
+			buttonPanel.add(nextButton);
+
+			nextButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						levelSavedLoaded = false;
+						if (gridPanel.isLevelCompleted()) {
+							controller.loadNewLevel();
+							updateDataPanel();
+							gridPanel.setCarsMap(controller.getCars());
+							gridPanel.setCars(controller.getCars());
+							gridPanel.setBoard(controller.getBoard());
+							gridPanel.repaint();
+
+							logger.info("Game advanced to next level.");
+							musicPlayer.playLevelSuccess();
+						}
+					} catch (Exception e) {
+						// Show all levels passed screen
+						logger.info("All levels finished.");
+						mainPanel.removeAll();
+						mainPanel.revalidate();
+						mainPanel.repaint();
+
+						// Add all congratulations messages and the total score
+						JLabel congratsLabel = new JLabel("Congratulations!", SwingConstants.CENTER);
+						congratsLabel.setFont(new Font("Impact", Font.PLAIN, 50));
+						congratsLabel.setForeground(Color.BLACK);
+
+						JLabel congratsLabel2 = new JLabel("All levels passed!", SwingConstants.CENTER);
+						congratsLabel2.setFont(new Font("Impact", Font.PLAIN, 40));
+						congratsLabel2.setForeground(Color.BLACK);
+
+						JLabel totalScore = new JLabel("TOTAL SCORE: " + dataPanel.getGameScore(), SwingConstants.CENTER);
+						totalScore.setFont(new Font("Impact", Font.PLAIN, 40));
+						totalScore.setForeground(Color.BLACK);
+
+						mainPanel.setLayout(new GridBagLayout());
+						GridBagConstraints gbc = new GridBagConstraints();
+						gbc.gridx = 0;
+						gbc.gridy = 0;
+						gbc.anchor = GridBagConstraints.CENTER;
+
+						mainPanel.add(congratsLabel, gbc);
+						gbc.gridy = 1;
+
+						mainPanel.add(congratsLabel2, gbc);
+
+						gbc.gridy = 2;
+
+						mainPanel.add(totalScore, gbc);
+						mainPanel.revalidate();
+						mainPanel.repaint();
+
+						logger.info("Congratulations message displayed.");
+						musicPlayer.playLevelSuccess();
+					}
+				}
+			});
+
+			// Add bar with a button to save the game
+			JMenuBar menuBar = new JMenuBar();
+			JMenu menu = new JMenu("Options");
+			JMenuItem saveMenuItem = new JMenuItem("Save game");
+
+			// Save game button functionality
+			saveMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						controller.saveGame();
+						JOptionPane.showMessageDialog(MainFrame.this, "Partida guardada con éxito.");
+					} catch (Exception ex) {
+						logger.error("Error al guardar la partida", ex);
+						JOptionPane.showMessageDialog(MainFrame.this, "Error al guardar la partida.");
+					}
+				}
+			});
+			menu.add(saveMenuItem);
+			menuBar.add(menu);
+			setJMenuBar(menuBar);
+		}
 
 		gbc.gridx = 1;
 		gbc.gridy = 2;
 		gbc.anchor = GridBagConstraints.SOUTH;
 		mainPanel.add(buttonPanel, gbc);
 
-		// Undo button functionality
+		// Undo button functionality (common for both)
 		actionButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -144,7 +253,7 @@ public class MainFrame extends JFrame {
 			}
 		});
 
-		// Reset level button functionality
+		// Reset level button functionality (common for both)
 		resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -165,93 +274,11 @@ public class MainFrame extends JFrame {
 					logger.info("Level reset.");
 					musicPlayer.playLevelStart();
 				}
-
 			}
 		});
 
-		// Next level button functionality
-		nextButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					levelSavedLoaded = false;
-					if (gridPanel.isLevelCompleted()) {
-
-						controller.loadNewLevel();
-						updateDataPanel();
-						gridPanel.setCarsMap(controller.getCars());
-						gridPanel.setCars(controller.getCars());
-						gridPanel.setBoard(controller.getBoard());
-						gridPanel.repaint();
-
-						logger.info("Game advanced to next level.");
-						musicPlayer.playLevelSuccess();
-					}
-				} catch (Exception e) {
-					// Show all levels passed screen
-					logger.info("All levels finished.");
-					mainPanel.removeAll();
-					mainPanel.revalidate();
-					mainPanel.repaint();
-
-					// Add all congratulations messages and the total score
-					JLabel congratsLabel = new JLabel("Congratulations!", SwingConstants.CENTER);
-					congratsLabel.setFont(new Font("Impact", Font.PLAIN, 50));
-					congratsLabel.setForeground(Color.BLACK);
-
-					JLabel congratsLabel2 = new JLabel("All levels passed!", SwingConstants.CENTER);
-					congratsLabel2.setFont(new Font("Impact", Font.PLAIN, 40));
-					congratsLabel2.setForeground(Color.BLACK);
-
-					JLabel totalScore = new JLabel("TOTAL SCORE: " + dataPanel.getGameScore(), SwingConstants.CENTER);
-					totalScore.setFont(new Font("Impact", Font.PLAIN, 40));
-					totalScore.setForeground(Color.BLACK);
-
-					mainPanel.setLayout(new GridBagLayout());
-					GridBagConstraints gbc = new GridBagConstraints();
-					gbc.gridx = 0;
-					gbc.gridy = 0;
-					gbc.anchor = GridBagConstraints.CENTER;
-
-					mainPanel.add(congratsLabel, gbc);
-					gbc.gridy = 1;
-
-					mainPanel.add(congratsLabel2, gbc);
-
-					gbc.gridy = 2;
-
-					mainPanel.add(totalScore, gbc);
-					mainPanel.revalidate();
-					mainPanel.repaint();
-
-					logger.info("Congratulations message displayed.");
-					musicPlayer.playLevelSuccess();
-				}
-			}
-		});
-
-		// Add bar with a button to save the game
-		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("Options");
-		JMenuItem saveMenuItem = new JMenuItem("Save game");
-
-		// Save game button functionality
-		saveMenuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					controller.saveGame();
-					JOptionPane.showMessageDialog(MainFrame.this, "Partida guardada con éxito.");
-				} catch (Exception ex) {
-					logger.error("Error al guardar la partida", ex);
-					JOptionPane.showMessageDialog(MainFrame.this, "Error al guardar la partida.");
-				}
-			}
-		});
-
-		menu.add(saveMenuItem);
-		menuBar.add(menu);
-		setJMenuBar(menuBar);
+		// Update data panel after setting up components
+		updateDataPanel();
 	}
 
 	/**
@@ -287,191 +314,97 @@ public class MainFrame extends JFrame {
 	}
 
 	/**
-	 * Starts an only level game by initializing the game components and adding them to the main panel
+	 * Loads the specified level and starts the game for that level
+	 * @param levelNumber the number of the level to load
 	 */
-	private void startOnlyOneLevelGame() {
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
-        if (dataPanel == null)
-            dataPanel = new DataPanel(controller);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.NORTH;
-        mainPanel.add(dataPanel, gbc);
-
-        gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, this);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        mainPanel.add(gridPanel, gbc);
-
-        JPanel buttonPanel = new JPanel();
-
-        JButton actionButton = new JButton("UNDO");
-        buttonPanel.add(actionButton);
-
-        JButton resetButton = new JButton("RESET LEVEL");
-        buttonPanel.add(resetButton);
-
-        JButton backToMenu = new JButton("BACK TO MENU");
-        buttonPanel.add(backToMenu);
-
-        actionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                try {
-                    char[][] oldBoard = controller.undoMovement();
-                    gridPanel.setCars(controller.getCars());
-                    gridPanel.setBoard(oldBoard);
-                    gridPanel.repaint();
-                    musicPlayer.playErase();
-                    logger.info("Movement undone.");
-                } catch (CannotUndoMovementException e) {
-                    logger.error("Cannot undo movement, there is none done previously.");
-                } catch (SameMovementException e) {
-                    logger.error("Cannot undo movement");
-                } catch (IllegalDirectionException e) {
-                    logger.error("Cannot undo movement, the direction is not valid");
-                }
-                updateDataPanel();
-            }
-        });
-
-        resetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                if (!levelSavedLoaded) {
-                    controller.resetLevel();
-                    gridPanel.setCars(controller.getCars());
-                    gridPanel.setBoard(controller.getBoard());
-                    gridPanel.repaint();
-                    updateDataPanel();
-                    logger.info("Level reset.");
-                    musicPlayer.playLevelStart();
-                } else {
-                    controller.resetOriginalLevel();
-                    gridPanel.setCars(controller.getCars());
-                    gridPanel.setBoard(controller.getBoard());
-                    gridPanel.repaint();
-                    updateDataPanel();
-                    logger.info("Level reset.");
-                    musicPlayer.playLevelStart();
-                }
-
-            }
-        });
-
-        backToMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                mainPanel.removeAll();
-                mainPanel.revalidate();
-                mainPanel.repaint();
-                showLevelButtons();
-            }
-        });
-
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.SOUTH;
-        mainPanel.add(buttonPanel, gbc);
-
-        updateDataPanel();
-    }
-
-	/**
-     * Loads the specified level and starts the game for that level
-     * @param levelNumber the number of the level to load
-     */
-    private void loadLevelAndStartGame(int levelNumber) {
-        mainPanel.removeAll();
-        mainPanel.revalidate();
-        mainPanel.repaint();
-        controller.loadLevel(levelNumber);
-        startOnlyOneLevelGame();
-        musicPlayer.playLevelStart();
-        levelSavedLoaded = false;
-    }
+	private void loadLevelAndStartGame(int levelNumber) {
+		mainPanel.removeAll();
+		mainPanel.revalidate();
+		mainPanel.repaint();
+		controller.loadLevel(levelNumber);
+		startOnlyOneLevelGame();
+		musicPlayer.playLevelStart();
+		levelSavedLoaded = false;
+	}
 
 	/**
 	 * Displays the level selection buttons for choosing a specific game level.
 	 * Creates a panel with buttons for levels 1 to 5 and a button to return to the main menu
 	 */
 	private void showLevelButtons() {
-        JPanel levelPanel = new JPanel(new GridLayout(2, 5, 10, 10));
-        levelPanel.setOpaque(false);
+		JPanel levelPanel = new JPanel(new GridLayout(2, 5, 10, 10));
+		levelPanel.setOpaque(false);
 
-        JButton backButton = new JButton("GO TO MAIN MENU");
+		JButton backButton = new JButton("GO TO MAIN MENU");
 
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainPanel.removeAll();
-                mainPanel.revalidate();
-                mainPanel.repaint();
-                addMainMenuTitleAndButtons();
-            }
-        });
+		backButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainPanel.removeAll();
+				mainPanel.revalidate();
+				mainPanel.repaint();
+				addMainMenuTitleAndButtons();
+			}
+		});
 
-        JButton level1Button = new JButton("Level 1");
-        JButton level2Button = new JButton("Level 2");
-        JButton level3Button = new JButton("Level 3");
-        JButton level4Button = new JButton("Level 4");
-        JButton level5Button = new JButton("Level 5");
+		JButton level1Button = new JButton("Level 1");
+		JButton level2Button = new JButton("Level 2");
+		JButton level3Button = new JButton("Level 3");
+		JButton level4Button = new JButton("Level 4");
+		JButton level5Button = new JButton("Level 5");
 
-        level1Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadLevelAndStartGame(1);
-            }
-        });
+		level1Button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadLevelAndStartGame(1);
+			}
+		});
 
-        level2Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadLevelAndStartGame(2);
-            }
-        });
+		level2Button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadLevelAndStartGame(2);
+			}
+		});
 
-        level3Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadLevelAndStartGame(3);
-            }
-        });
+		level3Button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadLevelAndStartGame(3);
+			}
+		});
 
-        level4Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadLevelAndStartGame(4);
-            }
-        });
+		level4Button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadLevelAndStartGame(4);
+			}
+		});
 
-        level5Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadLevelAndStartGame(5);
-            }
-        });
+		level5Button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadLevelAndStartGame(5);
+			}
+		});
 
-        levelPanel.add(level1Button);
-        levelPanel.add(level2Button);
-        levelPanel.add(level3Button);
-        levelPanel.add(level4Button);
-        levelPanel.add(level5Button);
+		levelPanel.add(level1Button);
+		levelPanel.add(level2Button);
+		levelPanel.add(level3Button);
+		levelPanel.add(level4Button);
+		levelPanel.add(level5Button);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        mainPanel.add(levelPanel, gbc);
-        gbc.gridy = 2;
-        mainPanel.add(backButton, gbc);
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.anchor = GridBagConstraints.CENTER;
+		mainPanel.add(levelPanel, gbc);
+		gbc.gridy = 2;
+		mainPanel.add(backButton, gbc);
 
-        mainPanel.revalidate();
-        mainPanel.repaint();
-    }
+		mainPanel.revalidate();
+		mainPanel.repaint();
+	}
 
 	/**
 	 * Add the title and start, load game and select level buttons of the main menu to the mainPanel
@@ -564,7 +497,7 @@ public class MainFrame extends JFrame {
 		mainPanel.revalidate();
 		mainPanel.repaint();
 	}
-	
+
 	/**
 	 * Creates a title label with the specified text with a shadow
 	 * @param text the text for the title label
