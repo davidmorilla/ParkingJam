@@ -15,12 +15,14 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
  * score, and move history. It handles the creation and management of necessary files.
  */
 public class GameSaver {
-	private File level;       // File for saving the current level state
-	private File score; 	  // File for saving the punctuation (score)
-	private File history;     // File for saving the move history
-	private String levelName; // The name of the current level
-	private String dimensions;// The dimensions of the current level
+	private File level;       	// File for saving the current level state
+	private File score; 	  	// File for saving the punctuation (score)
+	private File history;     	// File for saving the move history
+	private String levelName; 	// The name of the current level
+	private String dimensions;	// The dimensions of the current level
 	private static final Logger logger = LoggerFactory.getLogger(GameSaver.class);
+	private String msgLog;		// String used in logger messages
+	
 	/**
 	 * Initializes file objects for saving level, score, and history.
 	 * Creates the files if they do not exist.
@@ -31,27 +33,41 @@ public class GameSaver {
 		score = new File("src/main/resources/savedGame/punctuation.txt");
 		history = new File("src/main/resources/savedGame/history.txt");
 		try {
+			boolean isCreated;
 			if (!level.exists()) {
 				logger.info("Creating level.txt file...");
 				level.getParentFile().mkdirs();
-				level.createNewFile();
-				logger.info("The file level.txt has been created.");
+				isCreated = level.createNewFile();
+                if (isCreated) {
+                    logger.info("The file level.txt has been created.");
+                } else {
+                    logger.warn("The file level.txt already exists and was not created.");
+                }
 			}
 			if (!score.exists()) {
 				logger.info("Creating punctuation.txt file...");
 				score.getParentFile().mkdirs();
-				score.createNewFile();
-				logger.info("The file punctuation.txt has been created.");
+				isCreated = score.createNewFile();
+                if (isCreated) {
+                    logger.info("The file punctuation.txt has been created.");
+                } else {
+                    logger.warn("The file punctuation.txt already exists and was not created.");
+                }
 			}
 			if (!history.exists()) {
 				logger.info("Creating history.txt file...");
 				history.getParentFile().mkdirs();
-				history.createNewFile();
-				logger.info("The file history.txt has been created.");
+				isCreated = history.createNewFile();
+                if (isCreated) {
+                    logger.info("The file history.txt has been created.");
+                } else {
+                    logger.warn("The file history.txt already exists and was not created.");
+                }
 			}
 			logger.info("GameSaver created.");
 		} catch (IOException e) {
-			logger.error("There was a problem creating GameSaver: " + e.getLocalizedMessage());
+			msgLog = "There was a problem creating GameSaver: " + e.getLocalizedMessage();
+			logger.error(msgLog);
 			e.printStackTrace();
 		}
 	}
@@ -110,7 +126,8 @@ public class GameSaver {
 			}
 			logger.info("The level board has been saved.");
 		} catch (IOException e) {
-			logger.error("There was an error saving the board: " + e.getLocalizedMessage());
+			msgLog = "There was an error saving the board: " + e.getLocalizedMessage();
+			logger.error(msgLog);
 			e.printStackTrace();
 		}
 	}
@@ -130,7 +147,8 @@ public class GameSaver {
 			writer.newLine();
 			logger.info("The level score has been saved.");
 		} catch (IOException e) {
-			logger.error("There was an error saving the score: " + e.getLocalizedMessage());
+			msgLog = "There was an error saving the score: " + e.getLocalizedMessage();
+			logger.error(msgLog);
 			e.printStackTrace();
 		}
 	}
@@ -151,7 +169,8 @@ public class GameSaver {
 			}
 			logger.info("The level history has been saved.");
 		} catch (IOException e) {
-			logger.error("There was an error saving the history: " + e.getLocalizedMessage());
+			msgLog = "There was an error saving the history: " + e.getLocalizedMessage();
+			logger.error(msgLog);
 			e.printStackTrace();
 		}
 	}
@@ -177,7 +196,8 @@ public class GameSaver {
 			}
 			logger.info("The level history has been loaded.");
 		} catch (IOException e) {
-			logger.error("There was an error loading the history: " + e.getLocalizedMessage());
+			msgLog = "There was an error loading the history: " + e.getLocalizedMessage();
+			logger.error(msgLog);
 			e.printStackTrace();
 		}
 

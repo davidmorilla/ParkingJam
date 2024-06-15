@@ -93,14 +93,14 @@ public class LevelConverter {
         // Validate the number of exits
         if(numExits!=1){
             logger.error("There are {} exits. The number of exits must be exactly 1.",numExits);
-            cars= null;
+            cars = null;
             throw new IllegalExitsNumberException();
         }
         
         // Validate the red car dimensions
         if(cars.get('*').getLength()!=2){
             logger.error("There red car length is {}. The length of the red car must be exactly 2.",cars.get('*').getLength());
-            cars= null;
+            cars = null;
             throw new IllegalCarDimensionException();
         }
         logger.info("Level has been converted.");
