@@ -290,212 +290,188 @@ public class MainFrame extends JFrame {
 	 * Starts an only level game by initializing the game components and adding them to the main panel
 	 */
 	private void startOnlyOneLevelGame() {
-		GridBagConstraints gbc = new GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints();
 
-		// Add level and scores panel
-		Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
-		if (dataPanel == null)
-			dataPanel = new DataPanel(controller);
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.NORTH;
-		mainPanel.add(dataPanel, gbc);
+        Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
+        if (dataPanel == null)
+            dataPanel = new DataPanel(controller);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTH;
+        mainPanel.add(dataPanel, gbc);
 
-		// Add the board
-		gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, this);
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.CENTER;
-		mainPanel.add(gridPanel, gbc);
+        gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, this);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        mainPanel.add(gridPanel, gbc);
 
-		// Create a button panel and add the undo, reset level and back to menu buttons
-		JPanel buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
 
-		JButton actionButton = new JButton("UNDO");
-		buttonPanel.add(actionButton);
+        JButton actionButton = new JButton("UNDO");
+        buttonPanel.add(actionButton);
 
-		JButton resetButton = new JButton("RESET LEVEL");
-		buttonPanel.add(resetButton);
+        JButton resetButton = new JButton("RESET LEVEL");
+        buttonPanel.add(resetButton);
 
-		JButton backToMenu = new JButton("BACK TO MENU");
-		buttonPanel.add(backToMenu);
+        JButton backToMenu = new JButton("BACK TO MENU");
+        buttonPanel.add(backToMenu);
 
-		// Undo button functionality
-		actionButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					char[][] oldBoard = controller.undoMovement();
-					gridPanel.setCars(controller.getCars());
-					gridPanel.setBoard(oldBoard);
-					gridPanel.repaint();
-					musicPlayer.playErase();
-					logger.info("Movement undone.");
-				} catch (CannotUndoMovementException e) {
-					logger.error("Cannot undo movement, there is none done previously.");
-				} catch (SameMovementException e) {
-					logger.error("Cannot undo movement");
-				} catch (IllegalDirectionException e) {
-					logger.error("Cannot undo movement, the direction is not valid");
-				}
-				updateDataPanel();
-			}
-		});
+        actionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                try {
+                    char[][] oldBoard = controller.undoMovement();
+                    gridPanel.setCars(controller.getCars());
+                    gridPanel.setBoard(oldBoard);
+                    gridPanel.repaint();
+                    musicPlayer.playErase();
+                    logger.info("Movement undone.");
+                } catch (CannotUndoMovementException e) {
+                    logger.error("Cannot undo movement, there is none done previously.");
+                } catch (SameMovementException e) {
+                    logger.error("Cannot undo movement");
+                } catch (IllegalDirectionException e) {
+                    logger.error("Cannot undo movement, the direction is not valid");
+                }
+                updateDataPanel();
+            }
+        });
 
-		// Reset level button functionality
-		resetButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!levelSavedLoaded) {
-					controller.resetLevel();
-					gridPanel.setCars(controller.getCars());
-					gridPanel.setBoard(controller.getBoard());
-					gridPanel.repaint();
-					updateDataPanel();
-					logger.info("Level reset.");
-					musicPlayer.playLevelStart();
-				} else {
-					controller.resetOriginalLevel();
-					gridPanel.setCars(controller.getCars());
-					gridPanel.setBoard(controller.getBoard());
-					gridPanel.repaint();
-					updateDataPanel();
-					logger.info("Level reset.");
-					musicPlayer.playLevelStart();
-				}
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (!levelSavedLoaded) {
+                    controller.resetLevel();
+                    gridPanel.setCars(controller.getCars());
+                    gridPanel.setBoard(controller.getBoard());
+                    gridPanel.repaint();
+                    updateDataPanel();
+                    logger.info("Level reset.");
+                    musicPlayer.playLevelStart();
+                } else {
+                    controller.resetOriginalLevel();
+                    gridPanel.setCars(controller.getCars());
+                    gridPanel.setBoard(controller.getBoard());
+                    gridPanel.repaint();
+                    updateDataPanel();
+                    logger.info("Level reset.");
+                    musicPlayer.playLevelStart();
+                }
 
-			}
-		});
+            }
+        });
 
-		// Back to menu button functionality
-		backToMenu.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mainPanel.removeAll();
-				mainPanel.revalidate();
-				mainPanel.repaint();
-				showLevelButtons();
-			}
-		});
-		
-		// Add buttons to the main panel
-		gbc.gridx = 1;
-		gbc.gridy = 2;
-		gbc.anchor = GridBagConstraints.SOUTH;
-		mainPanel.add(buttonPanel, gbc);
-	}
+        backToMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                mainPanel.removeAll();
+                mainPanel.revalidate();
+                mainPanel.repaint();
+                showLevelButtons();
+            }
+        });
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.SOUTH;
+        mainPanel.add(buttonPanel, gbc);
+
+        updateDataPanel();
+    }
+
+	/**
+     * Loads the specified level and starts the game for that level
+     * @param levelNumber the number of the level to load
+     */
+    private void loadLevelAndStartGame(int levelNumber) {
+        mainPanel.removeAll();
+        mainPanel.revalidate();
+        mainPanel.repaint();
+        controller.loadLevel(levelNumber);
+        startOnlyOneLevelGame();
+        musicPlayer.playLevelStart();
+        levelSavedLoaded = false;
+    }
 
 	/**
 	 * Displays the level selection buttons for choosing a specific game level.
 	 * Creates a panel with buttons for levels 1 to 5 and a button to return to the main menu
 	 */
 	private void showLevelButtons() {
-		// Panel for the level buttons
-		JPanel levelPanel = new JPanel(new GridLayout(2, 5, 10, 10));
-		levelPanel.setOpaque(false);
+        JPanel levelPanel = new JPanel(new GridLayout(2, 5, 10, 10));
+        levelPanel.setOpaque(false);
 
-		// Add go to menu button
-		JButton backButton = new JButton("GO TO MAIN MENU");
+        JButton backButton = new JButton("GO TO MAIN MENU");
 
-		// Go to menu button functionality
-		backButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainPanel.removeAll();
-				mainPanel.revalidate();
-				mainPanel.repaint();
-				addMainMenuTitleAndButtons();
-			}
-		});
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.removeAll();
+                mainPanel.revalidate();
+                mainPanel.repaint();
+                addMainMenuTitleAndButtons();
+            }
+        });
 
-		// Button for each level in the game
-		JButton level1Button = new JButton("Level 1");
-		JButton level2Button = new JButton("Level 2");
-		JButton level3Button = new JButton("Level 3");
-		JButton level4Button = new JButton("Level 4");
-		JButton level5Button = new JButton("Level 5");
+        JButton level1Button = new JButton("Level 1");
+        JButton level2Button = new JButton("Level 2");
+        JButton level3Button = new JButton("Level 3");
+        JButton level4Button = new JButton("Level 4");
+        JButton level5Button = new JButton("Level 5");
 
-		// Functionality for each level button
-		level1Button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainPanel.removeAll();
-				mainPanel.revalidate();
-				mainPanel.repaint();
-				controller.loadLevel(1);
-				startOnlyOneLevelGame();
-				musicPlayer.playLevelStart();
-			}
-		});
+        level1Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadLevelAndStartGame(1);
+            }
+        });
 
-		level2Button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainPanel.removeAll();
-				mainPanel.revalidate();
-				mainPanel.repaint();
-				controller.loadLevel(2);
-				startOnlyOneLevelGame();
-				musicPlayer.playLevelStart();
-			}
-		});
+        level2Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadLevelAndStartGame(2);
+            }
+        });
 
-		level3Button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainPanel.removeAll();
-				mainPanel.revalidate();
-				mainPanel.repaint();
-				controller.loadLevel(3);
-				startOnlyOneLevelGame();
-				musicPlayer.playLevelStart();
-			}
-		});
+        level3Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadLevelAndStartGame(3);
+            }
+        });
 
-		level4Button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainPanel.removeAll();
-				mainPanel.revalidate();
-				mainPanel.repaint();
-				controller.loadLevel(4);
-				startOnlyOneLevelGame();
-				musicPlayer.playLevelStart();
-			}
-		});
+        level4Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadLevelAndStartGame(4);
+            }
+        });
 
-		level5Button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainPanel.removeAll();
-				mainPanel.revalidate();
-				mainPanel.repaint();
-				controller.loadLevel(5);
-				startOnlyOneLevelGame();
-				musicPlayer.playLevelStart();
-			}
-		});
+        level5Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadLevelAndStartGame(5);
+            }
+        });
 
-		// Add level buttons to level panel
-		levelPanel.add(level1Button);
-		levelPanel.add(level2Button);
-		levelPanel.add(level3Button);
-		levelPanel.add(level4Button);
-		levelPanel.add(level5Button);
+        levelPanel.add(level1Button);
+        levelPanel.add(level2Button);
+        levelPanel.add(level3Button);
+        levelPanel.add(level4Button);
+        levelPanel.add(level5Button);
 
-		// Add all components of this screen
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.CENTER;
-		mainPanel.add(levelPanel, gbc);
-		gbc.gridy = 2;
-		mainPanel.add(backButton, gbc);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        mainPanel.add(levelPanel, gbc);
+        gbc.gridy = 2;
+        mainPanel.add(backButton, gbc);
 
-		// Show level selection screen
-		mainPanel.revalidate();
-		mainPanel.repaint();
-	}
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
 
 	/**
 	 * Add the title and start, load game and select level buttons of the main menu to the mainPanel

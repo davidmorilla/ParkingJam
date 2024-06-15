@@ -229,7 +229,11 @@ public class Game {
 		LevelReader lr = new LevelReader();
 		char[][] board = lr.readMap(levelNumber, false);
 		try {
+			System.out.println("PARAM: " + levelNumber);
+			System.out.println("ATRIB (PRE): " + this.levelNumber);
 			this.levelNumber = levelNumber;
+			System.out.println("ATRIB (POST): " + this.levelNumber);
+			
 			level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
 		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
 			logger.error("Cannot load level. The number of exists and/or car dimensions are not valid");

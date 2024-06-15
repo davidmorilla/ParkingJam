@@ -144,4 +144,10 @@ public class DataPanel extends JPanel {
     public int getGameScore() {
         return this.totalPoints;
     }
+
+    public void changeLevelName(int levelNumber){
+        this.level = levelNumber;
+        this.revalidate();
+        this.repaint();
+    }
 }
