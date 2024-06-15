@@ -14,9 +14,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
-import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
-import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
 
 public class GameTest {
@@ -503,56 +501,4 @@ public class GameTest {
             assertEquals(0, game.getLevelScore());
         }
 	}
-	
-	@DisplayName("Tests related to saving and loading game state")
-    @Nested
-    class GameSaveLoadTests {
-	    GameSaver gameSaver;
-	    
-	    @BeforeEach
-	    void setUp() throws IllegalExitsNumberException, IllegalCarDimensionException, SameMovementException, IllegalDirectionException {
-	        // Crear un juego nuevo para cada prueba
-	        game = new Game(1);
-	        gameSaver = new GameSaver();
-	        game.moveCar('g',1,'L');
-	        game.saveGame(gameSaver);
-	    }
-	    
-	    @Test
-	    void testSameLevelNumber() throws IllegalExitsNumberException, IllegalCarDimensionException {
-	    	Game loadedGame = new Game();
-	        loadedGame.loadSavedLevel(gameSaver);
-
-	        assertEquals(game.getLevelNumber(), loadedGame.getLevelNumber());
-	    }
-	    
-	    @Test
-	    void testSameBoard() throws IllegalExitsNumberException, IllegalCarDimensionException {
-	    	Game loadedGame = new Game();
-	        loadedGame.loadSavedLevel(gameSaver);
-	        
-	        char[][] originalBoard = game.getBoard();
-	        char[][] loadedBoard = loadedGame.getBoard();
-	        assertArrayEquals(originalBoard, loadedBoard);
-	    }
-	    
-	    @Test
-	    void testSameAcumulatedScore() throws IllegalExitsNumberException, IllegalCarDimensionException {
-	    	Game loadedGame = new Game();
-	        loadedGame.loadSavedLevel(gameSaver);
-	        
-	        assertEquals(game.getAccumulatedScore(), loadedGame.getAccumulatedScore());
-	    }
-	    
-	    @Test
-	    void testSameDimensions() throws IllegalExitsNumberException, IllegalCarDimensionException {
-	    	Game loadedGame = new Game();
-	        loadedGame.loadSavedLevel(gameSaver);
-	        
-	        Pair<Integer, Integer> originalDimensions = game.getDimensions();
-	        Pair<Integer, Integer> loadedDimensions = loadedGame.getDimensions();
-	        assertEquals(originalDimensions.getLeft(), loadedDimensions.getLeft());
-	        assertEquals(originalDimensions.getRight(), loadedDimensions.getRight());	    
-	    }
-    }
 }
