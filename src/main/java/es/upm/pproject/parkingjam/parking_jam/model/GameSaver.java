@@ -206,7 +206,7 @@ public class GameSaver {
 
 	/**
 	 * Retrieves the dimensions of the board.
-	 * @returns the board dimensions (NxM)
+	 * @return the board dimensions (NxM)
 	 */
 	public String getDimensions() {
 		logger.info("Getting dimensions...");
@@ -215,7 +215,7 @@ public class GameSaver {
 	}
 	/**
 	 * Retrieves the name of the level.
-	 * @returns the name of the level
+	 * @return the name of the level
 	 */
 	public String getLevelName() {
 		logger.info("Getting level name...");

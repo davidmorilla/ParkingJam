@@ -158,7 +158,7 @@ public class Level {
 	/**
 	 * Sets the previous score to the value score
 	 * 
-	 * @param score
+	 * @param score the new score
 	 */
 	public void setPreviousScore(int score){
 		logger.info("Setting previous score = {}...", score);

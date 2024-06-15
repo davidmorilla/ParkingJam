@@ -236,7 +236,7 @@ public class Game {
 	}
     /**
     * Retrieves the 'GameSaver' instance used to save the game state.
-    * 
+    * @return the 'GameSaver' instance
     */
 	public GameSaver getGameSaver() {
 		return level.getGameSaver();

@@ -1,7 +1,7 @@
 es.upm.pproject.parkingjam.parking_jam
 es.upm.pproject.parkingjam.parking_jam.controller
-es.upm.pproject.parkingjam.parking_jam.exceptions
 es.upm.pproject.parkingjam.parking_jam.model
+es.upm.pproject.parkingjam.parking_jam.model.exceptions
 es.upm.pproject.parkingjam.parking_jam.utilities
 es.upm.pproject.parkingjam.parking_jam.view
 es.upm.pproject.parkingjam.parking_jam.view.utils
