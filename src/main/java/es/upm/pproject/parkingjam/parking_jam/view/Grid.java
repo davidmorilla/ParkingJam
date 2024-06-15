@@ -34,6 +34,7 @@ public class Grid extends JPanel {
 	private boolean levelCompleted;
 	private MainFrame mf;
 	private Map<Integer, String[]> carImages;
+	Random rnd = new Random();
 
 	/**
 	 * Constructor for Grid class.
@@ -245,7 +246,7 @@ public class Grid extends JPanel {
 	 * 
 	 * @param cars map of cars to create their drawable instances
 	 */
-	public void setCarsMap(Map<Character, Car> cars) {
+	public final void setCarsMap(Map<Character, Car> cars) {
 		this.movableCars = new HashMap<>();
 
 		for (Map.Entry<Character, Car> entry : cars.entrySet()) {
@@ -255,7 +256,7 @@ public class Grid extends JPanel {
 			if (imagePaths == null) { // if null means that the length is more than 3
 				imagePath = "longCar";
 			} else {
-				imagePath = imagePaths[new Random().nextInt(imagePaths.length)];
+				imagePath = imagePaths[rnd.nextInt(imagePaths.length)];
 			}
 			MovableCar movableCar = new MovableCar(car, new Pair<>(rows, cols), squareSize, this, controller, this.mf, imagePath);
 			movableCars.put(entry.getKey(), movableCar);

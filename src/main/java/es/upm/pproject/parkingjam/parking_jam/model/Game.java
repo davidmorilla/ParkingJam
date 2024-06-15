@@ -93,7 +93,7 @@ public class Game {
      * @throws IllegalExitsNumberException if there is an illegal number of exits in the level.
      * @throws IllegalCarDimensionException if there are illegal dimensions for cars in the level.
      */
-	public int loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
+	public final int loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		logger.info("Loading new level...");
 		levelNumber++;
 		acumulatedScore += level != null ? level.getScore() : 0;

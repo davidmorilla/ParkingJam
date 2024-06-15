@@ -119,7 +119,7 @@ public class MusicPlayer {
         logger.info("Sound stopped.");
     }
 
-    public void setVolume(float volume) {
+    public final void setVolume(float volume) {
         if (volumeControl != null) {
             float min = volumeControl.getMinimum();
             float max = volumeControl.getMaximum();
