@@ -13,7 +13,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
@@ -29,7 +29,7 @@ public class Grid extends JPanel {
 	private int cols;
 	private int squareSize = 50;
 	private Map<Character, MovableCar> movableCars; // Stores the drawable cars
-	private Controller controller;
+	private ControllerInterface controller;
 	private char[][] board;
 	private boolean levelCompleted;
 	private MainFrame mf;
@@ -45,7 +45,7 @@ public class Grid extends JPanel {
 	 * @param controller Controller object to handle game logic
 	 * @param mf MainFrame object representing the main application frame
 	 */
-	public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, Controller controller,
+	public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, ControllerInterface controller,
 			MainFrame mf) {
 		this.rows = dimensions.getLeft();
 		this.cols = dimensions.getRight();

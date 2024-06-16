@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
@@ -34,7 +34,7 @@ public class MovableCar {
 	private char orientation;
 	private char carSymbol;
 	private int length;
-	private Controller controller;
+	private ControllerInterface controller;
 	private MainFrame mf;
 	private boolean dragging;
 	private BufferedImage horizontalCarImage;
@@ -54,7 +54,7 @@ public class MovableCar {
 	 * @param mf         	The mainframe of the application
 	 * @param image      	Name of the car's image
 	 */
-	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, Grid grid, Controller controller, MainFrame mf, String image) {
+	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, Grid grid, ControllerInterface controller, MainFrame mf, String image) {
 		this.parent = grid;
 		this.carSymbol = car.getSymbol();
 		this.row = car.getCoordinates().getY();

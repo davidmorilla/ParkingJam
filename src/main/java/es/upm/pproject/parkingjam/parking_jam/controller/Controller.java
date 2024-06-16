@@ -9,13 +9,15 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
+
 /**
  * Controller class that manages the interaction between the view (MainFrame) and the model (Game).
  * It provides methods to control the game flow, such as loading levels, moving cars, and saving the game state.
  */
-public class Controller {
+public class Controller implements ControllerInterface {
 	private Game game; 
 	private GameSaver gameSaver;
+	
 	/**
      * Initializes the game, the main frame, and the game saver.
      * 
@@ -27,6 +29,7 @@ public class Controller {
 		new MainFrame(this);
 		gameSaver = game.getGameSaver();
 	}
+	
 	 /**
      * Loads a new level in the game.
      * 
@@ -37,6 +40,7 @@ public class Controller {
 		game.loadNewLevel();
 
 	}
+	
 	/**
      * Loads a saved level in the game.
      * 
@@ -48,6 +52,16 @@ public class Controller {
 		return game.loadSavedLevel(gameSaver);
 
 	}
+	
+	/**
+     * Loads a specific level by its number.
+     * 
+     * @param levelNumber the number of the level to load
+     */
+	public void loadLevel(int levelNumber) {
+		game.loadLevel(levelNumber);
+	}
+	
 	/**
      * Moves a car on the board.
      * 
@@ -61,6 +75,7 @@ public class Controller {
 	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException {
 		return game.moveCar(car, length, way);
 	}
+	
 	/**
      * Undoes the last car movement.
      * 
@@ -72,89 +87,36 @@ public class Controller {
 	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException {
 		return game.undoMovement();
 	}
-	/**
-     * Gets the current state of the board.
-     * 
-     * @return the current board state
-     */
-	public char[][] getBoard(){
-		return game.getBoard();
-	}
-	/**
-     * Gets the dimensions of the board.
-     * 
-     * @return a pair containing the width and height of the board
-     */
-	public Pair<Integer, Integer> getBoardDimensions() {
-		// This will return the board dimensions of the current level
-		return game.getDimensions();
-	}
-	/**
-     * Gets the map of cars on the board.
-     * 
-     * @return a map of car identifiers to Car objects
-     */
-	public Map<Character,Car> getCars(){
-		return game.getCars();
-	}
-	/**
-     * Gets the total game score.
-     * 
-     * @return the total game score
-     */
-	public int getGameScore() {
-		return game.getGameScore();
-	}
-	/**
-     * Gets the score for the current level.
-     * 
-     * @return the current level score
-     */
-	public int getLevelScore() {
-		return game.getLevelScore();
-	}
-	/**
-     * Gets the current level number.
-     * 
-     * @return the current level number
-     */
-	public int getLevelNumber() {
-		return game.getLevelNumber();
-	}	
+	
 	/**
      * Resets the current level.
      */
 	public void resetLevel(){
 		game.resetLevel();
 	}
-	 /**
-     * Checks if a car movement is valid.
-     * 
-     * @param car the identifier of the car
-     * @param newCoord the new coordinates for the car
-     * @param way the direction of the movement
-     * @return true if the movement is valid, false otherwise
-     * @throws SameMovementException if the same movement is attempted consecutively
-     */
+	
+	/**
+    * Checks if a car movement is valid.
+    * 
+    * @param car the identifier of the car
+    * @param newCoord the new coordinates for the car
+    * @param way the direction of the movement
+    * @return true if the movement is valid, false otherwise
+    * @throws SameMovementException if the same movement is attempted consecutively
+    */
 	public boolean isMoveValid(char car, Coordinates newCoord, char way) throws SameMovementException {
 		return game.getLevel().checkMovementValidity(car, newCoord, way);
 	}
+	
 	/**
-     * Checks if the current level is finished.
-     * 
-     * @return true if the level is finished, false otherwise
-     */
+    * Checks if the current level is finished.
+    * 
+    * @return true if the level is finished, false otherwise
+    */
 	public boolean isLevelFinished(){
 		return game.getLevel().isLevelFinished(this.getBoard()); 
 	}
-	/**
-     * Sets the score for the current level.
-     * 
-     * @param score the score to set for the current level
-     */
-	public void setPunctuation(int score) {
-		game.getLevel().setPunctuation(score);
-	}
+	
 	/**
      * Saves the current game state.
      */
@@ -162,15 +124,8 @@ public class Controller {
 		game.saveGame(gameSaver);
 
 	}
+	
 	/**
-     * Sets the total game score.
-     * 
-     * @param totalPoints the total points to set as the game score
-     */
-	public void setGameScore(int totalPoints) {
-		game.setGameScore(totalPoints);
-	}
-	 /**
      * Resets the level to its original state.
      */
 	public void resetOriginalLevel() {
@@ -181,13 +136,78 @@ public class Controller {
 		game.resetOriginalLevel();
 		game.setLevelScore(0);
 	}
+	
 	/**
-     * Loads a specific level by its number.
+     * Gets the current state of the board.
      * 
-     * @param levelNumber the number of the level to load
+     * @return the current board state
      */
-	public void loadLevel(int levelNumber) {
-		game.loadLevel(levelNumber);
+	public char[][] getBoard(){
+		return game.getBoard();
 	}
-
+	
+	/**
+     * Gets the dimensions of the board.
+     * 
+     * @return a pair containing the width and height of the board
+     */
+	public Pair<Integer, Integer> getBoardDimensions() {
+		// This will return the board dimensions of the current level
+		return game.getDimensions();
+	}
+	
+	/**
+     * Gets the map of cars on the board.
+     * 
+     * @return a map of car identifiers to Car objects
+     */
+	public Map<Character,Car> getCars(){
+		return game.getCars();
+	}
+	
+	/**
+     * Gets the total game score.
+     * 
+     * @return the total game score
+     */
+	public int getGameScore() {
+		return game.getGameScore();
+	}
+	
+	/**
+     * Gets the score for the current level.
+     * 
+     * @return the current level score
+     */
+	public int getLevelScore() {
+		return game.getLevelScore();
+	}
+	
+	/**
+     * Gets the current level number.
+     * 
+     * @return the current level number
+     */
+	public int getLevelNumber() {
+		return game.getLevelNumber();
+	}	
+	
+	/**
+     * Sets the score for the current level.
+     * 
+     * @param score the score to set for the current level
+     */
+	public void setPunctuation(int score) {
+		game.getLevel().setPunctuation(score);
+	}
+	
+	/**
+     * Sets the total game score.
+     * 
+     * @param totalPoints the total points to set as the game score
+     */
+	public void setGameScore(int totalPoints) {
+		game.setGameScore(totalPoints);
+	}
+	
 }
