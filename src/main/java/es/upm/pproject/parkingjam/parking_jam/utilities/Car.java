@@ -1,6 +1,11 @@
 package es.upm.pproject.parkingjam.parking_jam.utilities;
 
 import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import es.upm.pproject.parkingjam.parking_jam.model.Level;
 /**
  * The Car class represents a car in the Parking Jam game. Each car has a symbol, coordinates,
  * length, and orientation. The car can move within the constraints of the game board and its 
@@ -12,7 +17,7 @@ public class Car {
     private Coordinates coordinates; // The coordinates of the car's position
     private int length;           // The length of the car
     private char orientation;     // The orientation of the car ('V' for vertical, 'H' for horizontal)
-
+    private static final Logger logger = LoggerFactory.getLogger(Car.class);
     /**
      * Creates a car object and initializes its attributes.
      *
@@ -23,10 +28,12 @@ public class Car {
      * @param orientation a char that represents the orientation that the car will have. It must be either 'V' for vertical or 'H' for horizontal.
      */
     public Car(char symbol, int x, int y, int length, char orientation) {
+    	logger.info("Creating car '{}'...", symbol);
         this.symbol = symbol;
         this.coordinates = new Coordinates(x, y);
         this.length = length;
         this.orientation = orientation;
+        logger.info("Car '{}' created.", symbol);
     }
 	
     /**
@@ -35,6 +42,8 @@ public class Car {
      * @return the char that represents this car.
      */
 	public char getSymbol() {
+		logger.info("Getting car symbol...");
+		logger.info("Car symbol '{}' obtained.", symbol);
 		return symbol;
 	}
 
@@ -44,7 +53,9 @@ public class Car {
      * @param symbol the new symbol that will represent the car.
      */
 	public void setSymbol(char symbol) {
+		logger.info("Setting new car symbol for car '{}'...", this.symbol);
 		this.symbol = symbol;
+		logger.info("Car symbol updated to '{}'.", symbol);
 	}
 
     /**
@@ -53,6 +64,8 @@ public class Car {
      * @return the coordinates where the uppermost left part of the car is placed.
      */
 	public Coordinates getCoordinates(){
+		logger.info("Getting car '{}' coordinates...", symbol);
+		logger.info("Car coordinates [x={}, y={}] obtained.", coordinates.getX(), coordinates.getY());
         return this.coordinates; 
     }
 
@@ -63,8 +76,10 @@ public class Car {
      * @param y a positive integer that determines the new y coordinate where the uppermost left part of the car is placed.
      */
     public void setCoordinates(int x, int y) {
+    	logger.info("Setting car '{}' coordinates...", symbol);
         this.coordinates.setX(x);
         this.coordinates.setY(y);
+		logger.info("Car coordiantes set to [x={}, y={}].", x,y);
     }
 
     /**
@@ -73,6 +88,8 @@ public class Car {
      * @return the number of tiles that the car occupies.
      */
     public int getLength(){
+    	logger.info("Getting car '{}' length...", symbol);
+    	logger.info("Car length [{}] obtained.", length);
         return this.length;
     }
 
@@ -82,7 +99,9 @@ public class Car {
      * @param length a positive integer equal to or greater than 2 that determines the new number of tiles that the car occupies.
      */
     public void setLength(int length){
+    	logger.info("Setting car '{}' length...", symbol);
         this.length = length;
+        logger.info("Car length set to [{}].", length);
     }
     /**
      * Retrieves the orientation of the car.
@@ -90,6 +109,8 @@ public class Car {
      * @return a char that represents the orientation that the car has. 'V' stands for vertical and 'H' for horizontal.
      */
     public char getOrientation(){
+    	logger.info("Getting car '{}' orientation...", symbol);
+        logger.info("Car orientation [{}] obtained.", orientation);
         return this.orientation;
     }
     
@@ -99,7 +120,9 @@ public class Car {
      * @param orientation a char that represents the new orientation that the car has. It must be either 'V' for vertical or 'H' for horizontal.
      */
     public void setOrientation(char orientation){
+    	logger.info("Setting car '{}' orientation...", symbol);
         this.orientation = orientation;
+        logger.info("Car orientation set to [{}].", orientation);
     }
     
     /**
