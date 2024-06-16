@@ -14,7 +14,6 @@ import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
  * It provides methods to control the game flow, such as loading levels, moving cars, and saving the game state.
  */
 public class Controller {
-	private MainFrame mframe; 
 	private Game game; 
 	private GameSaver gameSaver;
 	/**
@@ -25,7 +24,7 @@ public class Controller {
      */
 	public Controller() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		game = new Game();
-		mframe = new MainFrame(this);
+		new MainFrame(this);
 		gameSaver = game.getGameSaver();
 	}
 	 /**

@@ -42,20 +42,25 @@ public class Level {
 	 * @param gs    the game saver utility for saving game states.
 	 */
 	public Level(char[][] board, Map<Character, Car> cars, GameSaver gs) {
-		logger.info("Creating level...");
-        gameSaver = gs;
+		if(board != null) {
+			logger.info("Creating level...");
+	        gameSaver = gs;
 
-        this.board = deepCopy(board); // Copia profunda del tablero inicial
-        this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
-        this.history = new ArrayList<>();
-        this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
-        this.carsDefault = deepCopyCars(cars); // Guardar una copia profunda del estado inicial de los coches
-        int numRows = board.length;
-        int numCols = board[0].length;
-        dimensions = new Pair<>(numRows, numCols);
+	        this.board = deepCopy(board); // Copia profunda del tablero inicial
+	        this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
+	        this.history = new ArrayList<>();
+	        this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
+	        this.carsDefault = deepCopyCars(cars); // Guardar una copia profunda del estado inicial de los coches
+	        int numRows = board.length;
+	        int numCols = board[0].length;
+	        dimensions = new Pair<>(numRows, numCols);
 
-        msgLog = "Level has been created: \n" + charMatrixToString(this.boardDefault);
-        logger.info(msgLog);
+	        msgLog = "Level has been created: \n" + charMatrixToString(this.boardDefault);
+	        logger.info(msgLog);
+		}
+		else {
+			logger.error("ERROR: The board given as a parameter when creating a Level object is null");
+		}
 	}
 
 	/**
@@ -531,8 +536,7 @@ public class Level {
 	 */
 	public Map<Character, Car> getCars() {
 		logger.info("Getting all cars...");
-		msgLog = "All cars have been given (cars: " + cars.keySet().toString() + ").";
-		logger.info(msgLog);
+	    logger.info("All cars have been given (cars: {}).", cars.keySet());
 		return this.cars;
 	}
 
@@ -607,14 +611,14 @@ public class Level {
 		oldScore = score;
 		history = new ArrayList<>();
 		LevelReader lr = new LevelReader();
-		char[][] board = lr.readMap(levelNumber, false);
+		char[][] originalBoard = lr.readMap(levelNumber, false);
 		try {
 
-			this.board = deepCopy(board); // deep copy of the board
-			this.cars = deepCopyCars(new LevelConverter().convertLevel(board)); // deep copy of the cars
+			this.board = deepCopy(originalBoard); // deep copy of the board
+			this.cars = deepCopyCars(new LevelConverter().convertLevel(originalBoard)); // deep copy of the cars
 
-			this.boardDefault = deepCopy(board); // deep copy of the initial state
-			this.carsDefault = deepCopyCars(new LevelConverter().convertLevel(board)); // deep copy of the initial cars
+			this.boardDefault = deepCopy(originalBoard); // deep copy of the initial state
+			this.carsDefault = deepCopyCars(new LevelConverter().convertLevel(originalBoard)); // deep copy of the initial cars
 
 		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
 			logger.error("There was an error resetting the original level: {}", e.getLocalizedMessage());
