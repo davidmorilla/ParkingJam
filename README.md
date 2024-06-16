@@ -176,11 +176,11 @@ The level files must be named `levelN.txt` (where `N` is a positive number).
 - First Line: Level + number of the level
 - Second Line: Dimensions of the board (nRows nColumns)
 - Following Lines: Board elements, with each line containing nColumns characters representing:
-    - + : Wall
-    - . : Empty square
-    - [a..z] : Vehicle identifier
-    - * : Red car
-    - @ : Exit
+    - '+' : Wall
+    - ' ' : Empty square
+    - [a-zA-Z] : Vehicle identifiers
+    - '*' : Red car
+    - '@' : Exit
 
 ### Example level
 
@@ -199,13 +199,30 @@ The level files must be named `levelN.txt` (where `N` is a positive number).
 
 ## Other input files
 
-The program uses other input files for playing sounds and showing images. These images are not to be modified. They are lo cated inside the folders:
-    1. parking-jam/src/main/resources/cars folder
-    2. parking-jam/src/main/resources/exits folder
-    3. parking-jam/src/main/resources/ folder
+The program uses other input files for playing sounds and showing images. These images are not to be modified. They are located inside the folders:
+  1. `parking-jam/src/main/resources/cars` folder: Contains the images for the cars.
+  2. `parking-jam/src/main/resources/exits` folder: Contains the images for the exits.
+  3. `parking-jam/src/main/resources` folder: Contains the rest of resources like sounds or background images.
     
 ## Output files format
 
+The program generates three files every time a game is saved.
+These files are inside the folder `parking-jam/src/main/resources/savedGame`. Here are some brief descriptions of each file.
+
+  1. `history.txt`: It contains the movements saved since the start of the level. It saves the movements in the format `car length direction`, where the direction is the opposite to the one 	made. All movemnts are written in separate lines. Here is an example file after moving car 'c' 2 units left, 	car 'b' 1 unit up and car 'a' 3 units down.	
+	
+	```txt
+		c 2 R
+		b 1 D
+		a 3 U
+	```
+  2. `level.txt`: It contains the level name, dimensions and board configuration at the moment of saving the game. It uses the same exact format that is used in the level files.
+  3. `punctuation.txt`: It's made of two lines, the first one containing a number indicating the total score and the second one containing the level score at the moment of saving the game. For example, if the total score is 15 and the level score is 4, the content of the file would look like this:
+	
+	```txt
+		15
+		4
+	```
 ## Requirements
 
 - Java Development Kit (JDK) 8 or higher
