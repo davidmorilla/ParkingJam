@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 
-import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.BackgroundPanel;
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * It handles the initialization of the game, display of the main menu, and transitions between different game states
  */
 public class MainFrame extends JFrame {
-	private Controller controller;
+	private ControllerInterface controller;
 	private ImageIcon icon;
 	private MusicPlayer musicPlayer;
 	private JPanel mainPanel;
@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 	 * Constructs a new MainFrame with the specified game controller.
 	 * @param controller the controller managing the game logic
 	 */
-	public MainFrame(final Controller controller) {
+	public MainFrame(final ControllerInterface controller) {
 		super("Parking Jam - Programming Project");
 		this.controller = controller;
 		mainMenu();

@@ -12,7 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
+import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
 
 /**
  * The DataPanel class is a custom JPanel that displays game information
@@ -28,13 +28,13 @@ public class DataPanel extends JPanel {
     private int level;
     private int totalPoints;
     private int levelPoints;
-    private Controller controller;
+    private ControllerInterface controller;
 
     /**
      * Constructs a DataPanel with the specified game controller
      * @param controller the controller managing the game logic
      */
-    public DataPanel(Controller controller) {
+    public DataPanel(ControllerInterface controller) {
         this.setOpaque(false);
         BoxLayout boxY = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxY);
