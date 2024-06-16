@@ -21,7 +21,7 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;
 
 /**
- * Represents the grid where the game is displayed, including cars, walls, and exits.
+ * Represents the grid where the game is displayed, including cars, walls and exits.
  * Extends JPanel to provide graphical rendering capabilities.
  */
 public class Grid extends JPanel {
@@ -62,7 +62,7 @@ public class Grid extends JPanel {
 		setCarsMap(cars);
 
 		// Add a mouse adapter for all the grid
-		MyMouseAdapter mouseAdapter = new MyMouseAdapter(squareSize, this);
+		MyMouseAdapter mouseAdapter = new MyMouseAdapter(this);
 		this.addMouseListener(mouseAdapter);
 		this.addMouseMotionListener(mouseAdapter);
 	}
@@ -294,4 +294,12 @@ public class Grid extends JPanel {
 		return this.levelCompleted;
 	}
 
+	/**
+	 * Return the square size for each tile on the grid
+	 * 
+	 * @return square size
+	 */
+	public int getSquareSize() {
+		return squareSize;
+	}
 }

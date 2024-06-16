@@ -11,10 +11,7 @@ public class App {
     	SwingUtilities.invokeLater(new Runnable() {
 			public void run() {		
 				try {
-					
-
 					new Controller();
-					
 				}
 				catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());

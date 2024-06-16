@@ -92,6 +92,7 @@ public class Car {
     public char getOrientation(){
         return this.orientation;
     }
+    
     /**
      * Modifies the orientation of the car.
      *
@@ -118,6 +119,7 @@ public class Car {
                coordinates.getX() == car.getCoordinates().getX()&&
                coordinates.getY() == car.getCoordinates().getY();
     }
+    
     /**
      * Returns a hash code value for the car.
      *

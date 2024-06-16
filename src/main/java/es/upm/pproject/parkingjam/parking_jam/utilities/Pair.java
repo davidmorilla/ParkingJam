@@ -19,6 +19,7 @@ public class Pair<L, R> {
         this.left = left;
         this.right = right;
     }
+    
     /**
      * Returns the left object.
      * 
@@ -27,6 +28,7 @@ public class Pair<L, R> {
     public L getLeft() {
         return left;
     }
+    
     /**
      * Sets the left object.
      * 
@@ -35,6 +37,7 @@ public class Pair<L, R> {
     public void setLeft(L left) {
         this.left = left;
     }
+    
     /**
      * Returns the right object.
      * 
@@ -43,6 +46,7 @@ public class Pair<L, R> {
     public R getRight() {
         return right;
     }
+    
     /**
      * Sets the right object.
      * 

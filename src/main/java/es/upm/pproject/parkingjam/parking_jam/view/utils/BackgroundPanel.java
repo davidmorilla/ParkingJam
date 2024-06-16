@@ -7,14 +7,29 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+/**
+ * This is the panel which will sit on the back of the app and
+ * will show the background image display
+ *
+ */
 public class BackgroundPanel extends JPanel {
     private BufferedImage backgroundImage;
     
+    /**
+     * BackgroundPanel constructor
+     *
+     * @param backgroundImage the background image to be painted
+     */
     public BackgroundPanel(BufferedImage backgroundImage){
         this.backgroundImage = backgroundImage;
     }
 
 
+    /**
+     * Paints the full background with an image transparency of 50%
+     *
+     * @param g the graphical context used to paint the background
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

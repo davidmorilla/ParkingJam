@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.Controller;
-import es.upm.pproject.parkingjam.parking_jam.model.LevelConverter;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
@@ -30,8 +29,8 @@ public class MovableCar {
 	private int cols;
 	private int squareSize;
 	private Color color;
-	private int initialCol; // Columna inicial al empezar a arrastrar
-	private int initialRow; // Fila inicial al empezar a arrastrar
+	private int initialCol; // Initial column when start dragging
+	private int initialRow; // Initial row when start dragging
 	private char orientation;
 	private char carSymbol;
 	private int length;
