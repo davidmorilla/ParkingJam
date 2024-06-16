@@ -24,7 +24,7 @@ import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;
  * Represents the grid where the game is displayed, including cars, walls and exits.
  * Extends JPanel to provide graphical rendering capabilities.
  */
-public class Grid extends JPanel {
+public class Grid extends JPanel implements IGrid {
 	private int rows;
 	private int cols;
 	private int squareSize = 50;
@@ -246,7 +246,7 @@ public class Grid extends JPanel {
 	 * 
 	 * @param cars map of cars to create their drawable instances
 	 */
-	public final void setCarsMap(Map<Character, Car> cars) {
+	public void setCarsMap(Map<Character, Car> cars) {
 		this.movableCars = new HashMap<>();
 
 		for (Map.Entry<Character, Car> entry : cars.entrySet()) {

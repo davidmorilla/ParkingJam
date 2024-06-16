@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
 	private MusicPlayer musicPlayer;
 	private JPanel mainPanel;
 	private DataPanel dataPanel;
-	private Grid gridPanel;
+	private IGrid gridPanel;
 
 	private boolean levelSavedLoaded = false;
 
@@ -117,7 +117,7 @@ public class MainFrame extends JFrame {
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.CENTER;
-		mainPanel.add(gridPanel, gbc);
+		mainPanel.add((Grid) gridPanel, gbc);
 
 		JPanel buttonPanel = new JPanel();
 		JButton actionButton = new JButton("UNDO");
@@ -155,7 +155,7 @@ public class MainFrame extends JFrame {
 							gridPanel.setCarsMap(controller.getCars());
 							gridPanel.setCars(controller.getCars());
 							gridPanel.setBoard(controller.getBoard());
-							gridPanel.repaint();
+							((Grid) gridPanel).repaint();
 
 							logger.info("Game advanced to next level.");
 							musicPlayer.playLevelSuccess();
@@ -239,7 +239,7 @@ public class MainFrame extends JFrame {
 					char[][] oldBoard = controller.undoMovement();
 					gridPanel.setCars(controller.getCars());
 					gridPanel.setBoard(oldBoard);
-					gridPanel.repaint();
+					((Grid)gridPanel).repaint();
 					musicPlayer.playErase();
 					logger.info("Movement undone.");
 				} catch (CannotUndoMovementException e) {
@@ -261,7 +261,7 @@ public class MainFrame extends JFrame {
 					controller.resetLevel();
 					gridPanel.setCars(controller.getCars());
 					gridPanel.setBoard(controller.getBoard());
-					gridPanel.repaint();
+					((Grid) gridPanel).repaint();
 					updateDataPanel();
 					logger.info("Level reset.");
 					musicPlayer.playLevelStart();
@@ -269,7 +269,7 @@ public class MainFrame extends JFrame {
 					controller.resetOriginalLevel();
 					gridPanel.setCars(controller.getCars());
 					gridPanel.setBoard(controller.getBoard());
-					gridPanel.repaint();
+					((Grid) gridPanel).repaint();
 					updateDataPanel();
 					logger.info("Level reset.");
 					musicPlayer.playLevelStart();
@@ -285,7 +285,7 @@ public class MainFrame extends JFrame {
 	 * Gets the board grid
 	 * @return the board grid
 	 */
-	public Grid getGrid() {
+	public IGrid getGrid() {
 		return this.gridPanel;
 	}
 
@@ -294,7 +294,7 @@ public class MainFrame extends JFrame {
 	 * @param grid the new grid
 	 */
 	public void setGrid(Grid grid) {
-		mainPanel.add(gridPanel, BorderLayout.CENTER);
+		mainPanel.add((Grid) gridPanel, BorderLayout.CENTER);
 	}
 
 	/**
