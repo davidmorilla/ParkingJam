@@ -12,6 +12,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
 
 /**
@@ -29,12 +32,13 @@ public class DataPanel extends JPanel {
     private int totalPoints;
     private int levelPoints;
     private ControllerInterface controller;
-
+    private static final Logger logger = LoggerFactory.getLogger(DataPanel.class);
     /**
      * Constructs a DataPanel with the specified game controller
      * @param controller the controller managing the game logic
      */
     public DataPanel(ControllerInterface controller) {
+        logger.info("Creating DataPanel...");
         this.setOpaque(false);
         BoxLayout boxY = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(boxY);
@@ -50,6 +54,7 @@ public class DataPanel extends JPanel {
         add(levelNumber);
         add(gameScore);
         add(levelScore);
+        logger.info("DataPanel created.");
     }
 
     /**
@@ -58,6 +63,7 @@ public class DataPanel extends JPanel {
      * @return a customized JLabel
      */
     private JLabel createLabel(String text) {
+    	logger.info("Creating label...");
         JLabel label = new JLabel(text) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -73,6 +79,7 @@ public class DataPanel extends JPanel {
         };
         label.setForeground(Color.BLACK); // Set text color to black
         label.setFont(new Font("Impact", Font.PLAIN, 20));
+        logger.info("Created label with text: '{}'", text);
         return label;
     }
 
@@ -83,20 +90,24 @@ public class DataPanel extends JPanel {
      * @param levelPoints the points for the current level
      */
     public void updateData(int level, int gamePoints, int levelPoints) {
-        this.level = level;
+    	logger.info("Updating panel data...");
+    	this.level = level;
         this.totalPoints = gamePoints;
         this.levelPoints = levelPoints;
         levelNumber.setText(String.format(LEVEL_NUMBER_TEXT, level));
         gameScore.setText(String.format(GAME_SCORE_TEXT, gamePoints));
         levelScore.setText(String.format(LEVEL_SCORE_TEXT, levelPoints));
+        logger.info("Updated data: level={}, gamePoints={}, levelPoints={}", level, gamePoints, levelPoints);
     }
 
     /**
      * Adds a point to the total game score and updates the displayed data
      */
     public void addPoint() {
+    	logger.info("Adding point...");
         levelPoints = controller.getLevelScore();
         this.updateData(level, ++totalPoints, levelPoints);
+        logger.info("Added a point. New total points: {}", totalPoints);
     }
 
     /**
@@ -104,7 +115,8 @@ public class DataPanel extends JPanel {
      * @return a deep copy of the DataPanel
      */
     public DataPanel deepCopy() {
-        DataPanel copy = new DataPanel(this.controller);
+        logger.info("Creating a deep copy...");
+    	DataPanel copy = new DataPanel(this.controller);
 
         // Copy primitive properties
         copy.level = this.level;
@@ -114,7 +126,7 @@ public class DataPanel extends JPanel {
         copy.levelNumber.setText(this.levelNumber.getText());
         copy.gameScore.setText(this.gameScore.getText());
         copy.levelScore.setText(this.levelScore.getText());
-
+        logger.info("Created a deep copy of DataPanel: level={}, totalPoints={}, levelPoints={}", copy.level, copy.totalPoints, copy.levelPoints);
         return copy;
     }
 
@@ -122,6 +134,7 @@ public class DataPanel extends JPanel {
      * Loads the score from a saved file and updates the panel.
      */
     public void loadPunctuation() {
+    	logger.info("Loading score from file...");
         try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/savedGame/punctuation.txt"))) {
             totalPoints = Integer.parseInt(reader.readLine());
             levelPoints = Integer.parseInt(reader.readLine());
@@ -133,7 +146,10 @@ public class DataPanel extends JPanel {
 
             this.revalidate();
             this.repaint();
+            
+            logger.info("Score loaded from file: totalPoints={}, levelPoints={}", totalPoints, levelPoints);
         } catch (IOException e) {
+        	logger.error("There was an error loading the score from  the file: {}.", e.getLocalizedMessage());
         }
     }
 
@@ -142,12 +158,16 @@ public class DataPanel extends JPanel {
      * @return the total game score
      */
     public int getGameScore() {
+    	logger.info("Getting game score...");
+    	logger.info("Game scored obtained: {}", this.totalPoints);
         return this.totalPoints;
     }
 
     public void changeLevelName(int levelNumber){
+    	logger.info("Changing level number of level: [Level {}]...", level);
         this.level = levelNumber;
         this.revalidate();
         this.repaint();
+        logger.info("Changed level number to: {}", levelNumber);
     }
 }

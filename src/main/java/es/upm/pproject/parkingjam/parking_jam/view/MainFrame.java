@@ -41,6 +41,7 @@ public class MainFrame extends JFrame {
 	public MainFrame(final ControllerInterface controller) {
 		super("Parking Jam - Programming Project");
 		this.controller = controller;
+		logger.info("Initializing MainFrame...");
 		mainMenu();
 	}
 
@@ -48,6 +49,7 @@ public class MainFrame extends JFrame {
 	 * Initializes and displays the main menu of the game
 	 */
 	private void mainMenu() {
+		logger.info("Initializing main menu...");
 		// Set frame configuration
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -69,7 +71,7 @@ public class MainFrame extends JFrame {
 			URL imageUrl = getClass().getClassLoader().getResource("background.jpg");
 			backgroundImage = ImageIO.read(imageUrl);
 		} catch (IOException e) {
-			logger.error("Could not load background image");
+			logger.error("Could not load background image: {}.", e.getLocalizedMessage());
 		}
 
 		mainPanel = new BackgroundPanel(backgroundImage);
@@ -81,12 +83,14 @@ public class MainFrame extends JFrame {
 		// Display as visible all the components on main menu screen
 		add(mainPanel);
 		this.setVisible(true);
+		logger.info("Main menu initialized and displayed.");
 	}
 
 	/**
 	 * Starts the game by initializing the game components and adding them to the main panel
 	 */
 	private void startGame() {
+		logger.info("Starting game...");
 		initializeGameComponents(false); // false because it's not just one level
 	}
 
@@ -94,6 +98,7 @@ public class MainFrame extends JFrame {
 	 * Starts an only level game by initializing the game components and adding them to the main panel
 	 */
 	private void startOnlyOneLevelGame() {
+		logger.info("Starting only one level game...");
 		initializeGameComponents(true); // true because it's only one level
 	}
 
@@ -101,6 +106,7 @@ public class MainFrame extends JFrame {
 	 * Initialize the components depending on whether it's a full game or a single level game
 	 */
 	private void initializeGameComponents(boolean onlyOneLevel) {
+		logger.info("Initializing game components (onlyOneLevel={})...", onlyOneLevel);
 		GridBagConstraints gbc = new GridBagConstraints();
 		Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
 
@@ -134,6 +140,7 @@ public class MainFrame extends JFrame {
 			backToMenu.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
+					logger.info("Back to menu button clicked.");
 					mainPanel.removeAll();
 					mainPanel.revalidate();
 					mainPanel.repaint();
@@ -156,7 +163,6 @@ public class MainFrame extends JFrame {
 							gridPanel.setCars(controller.getCars());
 							gridPanel.setBoard(controller.getBoard());
 							((Grid) gridPanel).repaint();
-
 							logger.info("Game advanced to next level.");
 							musicPlayer.playLevelSuccess();
 						}
@@ -213,11 +219,12 @@ public class MainFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try {
+						logger.info("Save game button clicked.");
 						controller.saveGame();
-						JOptionPane.showMessageDialog(MainFrame.this, "Partida guardada con éxito.");
+						JOptionPane.showMessageDialog(MainFrame.this, "Game successfully saved.");
 					} catch (Exception ex) {
-						logger.error("Error al guardar la partida", ex);
-						JOptionPane.showMessageDialog(MainFrame.this, "Error al guardar la partida.");
+						logger.error("There was an error saving the game: {}", ex.getLocalizedMessage());
+						JOptionPane.showMessageDialog(MainFrame.this, "There was an error saving the game.");
 					}
 				}
 			});
@@ -236,19 +243,15 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
+					logger.info("Undo movement button clicked.");
 					char[][] oldBoard = controller.undoMovement();
 					gridPanel.setCars(controller.getCars());
 					gridPanel.setBoard(oldBoard);
 					((Grid)gridPanel).repaint();
 					musicPlayer.playErase();
-					logger.info("Movement undone.");
-				} catch (CannotUndoMovementException e) {
-					logger.error("Cannot undo movement, there is none done previously.");
-				} catch (SameMovementException e) {
-					logger.error("Cannot undo movement");
-				} catch (IllegalDirectionException e) {
-					logger.error("Cannot undo movement, the direction is not valid");
-				}
+				} catch (Exception e) {
+					logger.error("Couldn´t undo movement: {}", e.getLocalizedMessage());
+				} 
 				updateDataPanel();
 			}
 		});
@@ -257,13 +260,13 @@ public class MainFrame extends JFrame {
 		resetButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				logger.info("Reset button clicked.");
 				if (!levelSavedLoaded) {
 					controller.resetLevel();
 					gridPanel.setCars(controller.getCars());
 					gridPanel.setBoard(controller.getBoard());
 					((Grid) gridPanel).repaint();
 					updateDataPanel();
-					logger.info("Level reset.");
 					musicPlayer.playLevelStart();
 				} else {
 					controller.resetOriginalLevel();
@@ -271,7 +274,6 @@ public class MainFrame extends JFrame {
 					gridPanel.setBoard(controller.getBoard());
 					((Grid) gridPanel).repaint();
 					updateDataPanel();
-					logger.info("Level reset.");
 					musicPlayer.playLevelStart();
 				}
 			}
@@ -279,6 +281,7 @@ public class MainFrame extends JFrame {
 
 		// Update data panel after setting up components
 		updateDataPanel();
+		logger.info("Game components initialized.");
 	}
 
 	/**
@@ -286,6 +289,8 @@ public class MainFrame extends JFrame {
 	 * @return the board grid
 	 */
 	public IGrid getGrid() {
+		logger.info("Getting the grid...");
+		logger.info("The grid was obtained.");
 		return this.gridPanel;
 	}
 
@@ -294,13 +299,16 @@ public class MainFrame extends JFrame {
 	 * @param grid the new grid
 	 */
 	public void setGrid(Grid grid) {
+		logger.info("Setting a new grid...");
 		mainPanel.add((Grid) gridPanel, BorderLayout.CENTER);
+		logger.info("New grid set.");
 	}
 
 	/**
-	 * Updates de data panel with the new level and scores
+	 * Updates the data panel with the new level and scores
 	 */
 	public void updateDataPanel() {
+		logger.info("Updating data panel...");
 		dataPanel.updateData(controller.getLevelNumber(), controller.getGameScore(), controller.getLevelScore());
 		logger.info("Panel data updated.");
 	}
@@ -309,6 +317,7 @@ public class MainFrame extends JFrame {
 	 * Updates the data panel adding 1 to level and total scores
 	 */
 	public void increaseScore() {
+		logger.info("Increasing score...");
 		dataPanel.addPoint();
 		logger.info("Score increased.");
 	}
@@ -318,6 +327,7 @@ public class MainFrame extends JFrame {
 	 * @param levelNumber the number of the level to load
 	 */
 	private void loadLevelAndStartGame(int levelNumber) {
+		logger.info("Loading level {} and starting game...", levelNumber);
 		mainPanel.removeAll();
 		mainPanel.revalidate();
 		mainPanel.repaint();
@@ -332,6 +342,7 @@ public class MainFrame extends JFrame {
 	 * Creates a panel with buttons for levels 1 to 5 and a button to return to the main menu
 	 */
 	private void showLevelButtons() {
+		logger.info("Displaying level buttons...");
 		JPanel levelPanel = new JPanel(new GridLayout(2, 5, 10, 10));
 		levelPanel.setOpaque(false);
 
@@ -340,6 +351,7 @@ public class MainFrame extends JFrame {
 		backButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				logger.info("'Go to main menu' button clicked.");
 				mainPanel.removeAll();
 				mainPanel.revalidate();
 				mainPanel.repaint();
@@ -356,6 +368,7 @@ public class MainFrame extends JFrame {
 		level1Button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				logger.info("Level 1 button clicked.");
 				loadLevelAndStartGame(1);
 			}
 		});
@@ -363,6 +376,7 @@ public class MainFrame extends JFrame {
 		level2Button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				logger.info("Level 2 button clicked.");
 				loadLevelAndStartGame(2);
 			}
 		});
@@ -370,6 +384,7 @@ public class MainFrame extends JFrame {
 		level3Button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				logger.info("Level 3 button clicked.");
 				loadLevelAndStartGame(3);
 			}
 		});
@@ -377,6 +392,7 @@ public class MainFrame extends JFrame {
 		level4Button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				logger.info("Level 4 button clicked.");
 				loadLevelAndStartGame(4);
 			}
 		});
@@ -384,6 +400,7 @@ public class MainFrame extends JFrame {
 		level5Button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				logger.info("Level 5 button clicked.");
 				loadLevelAndStartGame(5);
 			}
 		});
@@ -404,12 +421,14 @@ public class MainFrame extends JFrame {
 
 		mainPanel.revalidate();
 		mainPanel.repaint();
+		logger.info("Level buttons displayed.");
 	}
 
 	/**
 	 * Add the title and start, load game and select level buttons of the main menu to the mainPanel
 	 */
 	private void addMainMenuTitleAndButtons() {
+		logger.info("Adding title and start, load game and select level buttons of the main menu...");
 		// Add title
 		JLabel titleLabel = createTitleLabel("PARKING JAM");
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -435,6 +454,7 @@ public class MainFrame extends JFrame {
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				logger.info("New Game button clicked.");
 				clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
 
 				mainPanel.remove(startButton);
@@ -454,6 +474,7 @@ public class MainFrame extends JFrame {
 		loadGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				logger.info("Load Last Game button clicked.");
 				clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
 				try {
 					levelSavedLoaded = true;
@@ -464,7 +485,7 @@ public class MainFrame extends JFrame {
 					startGame();
 					musicPlayer.playLevelStart();
 				} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
-					logger.error("Cannot load saved game. The number of exists and/or car dimensions are wrong");
+					logger.error("Cannot load saved game: {}", e.getLocalizedMessage());
 				}
 			}
 		});
@@ -473,6 +494,7 @@ public class MainFrame extends JFrame {
 		selectLevel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				logger.info("Select Level button clicked.");
 				clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
 				// Show select level screen
 				showLevelButtons();
@@ -483,10 +505,12 @@ public class MainFrame extends JFrame {
 		mainPanel.add(buttonPanel, gbc);
 		mainPanel.revalidate();
 		mainPanel.repaint();
+logger.info("Ttitle and start, load game and select level buttons have been added to the main menu");
 	}
 	
 	private void clearMainPanel(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton, JLabel titleLabel) {
-	    mainPanel.remove(startButton);
+		logger.info("Clearing main panel...");
+		mainPanel.remove(startButton);
 	    mainPanel.remove(selectLevel);
 	    buttonPanel.remove(selectLevel);
 	    buttonPanel.remove(startButton);
@@ -494,6 +518,7 @@ public class MainFrame extends JFrame {
 	    mainPanel.remove(titleLabel);
 	    mainPanel.revalidate();
 	    mainPanel.repaint();
+	    logger.info("Main panel cleared.");
 	}
 
 	/**
@@ -502,6 +527,7 @@ public class MainFrame extends JFrame {
 	 * @return the created title label
 	 */
 	private JLabel createTitleLabel(String text) {
+		logger.info("Creating title label...");
 		JLabel label = new JLabel(text) {
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -521,6 +547,7 @@ public class MainFrame extends JFrame {
 		label.setFont(new Font("Impact", Font.PLAIN, 50));
 		label.setForeground(Color.BLACK);
 		label.setOpaque(false);
+		logger.info("Title lable created.");
 		return label;
 	}
 }
