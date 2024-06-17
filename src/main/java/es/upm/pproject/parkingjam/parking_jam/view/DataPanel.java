@@ -25,13 +25,13 @@ public class DataPanel extends JPanel {
     private JLabel levelNumber;
     private JLabel gameScore;
     private JLabel levelScore;
-    private final static String LEVEL_NUMBER_TEXT = "LEVEL %d";
-    private final static String GAME_SCORE_TEXT = "Game Score: %d";
-    private final static String LEVEL_SCORE_TEXT = "Level Score: %d";
+    private static final String LEVEL_NUMBER_TEXT = "LEVEL %d";
+    private static final String GAME_SCORE_TEXT = "Game Score: %d";
+    private static final String LEVEL_SCORE_TEXT = "Level Score: %d";
     private int level;
     private int totalPoints;
     private int levelPoints;
-    private ControllerInterface controller;
+    private transient ControllerInterface controller;
     private static final Logger logger = LoggerFactory.getLogger(DataPanel.class);
     /**
      * Constructs a DataPanel with the specified game controller

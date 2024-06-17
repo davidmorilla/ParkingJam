@@ -35,7 +35,7 @@ public class MyMouseAdapter extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         Point point = e.getPoint();
-        movableSquare = (MovableCar) grid.getMovableCarAt(point);
+        movableSquare = grid.getMovableCarAt(point);
         if (movableSquare != null) {
             movableSquare.startDrag();
             initialRow = movableSquare.getRow();

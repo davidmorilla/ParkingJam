@@ -28,18 +28,6 @@ public interface IMainFrame {
 	public void initializeGameComponents(boolean onlyOneLevel);
 
     /**
-	 * Gets the board grid
-	 * @return the board grid
-	 */
-	public IGrid getGrid();
-
-    /**
-	 * Sets the board grid to a new one
-	 * @param grid the new grid
-	 */
-	public void setGrid(Grid grid);
-
-    /**
 	 * Updates the data panel with the new level and scores
 	 */
 	public void updateDataPanel();
@@ -86,4 +74,16 @@ public interface IMainFrame {
 	 * @return the created title label
 	 */
 	public JLabel createTitleLabel(String text);
+	
+	/**
+	 * Gets the board grid
+	 * @return the board grid
+	 */
+	public IGrid getGrid();
+
+    /**
+	 * Sets the board grid to a new one
+	 * @param grid the new grid
+	 */
+	public void setGrid(Grid grid);
 }

@@ -122,10 +122,10 @@ public class LevelReader {
      * @return the extracted level number, or -1 if it cannot be extracted.
      */
     private int extractLevelNumber(String levelName) {
-		if(levelName.equals("Initial level"))
+		if("Initial level".equals(levelName))
 			return 1; // Special case for the initial level
         String[] parts = levelName.split(" ");
-        if (parts.length > 1 && parts[0].equalsIgnoreCase("Level")) {
+        if (parts.length > 1 && "Level".equalsIgnoreCase(parts[0])) {
             try {
                 return Integer.parseInt(parts[1]);
             } catch (NumberFormatException e) {

@@ -13,7 +13,7 @@ import javax.swing.JPanel;
  *
  */
 public class BackgroundPanel extends JPanel {
-    private BufferedImage backgroundImage;
+    private transient BufferedImage backgroundImage;
     
     /**
      * BackgroundPanel constructor

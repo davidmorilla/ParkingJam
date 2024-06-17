@@ -13,6 +13,10 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
@@ -30,12 +34,21 @@ public class Grid extends JPanel implements IGrid {
 	private int rows;
 	private int cols;
 	private int squareSize = 50;
-	private Map<Character, Manager> movableCars; // Stores the drawable cars
-	private ControllerInterface controller;
+	private transient Map<Character, Manager> movableCars; // Stores the drawable cars
+	private transient ControllerInterface controller;
 	private char[][] board;
 	private boolean levelCompleted;
 	private Map<Integer, String[]> carImages;
+	
+	private static final Logger logger = LoggerFactory.getLogger(Grid.class);
+
 	private Random rnd = new Random();
+	private static final String TOP_LEFT = "topLeft";
+	private static final String TOP_RIGHT = "topRight";
+	private static final String BOTTOM_LEFT = "bottomLeft";
+	private static final String BOTTOM_RIGHT = "bottomRight";
+
+
 
 	/**
 	 * Constructor for Grid class.
@@ -44,7 +57,6 @@ public class Grid extends JPanel implements IGrid {
 	 * @param cars Map of characters to Car objects representing movable cars in the game
 	 * @param board 2D char array representing the initial layout of the game board
 	 * @param controller Controller object to handle game logic
-	 * @param mf MainFrame object representing the main application frame
 	 */
 	public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, ControllerInterface controller,
 			DataPanel dataPanel) {
@@ -53,7 +65,6 @@ public class Grid extends JPanel implements IGrid {
 		this.board = board;
 		this.controller = controller;
 		this.levelCompleted = false;
-		//this.mf = mf;
 		this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
 		this.carImages = new HashMap<>();
 		carImages.put(2, new String[] { "car2", "car4", "car7", "car9", "car10", "car11", "car12" });
@@ -92,13 +103,14 @@ public class Grid extends JPanel implements IGrid {
 
 		HashMap<String,BufferedImage> wallTypeMap = new HashMap<>();
 		try {
-			wallTypeMap.put("topLeft", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_left_corners.png")));
-			wallTypeMap.put("topRight", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_right_corners.png")));
-			wallTypeMap.put("bottomLeft", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_left_corners.png")));
-			wallTypeMap.put("bottomRight", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_right_corners.png")));
+			wallTypeMap.put(TOP_LEFT, ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_left_corners.png")));
+			wallTypeMap.put(TOP_RIGHT, ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_right_corners.png")));
+			wallTypeMap.put(BOTTOM_LEFT, ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_left_corners.png")));
+			wallTypeMap.put(BOTTOM_RIGHT, ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_right_corners.png")));
 			wallTypeMap.put("vertical", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_vertical.png")));
 			wallTypeMap.put("horizontal", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_horizontal.png")));
 		} catch (IOException e) {
+			logger.error("ERROR: Cannot load wall images");
 		}
 
 		// Paint the board
@@ -108,16 +120,16 @@ public class Grid extends JPanel implements IGrid {
 				if (elem == '+') {
 					String cornerType = getCornerType(j, i);
 					switch (cornerType) {
-					case "topLeft": // If wall is top left corner
+					case TOP_LEFT: // If wall is top left corner
 						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
 						break;
-					case "topRight": // If wall is top right corner
+					case TOP_RIGHT: // If wall is top right corner
 						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
 						break;
-					case "bottomLeft": // If wall is bottom left corner
+					case BOTTOM_LEFT: // If wall is bottom left corner
 						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
 						break;
-					case "bottomRight": // If wall is bottom right corner
+					case BOTTOM_RIGHT: // If wall is bottom right corner
 						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
 						break;
 					default:
@@ -138,6 +150,7 @@ public class Grid extends JPanel implements IGrid {
 						
 						g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
 						} catch (IOException e) {
+							logger.error("ERROR: Cannot load exit image");
 						}
 					}
 				} else {
@@ -180,13 +193,13 @@ public class Grid extends JPanel implements IGrid {
 	 */
 	private String getCornerType(int x, int y) {
 		if (x == 0 && y == 0) {
-			return "topLeft";
+			return TOP_LEFT;
 		} else if (x == cols - 1 && y == 0) {
-			return "topRight";
+			return TOP_RIGHT;
 		} else if (x == 0 && y == rows - 1) {
-			return "bottomLeft";
+			return BOTTOM_LEFT;
 		} else if (x == cols - 1 && y == rows - 1) {
-			return "bottomRight";
+			return BOTTOM_RIGHT;
 		} else {
 			return "";
 		}
