@@ -36,7 +36,11 @@ public class GameSaver {
 			boolean isCreated;
 			if (!level.exists()) {
 				logger.info("Creating level.txt file...");
-				level.getParentFile().mkdirs();
+				if (level.getParentFile().mkdirs()) {
+                    logger.info("Directories for level.txt created.");
+                } else {
+                    logger.warn("Directories for level.txt already exist or could not be created.");
+                }
 				isCreated = level.createNewFile();
                 if (isCreated) {
                     logger.info("The file level.txt has been created.");
@@ -46,7 +50,11 @@ public class GameSaver {
 			}
 			if (!score.exists()) {
 				logger.info("Creating punctuation.txt file...");
-				score.getParentFile().mkdirs();
+				if (score.getParentFile().mkdirs()) {
+                    logger.info("Directories for punctuation.txt created.");
+                } else {
+                    logger.warn("Directories for punctuation.txt already exist or could not be created.");
+                }
 				isCreated = score.createNewFile();
                 if (isCreated) {
                     logger.info("The file punctuation.txt has been created.");
@@ -56,7 +64,11 @@ public class GameSaver {
 			}
 			if (!history.exists()) {
 				logger.info("Creating history.txt file...");
-				history.getParentFile().mkdirs();
+				if (history.getParentFile().mkdirs()) {
+                    logger.info("Directories for history.txt created.");
+                } else {
+                    logger.warn("Directories for history.txt already exist or could not be created.");
+                }
 				isCreated = history.createNewFile();
                 if (isCreated) {
                     logger.info("The file history.txt has been created.");

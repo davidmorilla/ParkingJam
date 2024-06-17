@@ -2,10 +2,15 @@ package es.upm.pproject.parkingjam.parking_jam;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import es.upm.pproject.parkingjam.parking_jam.model.LevelReader;
 
@@ -30,75 +35,41 @@ class LevelReaderTest {
 	}
 	
 	@Test
-	void readLevelWithNoNameTest() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-8,false));
-	}
-	
-	@Test
 	void getLevelNumberTest() {
 		lr = new LevelReader();
 		lr.readMap(-1,false);
 		Assertions.assertEquals(1, lr.getLevelNumber());
 	}
 	
-	@Test
-	void readLevelWithNoDimensionsTest() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-9,false));
-	}
-	
-	@Test
-	void readLevelWithWrongDimensionsFormatTest() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-10,false));
-	}
-	
-	@Test
-	void readLevelWithMissingLinesTest() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-11,false));
-	}
-	
-	@Test
-	void readTooSmallLevelTest() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-12,false));
-	}
-	
-	@Test
-	void readLevelWithNonConcordantGreaterDimensionsTest() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-14,false));
-	}
-	
-	@Test
-	void readLevelWithNonConcordantSmallerDimensionsTest() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-15,false));
-	}
-	
-	@Test
-	void readNonExistentLevel() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-150,false));
-	}
-	
-	@Test
-	void readLevelWithWrongLevelNumberFormat1() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-16,false));
-	}
-	
-	@Test
-	void readLevelWithWrongLevelNumberFormat2() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-17,false));
-	}
-	
-	@Test
-	void readLevelWithWrongLevelNumberFormat3() {
-		lr = new LevelReader();
-		assertArrayEquals(new char[0][0], lr.readMap(-18,false));
-	}
+	@DisplayName("In this parameterized test, all levels are incorrect (in different ways):\n"
+			+ "- Level without a levelName\n"
+			+ "- Level without dimensions\n"
+			+ "- Level with wrong dimensions format\n"
+			+ "- Level with missing lines\n"
+			+ "- Level too small\n"
+			+ "- 2 levels with no concordant dimensions\n"
+			+ "- A non existent level\n"
+			+ "- 3 levels with wrong level number format")
+	@ParameterizedTest
+    @MethodSource("provideInvalidLevelNumbers")
+    void testReadInvalidLevels(int levelNumber) {
+        lr = new LevelReader();
+        assertArrayEquals(new char[0][0], lr.readMap(levelNumber, false));
+    }
+
+    static Stream<Arguments> provideInvalidLevelNumbers() {
+        return Stream.of(
+                Arguments.of(-8),
+                Arguments.of(-9),
+                Arguments.of(-10),
+                Arguments.of(-11),
+                Arguments.of(-12),
+                Arguments.of(-14),
+                Arguments.of(-15),
+                Arguments.of(-150),
+                Arguments.of(-16),
+                Arguments.of(-17),
+                Arguments.of(-18)
+        );
+    }
 }
