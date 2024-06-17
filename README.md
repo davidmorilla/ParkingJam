@@ -210,19 +210,44 @@ The program generates three files every time a game is saved.
 These files are inside the folder `parking-jam/src/main/resources/savedGame`. Here are some brief descriptions of each file.
 
   1. `history.txt`: It contains the movements saved since the start of the level. It saves the movements in the format `car length direction`, where the direction is the opposite to the one 	made. All movemnts are written in separate lines. Here is an example file after moving car 'c' 2 units left, 	car 'b' 1 unit up and car 'a' 3 units down.	
-	
-	```txt
-		c 2 R
-		b 1 D
-		a 3 U
-	```
+
+   ```txt
+   c 2 R
+   b 1 D
+   a 3 U
+   ```
+		 
   2. `level.txt`: It contains the level name, dimensions and board configuration at the moment of saving the game. It uses the same exact format that is used in the level files.
   3. `punctuation.txt`: It's made of two lines, the first one containing a number indicating the total score and the second one containing the level score at the moment of saving the game. For example, if the total score is 15 and the level score is 4, the content of the file would look like this:
-	
-	```txt
-		15
-		4
-	```
+
+   ```txt
+   15
+   4
+   ``` 
+## Controls to use the application
+
+Once the game is run, it opens the next window:
+[Main window](readmeImages/main_window)
+In this window it's possible to see three buttons:
+  1. **NEW GAME**: By clicking it, it allows the user to start a new game, loading the first level.
+  2. **LOAD LAST GAME**: By clicking it, it allows the user to load the last saved game.
+  3. **SELECT LEVEL**: By clicking it, it allows the user to select the specific level they want to play. It's not allowed to save a game when entering in it through the select level button. it's only possible to do so when the **NEW GAME** button is clicked.
+
+The level selection window looks like this:
+[Level selection window](readmeImages/level_selection_window)
+The user can then select any available level or go back to the main menu.
+
+When a level is started, it'll show the next window:
+[Main window](readmeImages/level_window)
+The user can now start playing the game by clicking on any car and dragging it to their desired position. The allowed movements are only backward and forward and it's not possible to move the car laterally or diagonally.
+At any time, the user can choose to press any of the buttons located right under the board.
+  1. **UNDO**: By clicking it, it allows the user to undo the last recorded movement.
+  2. **RESET LEVEL**: By clicking it, it allows the user to reset the level, going back to its initial configuration.
+  3. **SAVE GAME**: By clicking it, it allows the user to save their game progress for later.
+  4. **NEXT LEVEL**: This button only works when a level is finished, this is whenever the red car exits the board and the 'LEVEL COMPLETED' message is displayed. Clicking this button allows the user to advance to the next level.
+
+Once all the levels have been completed, the game will show the user a congratulations message indicating that they have finished the game.
+
 ## Requirements
 
 - Java Development Kit (JDK) 8 or higher
