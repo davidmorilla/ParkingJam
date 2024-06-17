@@ -149,7 +149,7 @@ class GameSaverTest {
     }
 
     @Test
-    void testLoadHistoryFirstMove() throws IOException {
+    void testLoadHistoryFirstMove() {
         List<Pair<Character, Pair<Integer, Character>>> history = new ArrayList<>();
         history.add(new Pair<>('a', new Pair<>(1, 'U')));
         history.add(new Pair<>('b', new Pair<>(2, 'D')));
@@ -163,7 +163,7 @@ class GameSaverTest {
     }
 
     @Test
-    void testLoadHistorySecondMove() throws IOException {
+    void testLoadHistorySecondMove() {
         List<Pair<Character, Pair<Integer, Character>>> history = new ArrayList<>();
         history.add(new Pair<>('a', new Pair<>(1, 'U')));
         history.add(new Pair<>('b', new Pair<>(2, 'D')));

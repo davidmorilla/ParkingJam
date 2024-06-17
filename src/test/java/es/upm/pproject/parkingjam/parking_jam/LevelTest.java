@@ -224,7 +224,7 @@ public class LevelTest {
 		}
 		
 		@Test
-		void testInvalidDirection() throws SameMovementException, IllegalDirectionException {
+		void testInvalidDirection() {
 			assertThrows(IllegalDirectionException.class, () -> level.moveCar('*', 1, 'Q', false));
 		}
 	}
@@ -291,13 +291,13 @@ public class LevelTest {
 		}
 
 		@Test
-		void testUndoMovementInvalid() throws SameMovementException, CannotUndoMovementException {
+		void testUndoMovementInvalid() {
 			// If there are no moves recorded, you can't undo
 			assertThrows(CannotUndoMovementException.class, () -> level.undoMovement());
 		}
 
 		@Test
-		void testUndoMovementInvalid2() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
+		void testUndoMovementInvalid2() throws SameMovementException, IllegalDirectionException {
 			level.moveCar('e', 1, 'U', false);
 			assertDoesNotThrow(() -> level.undoMovement());
 			assertThrows(CannotUndoMovementException.class, () -> level.undoMovement());
@@ -415,7 +415,7 @@ public class LevelTest {
 		}
 		
 		@Test
-		void testGetHistoryNoMovements() throws SameMovementException, IllegalDirectionException {
+		void testGetHistoryNoMovements(){
 			List<Pair<Character,Pair<Integer,Character>>> movements = level.getHistory();
 			assertEquals(0, movements.size());
 		}

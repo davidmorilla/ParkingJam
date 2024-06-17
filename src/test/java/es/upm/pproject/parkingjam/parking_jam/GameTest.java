@@ -420,13 +420,14 @@ public class GameTest {
 		}
 
 		@Test
-		void testUndoMovementInvalid() throws SameMovementException, CannotUndoMovementException {
+		void testUndoMovementInvalid() {
 			// If there are no moves recorded, you can't undo
 			assertThrows(CannotUndoMovementException.class, () -> game.undoMovement());
+			
 		}
 
 		@Test
-		void testUndoMovementInvalid2() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
+		void testUndoMovementInvalid2() throws SameMovementException, IllegalDirectionException {
 			game.moveCar('e', 1, 'U');
 			assertDoesNotThrow(() -> game.undoMovement());
 			assertThrows(CannotUndoMovementException.class, () -> game.undoMovement());
