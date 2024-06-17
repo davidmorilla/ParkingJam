@@ -112,6 +112,7 @@ public class DataPanel extends JPanel {
 
     /**
      * Creates a deep copy of the DataPanel
+     * 
      * @return a deep copy of the DataPanel
      */
     public DataPanel deepCopy() {
@@ -163,6 +164,11 @@ public class DataPanel extends JPanel {
         return this.totalPoints;
     }
 
+    /**
+     * Changes the level name to a new one
+     * 
+     * @param levelNumber the number, which is the name of the level
+     */
     public void changeLevelName(int levelNumber){
     	logger.info("Changing level number of level: [Level {}]...", level);
         this.level = levelNumber;

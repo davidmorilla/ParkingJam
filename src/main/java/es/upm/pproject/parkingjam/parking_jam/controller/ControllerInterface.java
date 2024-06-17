@@ -154,7 +154,13 @@ public interface ControllerInterface {
 	 */
     IGrid getGrid();
 
+    /**
+	 * Set the car list on the grid
+	 */
 	void setCars();
 
+	/**
+	 * Set the board on the grid
+	 */
 	void setBoard(char[][] newBoard);
 }

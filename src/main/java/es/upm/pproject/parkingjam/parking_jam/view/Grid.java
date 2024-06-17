@@ -40,16 +40,10 @@ public class Grid extends JPanel implements IGrid {
 	private char[][] board;
 	private boolean levelCompleted;
 	private Map<Integer, String[]> carImages;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(Grid.class);
 
 	private Random rnd = new Random();
-	private static final String TOP_LEFT = "topLeft";
-	private static final String TOP_RIGHT = "topRight";
-	private static final String BOTTOM_LEFT = "bottomLeft";
-	private static final String BOTTOM_RIGHT = "bottomRight";
-
-
 
 	/**
 	 * Constructor for Grid class.
@@ -87,7 +81,7 @@ public class Grid extends JPanel implements IGrid {
 	 */
 	public MovableCar getMovableCarAt(Point point) {
 		for (Manager car : movableCars.values()) {
-			
+
 			if (car.getMovableCar().contains(point)) {
 				return car.getMovableCar();
 			}
@@ -97,67 +91,28 @@ public class Grid extends JPanel implements IGrid {
 
 	/**
 	 * Paint the board and the cars, plus the level completed message on top if level is finished
+	 * 
+	 * @param g the graphics component used to draw
 	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		HashMap<String,BufferedImage> wallTypeMap = new HashMap<>();
-		try {
-			wallTypeMap.put(TOP_LEFT, ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_left_corners.png")));
-			wallTypeMap.put(TOP_RIGHT, ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_right_corners.png")));
-			wallTypeMap.put(BOTTOM_LEFT, ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_left_corners.png")));
-			wallTypeMap.put(BOTTOM_RIGHT, ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_right_corners.png")));
-			wallTypeMap.put("vertical", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_vertical.png")));
-			wallTypeMap.put("horizontal", ImageIO.read(getClass().getClassLoader().getResourceAsStream("wall_horizontal.png")));
-		} catch (IOException e) {
-			logger.error("ERROR: Cannot load wall images");
-		}
-
 		// Paint the board
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				char elem = board[i][j];
-				if (elem == '+') {
-					String cornerType = getCornerType(j, i);
-					switch (cornerType) {
-					case TOP_LEFT: // If wall is top left corner
-						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
-						break;
-					case TOP_RIGHT: // If wall is top right corner
-						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
-						break;
-					case BOTTOM_LEFT: // If wall is bottom left corner
-						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
-						break;
-					case BOTTOM_RIGHT: // If wall is bottom right corner
-						g.drawImage(wallTypeMap.get(cornerType), j * squareSize, i * squareSize, squareSize, squareSize, null);
-						break;
-					default:
-						if (j == 0 || j == cols - 1) { // If wall is vertical
-							g.drawImage(wallTypeMap.get("vertical"), j * squareSize, i * squareSize, squareSize, squareSize, this);
-						} else { // If wall is horizontal
-							g.drawImage(wallTypeMap.get("horizontal"), j * squareSize, i * squareSize, squareSize, squareSize, this);
-						}
-					}
-				} else if (elem == '@') {
-					levelCompleted = false;
-					// Paint wall if on exit side
-					String side = getExitSide(j, i);
-					if(side != null) {
-						try {
-						BufferedImage imageToDraw = ImageIO.read(
-								getClass().getClassLoader().getResourceAsStream("exits/exit" + side + ".png"));
-						
-						g.drawImage(imageToDraw, j * squareSize, i * squareSize, squareSize, squareSize, null);
-						} catch (IOException e) {
-							logger.error("ERROR: Cannot load exit image");
-						}
-					}
-				} else {
-					// Paint gray the cell
+				switch(board[i][j]) {
+				case '+': // Paint wall
+					paintWall(g,i,j);
+					break;
+				case '@': { // Paint exit
+					paintExit(g,i,j);
+					break;
+				}
+				default: { // Paint gray the cell
 					g.setColor(Color.GRAY);
 					g.fillRect(j * squareSize, i * squareSize, squareSize, squareSize);
+				}
 				}
 			}
 		}
@@ -186,44 +141,59 @@ public class Grid extends JPanel implements IGrid {
 	}
 
 	/**
-	 * Returns which type of corner is the cell given
+	 * Paints an exit in the coordinates x,y given
 	 * 
+	 * @param g the graphics component used to draw
 	 * @param x horizontal coordinate of the cell
 	 * @param y vertical coordinate of the cell
-	 * @return bottomLeft, bottomRight, topLeft or topRight depending on which side is the cell
 	 */
-	private String getCornerType(int x, int y) {
-		if (x == 0 && y == 0) {
-			return TOP_LEFT;
-		} else if (x == cols - 1 && y == 0) {
-			return TOP_RIGHT;
-		} else if (x == 0 && y == rows - 1) {
-			return BOTTOM_LEFT;
-		} else if (x == cols - 1 && y == rows - 1) {
-			return BOTTOM_RIGHT;
-		} else {
-			return "";
+	private void paintExit(Graphics g, int x, int y) {
+		String image = "exits/exit%s.png";
+		levelCompleted = false;
+
+		if (x == 0)
+			image = String.format(image, "Top");
+		else if (x == rows - 1)
+			image = String.format(image, "Bottom");
+		else if (y == 0)
+			image = String.format(image, "Left");
+		else if (y == cols - 1)
+			image = String.format(image, "Right");
+		else
+			return ;
+
+		try {
+			BufferedImage imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
+			g.drawImage(imageToDraw, y * squareSize, x * squareSize, squareSize, squareSize, null);
+		} catch (IOException e) {
+			logger.error("ERROR: Cannot load exit image");
 		}
 	}
 
 	/**
-	 * Returns in which side of the board is the exit
+	 * Paints a wall in the coordinates x,y given
 	 * 
-	 * @param x horizontal coordinate of the exit
-	 * @param y vertical coordinate of the exit
-	 * @return Top, Bottom, Left or Right depending on which side is the exit, null if not on a side
+	 * @param g the graphics component used to draw
+	 * @param x horizontal coordinate of the cell
+	 * @param y vertical coordinate of the cell
 	 */
-	private String getExitSide(int x, int y) {
-		if (y == 0) {
-			return "Top";
-		} else if (y == rows - 1) {
-			return "Bottom";
-		} else if (x == 0) {
-			return "Left";
-		} else if (x == cols - 1) {
-			return "Right";
-		} else {
-			return null;
+	private void paintWall(Graphics g, int x, int y) {
+		String image = "wall_%s.png";
+
+		if(y == 0 && (x == 0 || x == rows - 1))
+			image = String.format(image, "left_corners");
+		else if (y == cols - 1 && (x == 0 || x == rows - 1))
+			image = String.format(image, "right_corners");
+		else if (y == 0 || y == cols - 1)
+			image = String.format(image, "vertical");
+		else
+			image = String.format(image, "horizontal");
+
+		try {
+			g.drawImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream(image)), y * squareSize, x * squareSize,
+					squareSize, squareSize, this);
+		} catch (IOException e) {
+			logger.error("ERROR: Cannot load wall images");
 		}
 	}
 
@@ -261,10 +231,11 @@ public class Grid extends JPanel implements IGrid {
 	 * Create drawable cars equivalent instances (MovableCar) and store them
 	 * 
 	 * @param cars map of cars to create their drawable instances
+	 * @param dataPanel the data panel necessary to create the movable cars
 	 */
 	public final void setCarsMap(Map<Character, Car> cars, DataPanel dataPanel) {
 		this.movableCars = new HashMap<>();
-		
+
 		for (Map.Entry<Character, Car> entry : cars.entrySet()) {
 			Car car = entry.getValue();
 			String[] imagePaths = carImages.get(car.getLength());

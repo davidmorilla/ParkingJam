@@ -171,56 +171,56 @@ public class LevelTest {
 		void testMoveAgainstLeftWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('c', 1, 'U', false);
 
-			assertNull(newBoard);
+			assertArrayEquals(new char[0][0],newBoard);
 		}
 
 		@Test
 		void testMoveAgainstRightWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('g', 5, 'R', false);
 
-			assertNull(newBoard);
+			assertArrayEquals(new char[0][0],newBoard);
 		}
 
 		@Test
 		void testMoveAgainstUpperWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('a', 1, 'L', false);
 
-			assertNull(newBoard);
+			assertArrayEquals(new char[0][0],newBoard);
 		}
 
 		@Test
 		void testMoveAgainstBottomWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('d', 5, 'D', false);
 
-			assertNull(newBoard);
+			assertArrayEquals(new char[0][0],newBoard);
 		}
 
 		@Test
 		void testMoveInvalidDirection() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('d', 1, 'R', false);
 
-			assertNull(newBoard);
+			assertArrayEquals(new char[0][0],newBoard);
 		}
 
 		@Test
 		void testMoveInvalidDirection2() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('a', 1, 'D', false);
 
-			assertNull(newBoard);
+			assertArrayEquals(new char[0][0],newBoard);
 		}
 
 		@Test
 		void testMoveAgainstOtherCar() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('a', 1, 'R', false);
 
-			assertNull(newBoard);
+			assertArrayEquals(new char[0][0],newBoard);
 		}
 
 		@Test
 		void testMoveAgainstOtherCar2() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = level.moveCar('*', 1, 'D', false);
 
-			assertNull(newBoard);
+			assertArrayEquals(new char[0][0],newBoard);
 		}
 		
 		@Test

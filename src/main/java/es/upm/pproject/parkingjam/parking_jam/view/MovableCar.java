@@ -56,7 +56,8 @@ public class MovableCar implements IMovableCar{
 	 * @param mf         	The mainframe of the application
 	 * @param image      	Name of the car's image
 	 */
-	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, ControllerInterface controller, DataPanel dataPanel, String image) {
+	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, ControllerInterface controller,
+			DataPanel dataPanel, String image) {
 		
 		this.carSymbol = car.getSymbol();
 		this.row = car.getCoordinates().getY();
@@ -79,7 +80,6 @@ public class MovableCar implements IMovableCar{
 		}
 	}
 	
-	@Override
 	/**
 	 * Returns the current column (horizontal) position of the car
 	 * 
@@ -89,8 +89,6 @@ public class MovableCar implements IMovableCar{
 		return col;
 	}
 
-
-	@Override
 	/**
 	 * Returns the current row (vertical) position of the car
 	 * 
@@ -100,8 +98,6 @@ public class MovableCar implements IMovableCar{
 		return row;
 	}
 
-
-	@Override
 	/**
 	 * Update the position of the car
 	 *
@@ -112,8 +108,6 @@ public class MovableCar implements IMovableCar{
 		this.col = coordinates.getX();
 	}
 
-
-	@Override
 	/**
 	 * Draw the car on the given graphical component given
 	 *
@@ -161,7 +155,6 @@ public class MovableCar implements IMovableCar{
 		}
 	}
 
-	@Override
 	/**
 	 * Initiates the dragging process
 	 */
@@ -171,7 +164,6 @@ public class MovableCar implements IMovableCar{
 		dragging = true;
 	}
 
-	@Override
 	/**
 	 * Ends the dragging process and moves the car if it has been dragged
 	 */
@@ -184,7 +176,6 @@ public class MovableCar implements IMovableCar{
 		}
 	}
 
-	@Override
 	/**
 	 * Drag the car to a new position
 	 *
@@ -223,8 +214,6 @@ public class MovableCar implements IMovableCar{
 		}
 	}
 
-
-	@Override
 	/**
 	 * Move the car con the board and update its graphical representation
 	 *
@@ -254,8 +243,6 @@ public class MovableCar implements IMovableCar{
 		}
 	}
 	
-
-	@Override
 	/**
 	 * Load the car's image from resources folders
 	 *

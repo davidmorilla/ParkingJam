@@ -2,9 +2,9 @@ package es.upm.pproject.parkingjam.parking_jam.controller;
 
 import java.util.Map;
 
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
@@ -218,17 +218,20 @@ public class Controller implements ControllerInterface {
 	 * 
 	 * @return the current grid
 	 */
-	@Override
 	public IGrid getGrid() {
 		return mf.getGrid();
 	}
 
-	@Override
+	/**
+	 * Set the car list on the grid
+	 */
 	public void setCars() {
 		mf.getGrid().setCars(getCars());
 	}
 
-	@Override
+	/**
+	 * Set the board on the grid
+	 */
 	public void setBoard(char[][] newBoard) {
 		mf.getGrid().setBoard(newBoard);
 	}

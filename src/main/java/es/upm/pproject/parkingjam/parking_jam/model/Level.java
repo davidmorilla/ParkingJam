@@ -44,19 +44,19 @@ public class Level {
 	public Level(char[][] board, Map<Character, Car> cars, GameSaver gs) {
 		if(board != null) {
 			logger.info("Creating level...");
-	        gameSaver = gs;
+			gameSaver = gs;
 
-	        this.board = deepCopy(board); // Copia profunda del tablero inicial
-	        this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
-	        this.history = new ArrayList<>();
-	        this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
-	        this.carsDefault = deepCopyCars(cars); // Guardar una copia profunda del estado inicial de los coches
-	        int numRows = board.length;
-	        int numCols = board[0].length;
-	        dimensions = new Pair<>(numRows, numCols);
+			this.board = deepCopy(board); // Copia profunda del tablero inicial
+			this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
+			this.history = new ArrayList<>();
+			this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
+			this.carsDefault = deepCopyCars(cars); // Guardar una copia profunda del estado inicial de los coches
+			int numRows = board.length;
+			int numCols = board[0].length;
+			dimensions = new Pair<>(numRows, numCols);
 
-	        msgLog = "Level has been created: \n" + charMatrixToString(this.boardDefault);
-	        logger.info(msgLog);
+			msgLog = "Level has been created: \n" + charMatrixToString(this.boardDefault);
+			logger.info(msgLog);
 		}
 		else {
 			logger.error("ERROR: The board given as a parameter when creating a Level object is null");
@@ -71,13 +71,13 @@ public class Level {
 	 */
 	private String charMatrixToString(char[][] board) {
 		StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                sb.append(board[i][j]).append(' ');
-            }
-            sb.append('\n'); // New line after each row
-        }
-        return sb.toString();
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				sb.append(board[i][j]).append(' ');
+			}
+			sb.append('\n'); // New line after each row
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -181,39 +181,39 @@ public class Level {
 	 */
 	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException {
 		logger.info("Undoing movement...");
-        if (!history.isEmpty() && !this.isLevelFinished(board)) {
-            Pair<Character, Pair<Integer, Character>> mov = history.get(history.size() - 1);
-            history.remove(history.size() - 1);
+		if (!history.isEmpty() && !this.isLevelFinished(board)) {
+			Pair<Character, Pair<Integer, Character>> mov = history.get(history.size() - 1);
+			history.remove(history.size() - 1);
 
-            char[][] boardAfterUndo = moveCar(mov.getLeft(), mov.getRight().getLeft(), mov.getRight().getRight(), true);
-            decreaseScore();
-            if (score == -1) {
-                score = oldScore;
-            }
-            logger.info("Movement has been undone.");
-            return boardAfterUndo;
-        } else if (previousBoard != null) {
-            // Restaurar el estado anterior si el último cambio fue un reset
-            logger.info("Restoring previous state before reset...");
-            board = deepCopy(previousBoard);
-            cars = deepCopyCars(previousCars);
-            score = previousScore;
-            history = new ArrayList<>(previousHistory);
+			char[][] boardAfterUndo = moveCar(mov.getLeft(), mov.getRight().getLeft(), mov.getRight().getRight(), true);
+			decreaseScore();
+			if (score == -1) {
+				score = oldScore;
+			}
+			logger.info("Movement has been undone.");
+			return boardAfterUndo;
+		} else if (previousBoard != null) {
+			// Restaurar el estado anterior si el último cambio fue un reset
+			logger.info("Restoring previous state before reset...");
+			board = deepCopy(previousBoard);
+			cars = deepCopyCars(previousCars);
+			score = previousScore;
+			history = new ArrayList<>(previousHistory);
 
-            // Limpiar los estados guardados para evitar restauraciones múltiples no deseadas
-            previousBoard = null;
-            previousCars = null;
-            previousScore = 0;
-            previousHistory = null;
+			// Limpiar los estados guardados para evitar restauraciones múltiples no deseadas
+			previousBoard = null;
+			previousCars = null;
+			previousScore = 0;
+			previousHistory = null;
 
-            logger.info("Previous state has been restored.");
-            return board;
-        } else {
-            logger.error("There are no movements to undo because no movement has been done before.");
-            throw new CannotUndoMovementException();
-        }
+			logger.info("Previous state has been restored.");
+			return board;
+		} else {
+			logger.error("There are no movements to undo because no movement has been done before.");
+			throw new CannotUndoMovementException();
+		}
 	}
-	
+
 
 	/**
 	 * Moves the specified car in the specified direction and updates the board
@@ -224,7 +224,7 @@ public class Level {
 	 * @param way    the direction to move ('L', 'R', 'U', 'D').
 	 * @param undo   boolean indicating whether the movement is a new movement or an
 	 *               undo movement.
-	 * @return the new board state or null if the move is not possible.
+	 * @return the new board state or an empty matrix if the move is not possible.
 	 * @throws SameMovementException if the same movement is repeated.
 	 * @throws IllegalDirectionException 
 	 */
@@ -234,7 +234,7 @@ public class Level {
 		// Check if the level is already finished
 		if (isLevelFinished(board)) {
 			logger.warn("Cannot move car '{}', level is finished", car);
-			return null;
+			return new char[0][0];
 		}
 		if (!undo) { // If it's not an undo movement we must save the movement to the history list
 			char undoWay = opposite(way);
@@ -253,7 +253,7 @@ public class Level {
 		if (cars.get(car) == null) {
 			msgLog = "Car " + car + " does not exist.";
 			logger.error(msgLog);
-			return null;
+			return new char[0][0];
 		}
 
 		// Validate the direction of movement
@@ -263,22 +263,22 @@ public class Level {
 
 			// Determine the new coordinates based on the direction and length of the move
 			switch (way) {
-				case 'L': // Move left
-					logger.info("Moving car '{}' {} units left...", car, length);
-					coord = new Coordinates(xCar - Math.abs(length), yCar);
-					break;
-				case 'R': // Move right
-					logger.info("Moving car '{}' {} units right...", car, length);
-					coord = new Coordinates(xCar + Math.abs(length), yCar);
-					break;
-				case 'U': // Move up
-					logger.info("Moving car '{}' {} units up...", car, length);
-					coord = new Coordinates(xCar, yCar - Math.abs(length));
-					break;
-				default: // Move down
-					logger.info("Moving car '{}' {} units down...", car, length);
-					coord = new Coordinates(xCar, yCar + Math.abs(length));
-					break;
+			case 'L': // Move left
+				logger.info("Moving car '{}' {} units left...", car, length);
+				coord = new Coordinates(xCar - Math.abs(length), yCar);
+				break;
+			case 'R': // Move right
+				logger.info("Moving car '{}' {} units right...", car, length);
+				coord = new Coordinates(xCar + Math.abs(length), yCar);
+				break;
+			case 'U': // Move up
+				logger.info("Moving car '{}' {} units up...", car, length);
+				coord = new Coordinates(xCar, yCar - Math.abs(length));
+				break;
+			default: // Move down
+				logger.info("Moving car '{}' {} units down...", car, length);
+				coord = new Coordinates(xCar, yCar + Math.abs(length));
+				break;
 			}
 			// Check if the new coordinates are within the board boundaries
 			if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1
@@ -310,13 +310,13 @@ public class Level {
 						logger.warn("Cannot move car '{}', there's an obstacle", car);
 					}
 					this.history.remove(history.size() - 1);
-					return null;
+					return new char[0][0];
 				}
 
 			} else {
 				// Handle movement that goes out of board boundaries
 				logger.warn("Cannot move car '{}', new movement is out of reach.", car);
-				return null;
+				return new char[0][0];
 			}
 		} else {
 			// Handle invalid movement direction
@@ -354,7 +354,7 @@ public class Level {
 	 */
 	private char[][] deepCopy(char[][] original) {
 		if (original == null) {
-			return null;
+			return new char[0][0];
 		}
 
 		final char[][] result = new char[original.length][];
@@ -371,22 +371,22 @@ public class Level {
 	 */
 	public void resetLevel() {
 		logger.info("Resetting level...");
-	
+
 		// Guardar el estado actual antes de resetear
 		previousBoard = deepCopy(board);
 		previousCars = deepCopyCars(cars);
 		previousScore = score;
 		previousHistory = new ArrayList<>(history);
-	
+
 		oldScore = score;
 		history = new ArrayList<>();
 		this.score = 0;
 		this.board = deepCopy(boardDefault); // Restores the deep copy of the initial board
 		this.cars = deepCopyCars(carsDefault); //Restores the deep copy of the initial cars
-	
+
 		logger.info("Level has been reset.");
 	}
-	
+
 
 	/**
 	 * Deletes a car from the board.
@@ -458,75 +458,70 @@ public class Level {
 	 * @throws SameMovementException if the movement is invalid due to repeating the
 	 *                               same movement.
 	 */
-	public boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way)
-			throws SameMovementException {
-		logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...", carChar,
-				newCoordinates.getX(), newCoordinates.getY(), way);
+	public boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way) throws SameMovementException {
+	    logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...", carChar, newCoordinates.getX(), newCoordinates.getY(), way);
 
-		// Retrieve car details
-		Car car = cars.get(carChar);
-		Coordinates carCoordinates = car.getCoordinates();
-		int carLength = car.getLength();
-		char carOrientation = car.getOrientation();
-		int boardWidth = board[0].length;
-		int boardHeight = board.length;
+	    Car car = cars.get(carChar);
 
-		// Check if the new coordinates are within the board limits
-		if (newCoordinates.getX() < 0 || newCoordinates.getX() >= boardWidth || newCoordinates.getY() < 0
-				|| newCoordinates.getY() >= boardHeight) {
-			logger.warn("Invalid movement: Trying to move out of board limits.");
+	    if (!areCoordinatesWithinBoard(newCoordinates, car.getOrientation(), car.getLength())) {
+	        logger.warn("Invalid movement: Trying to move out of board limits.");
+	        return false;
+	    }
 
-			return false;
-		}
+	    if (!areCellsValidForMovement(carChar, newCoordinates, car.getOrientation(), car.getLength())) {
+	        logger.warn("Invalid movement: Trying to move to an invalid cell.");
+	        return false;
+	    }
 
-		// Check if the car's movement is valid within the board dimensions
-		if (carOrientation == 'V') { // Car is oriented vertically
-			// Check if the car stays within the vertical bounds and doesn't move
-			// horizontally
-			if (newCoordinates.getY() < 0 || newCoordinates.getY() + carLength > boardHeight
-					|| newCoordinates.getX() != carCoordinates.getX()) {
-				logger.warn(
-						"Invalid movement: Trying to move out of board limits or make a horizontal move in an vertical car.");
-				return false;
-			}
-		} else { // Car is oriented horizontally
-			// Check if the car stays within the horizontal bounds and doesn't move
-			// vertically
-			if (newCoordinates.getX() < 0 || newCoordinates.getX() + carLength > boardWidth
-					|| newCoordinates.getY() != carCoordinates.getY()) {
-				logger.warn(
-						"Invalid movement: Trying to move out of board limits or make a vertical move in an horizontal car.");
-				return false;
-			}
-		}
+	    logger.info("Valid movement.");
+	    return true;
+	}
 
-		// Verify all cells along the path of the movement
-		if (carOrientation == 'V') { // Car is oriented vertically
-			int startY = Math.min(carCoordinates.getY(), newCoordinates.getY());
-			int endY = Math.max(carCoordinates.getY() + carLength, newCoordinates.getY() + carLength);
-			for (int y = startY; y < endY; y++) {
-				// Check if the cell is empty or occupied by the car itself or an exit '@'
-				if (board[y][carCoordinates.getX()] != ' ' && board[y][carCoordinates.getX()] != carChar
-						&& board[y][carCoordinates.getX()] != '@') {
-					logger.warn("Invalid movement: Trying to move to an invalid cell.");
-					return false;
-				}
-			}
-		} else { // Car is oriented horizontally
-			int startX = Math.min(carCoordinates.getX(), newCoordinates.getX());
-			int endX = Math.max(carCoordinates.getX() + carLength, newCoordinates.getX() + carLength);
-			for (int x = startX; x < endX; x++) {
-				// Check if the cell is empty or occupied by the car itself or an exit '@'
-				if (board[carCoordinates.getY()][x] != ' ' && board[carCoordinates.getY()][x] != carChar
-						&& board[carCoordinates.getY()][x] != '@') {
-					logger.warn("Invalid movement: Trying to move to an invalid cell.");
-					return false;
-				}
-			}
-		}
-		// If all checks pass, the movement is valid
-		logger.info("Valid movement.");
-		return true;
+	/**
+	 * Checks if the coordinates allow a car to exist there 
+	 * 
+	 * @param newCoordinates the new coordinates for the car
+	 * @param carOrientation the orientation of the car ('V' or 'H')
+	 * @param carLength the length of the car
+	 * @return true if the car can fit, false otherwise
+	 */
+	private boolean areCoordinatesWithinBoard(Coordinates newCoordinates, char carOrientation, int carLength) {
+	    int boardWidth = board[0].length;
+	    int boardHeight = board.length;
+
+	    if (carOrientation == 'V') {
+	        return newCoordinates.getY() >= 0 && newCoordinates.getY() + carLength <= boardHeight;
+	    } else {
+	        return newCoordinates.getX() >= 0 && newCoordinates.getX() + carLength <= boardWidth;
+	    }
+	}
+
+	/**
+	 * Checks if the cells to be occupied by the car are valid to use
+	 * 
+	 * @param carChar the symbol of the car to move
+	 * @param newCoordinates the coordinates for the car
+	 * @param carOrientation the orientation of the car ('V' or 'H')
+	 * @param carLength the length of the car
+	 * @return true if all the cells are valid to use, false otherwise
+	 */
+	private boolean areCellsValidForMovement(char carChar, Coordinates newCoordinates, char carOrientation, int carLength) {
+	    if (carOrientation == 'V') {
+	        for (int y = newCoordinates.getY(); y < newCoordinates.getY() + carLength; y++) {
+	            int x = newCoordinates.getX();
+	            //If cell not valid
+	            if (!(board[y][x] == ' ' || board[y][x] == carChar || board[y][x] == '@'))
+	                return false;
+	        }
+	    } else {
+	        for (int x = newCoordinates.getX(); x < newCoordinates.getX() + carLength; x++) {
+	        	int y = newCoordinates.getY();
+	        	// If cell not valid
+	        	if (!(board[y][x] == ' ' || board[y][x] == carChar || board[y][x] == '@'))
+	                return false;
+	        }
+	    }
+	    return true;
 	}
 
 	/**
@@ -536,7 +531,7 @@ public class Level {
 	 */
 	public Map<Character, Car> getCars() {
 		logger.info("Getting all cars...");
-	    logger.info("All cars have been given (cars: {}).", cars.keySet());
+		logger.info("All cars have been given (cars: {}).", cars.keySet());
 		return this.cars;
 	}
 

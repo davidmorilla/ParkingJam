@@ -59,15 +59,14 @@ public interface IMainFrame {
     /**
 	 * Clears the entire mainPanel
 	 * 
-	 * @param startButton
-	 * @param selectLevel
-	 * @param buttonPanel
-	 * @param loadGameButton
-	 * @param titleLabel
+	 * @param buttonPanel panel that will hold the buttons
+	 * @param startButton button for starting the game
+	 * @param selectLevel button for selecting a level
+	 * @param loadGameButton button for loading the game
+	 * @param titleLabel title displayed
 	 */
-	public void clearMainPanel(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton,
-			JLabel titleLabel);
-
+	public void clearMainPanel(JPanel buttonPanel, JButton startButton, JButton selectLevel,
+			JButton loadGameButton, JLabel titleLabel);
 
     /**
 	 * Creates a title label with the specified text with a shadow

@@ -32,7 +32,7 @@ class LevelReaderTest {
 	@Test
 	void readLevelWithNoNameTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-8,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-8,false));
 	}
 	
 	@Test
@@ -45,60 +45,60 @@ class LevelReaderTest {
 	@Test
 	void readLevelWithNoDimensionsTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-9,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-9,false));
 	}
 	
 	@Test
 	void readLevelWithWrongDimensionsFormatTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-10,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-10,false));
 	}
 	
 	@Test
 	void readLevelWithMissingLinesTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-11,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-11,false));
 	}
 	
 	@Test
 	void readTooSmallLevelTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-12,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-12,false));
 	}
 	
 	@Test
 	void readLevelWithNonConcordantGreaterDimensionsTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-14,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-14,false));
 	}
 	
 	@Test
 	void readLevelWithNonConcordantSmallerDimensionsTest() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-15,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-15,false));
 	}
 	
 	@Test
 	void readNonExistentLevel() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-150,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-150,false));
 	}
 	
 	@Test
 	void readLevelWithWrongLevelNumberFormat1() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-16,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-16,false));
 	}
 	
 	@Test
 	void readLevelWithWrongLevelNumberFormat2() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-17,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-17,false));
 	}
 	
 	@Test
 	void readLevelWithWrongLevelNumberFormat3() {
 		lr = new LevelReader();
-		Assertions.assertNull(lr.readMap(-18,false));
+		assertArrayEquals(new char[0][0], lr.readMap(-18,false));
 	}
 }
