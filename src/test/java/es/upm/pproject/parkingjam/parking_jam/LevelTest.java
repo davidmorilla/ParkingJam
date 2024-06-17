@@ -2,6 +2,7 @@ package es.upm.pproject.parkingjam.parking_jam;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.CannotUndoMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarDimensionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementException;
@@ -27,7 +29,7 @@ public class LevelTest {
 	private Level level;
 
 	@BeforeEach
-	void runBeforeEach () throws NullBoardException {
+	void runBeforeEach () throws NullBoardException, IllegalCarDimensionException {
 		/* Note: In the game board and cars are given by LevelReader and LevelConverter classes,
 		 * but here they are introduced manually in order to test only the Level class*/
 		char level1Board[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
@@ -55,7 +57,7 @@ public class LevelTest {
 	@Nested
 	class ContructorTests {
 		@Test
-		void testConstructor() throws NullBoardException {
+		void testConstructor() throws NullBoardException, IllegalCarDimensionException {
 			char board[][] =	{{'+', '+', '+', '+'},
 					{'+', 'a', 'a', '+'},
 					{'+', '+', '@', '+'}};
@@ -319,6 +321,27 @@ public class LevelTest {
 			assertDoesNotThrow(() -> level.undoMovement());
 			assertThrows(CannotUndoMovementException.class, () -> level.undoMovement());
 		}
+		
+		@Test
+		void testUndoAfterReset() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+			level.moveCar('e', 1, 'U', false);
+			level.moveCar('g', 1, 'L', false);
+			level.moveCar('c', 1, 'D', false);
+			
+			level.resetLevel();
+			level.undoMovement(); // this should revoke the reset
+			
+			char expectedBoard[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+					{'+', 'a', 'a', 'b', 'b', 'b', ' ', '+'},
+					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
+					{'+', 'd', ' ', ' ', '*', ' ', 'c', ' '},
+					{'+', 'd', 'e', 'f', 'f', 'f', ' ', '+'},
+					{'+', 'd', 'e', ' ', ' ', ' ', ' ', '+'},
+					{'+', ' ', ' ', 'g', 'g', 'g', ' ', '+'},
+					{'+', '+', '+', '+', '@', '+', '+', '+'}};
+
+			assertArrayEquals(expectedBoard, level.getBoard());
+		}
 	}
 
 	@DisplayName ("Tests related to testing the level score")
@@ -412,6 +435,45 @@ public class LevelTest {
 		void testGetHistoryNoMovements(){
 			List<Pair<Character,Pair<Integer,Character>>> movements = level.getHistory();
 			assertEquals(0, movements.size());
+		}
+	}
+	
+	@DisplayName ("Tests related to testing the reset system")
+	@Nested
+	class ResetTests {
+		@Test
+		void resetLevelNoMovements() throws NullBoardException { // reset with no movements should leave the board as it was
+			level.resetLevel();
+			
+			char level1Board[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+					{'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
+					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
+					{'+', 'd', ' ', ' ', '*', ' ', ' ', ' '},
+					{'+', 'd', ' ', 'f', 'f', 'f', ' ', '+'},
+					{'+', 'd', 'e', ' ', ' ', ' ', ' ', '+'},
+					{'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
+					{'+', '+', '+', '+', '@', '+', '+', '+'}};
+			
+			assertArrayEquals(level1Board, level.getBoard());
+		}
+		
+		@Test
+		void resetLevel() throws NullBoardException, SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException { // reset with no movements should leave the board as it was
+			level.moveCar('e', 1, 'U', false);
+			level.moveCar('g', 3, 'L', false);
+			
+			level.resetLevel();
+			
+			char level1Board[][] =	{{'+', '+', '+', '+', '+', '+', '+', '+'},
+					{'+', 'a', 'a', 'b', 'b', 'b', 'c', '+'},
+					{'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
+					{'+', 'd', ' ', ' ', '*', ' ', ' ', ' '},
+					{'+', 'd', ' ', 'f', 'f', 'f', ' ', '+'},
+					{'+', 'd', 'e', ' ', ' ', ' ', ' ', '+'},
+					{'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
+					{'+', '+', '+', '+', '@', '+', '+', '+'}};
+			
+			assertArrayEquals(level1Board, level.getBoard());
 		}
 	}
 }

@@ -40,29 +40,45 @@ public class Level {
 	 * @param board the initial board configuration.
 	 * @param cars  the initial set of cars on the board.
 	 * @param gs    the game saver utility for saving game states.
-	 * @throws NullBoardException 
+	 * @throws NullBoardException
+	 * @throws IllegalCarDimensionException 
 	 */
-	public Level(char[][] board, Map<Character, Car> cars, GameSaver gs) throws NullBoardException {
-		if(board != null) {
+	public Level(char[][] board, Map<Character, Car> cars, GameSaver gs) throws NullBoardException, IllegalCarDimensionException {
+		if (board != null) {
 			logger.info("Creating level...");
-			gameSaver = gs;
+			if (allCarsOK(cars)) {
+				gameSaver = gs;
 
-			this.board = deepCopy(board); // Copia profunda del tablero inicial
-			this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
-			this.history = new ArrayList<>();
-			this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
-			this.carsDefault = deepCopyCars(cars); // Guardar una copia profunda del estado inicial de los coches
-			int numRows = board.length;
-			int numCols = board[0].length;
-			dimensions = new Pair<>(numRows, numCols);
+				this.board = deepCopy(board); // Copia profunda del tablero inicial
+				this.cars = deepCopyCars(cars); // Copia profunda de los coches iniciales
+				this.history = new ArrayList<>();
+				this.boardDefault = deepCopy(board); // Guardar una copia profunda del estado inicial
+				this.carsDefault = deepCopyCars(cars); // Guardar una copia profunda del estado inicial de los coches
+				int numRows = board.length;
+				int numCols = board[0].length;
+				dimensions = new Pair<>(numRows, numCols);
 
-			msgLog = "Level has been created: \n" + charMatrixToString(this.boardDefault);
-			logger.info(msgLog);
-		}
-		else {
+				msgLog = "Level has been created: \n" + charMatrixToString(this.boardDefault);
+				logger.info(msgLog);
+			}
+			else{
+				logger.error("ERROR: There are cars with an unpermitted dimension");
+				throw new IllegalCarDimensionException();
+			}
+		} else {
 			logger.error("ERROR: The board given as a parameter when creating a Level object is null");
 			throw new NullBoardException();
 		}
+	}
+
+	public boolean allCarsOK(Map<Character, Car> cars) {
+		boolean allOk = true;
+		for (Car c : cars.values()) {
+			allOk = c.getLength() > 1;
+			if (!allOk)
+				break;
+		}
+		return allOk;
 	}
 
 	/**
@@ -166,16 +182,19 @@ public class Level {
 	 * Undoes the last movement and restores the previous board state.
 	 * 
 	 * @return the restored board state.
-	 * @throws CannotUndoMovementException if there are no movements to undo.
-	 * @throws SameMovementException       if the movement is to the same position.
-	 * @throws IllegalDirectionException 
-	 * @throws LevelAlreadyFinishedException 
-	 * @throws MovementOutOfBoundariesException 
-	 * @throws InvalidMovementException 
-	 * @throws IllegalCarException 
-	 * @throws NullBoardException 
+	 * @throws CannotUndoMovementException      if there are no movements to undo.
+	 * @throws SameMovementException            if the movement is to the same
+	 *                                          position.
+	 * @throws IllegalDirectionException
+	 * @throws LevelAlreadyFinishedException
+	 * @throws MovementOutOfBoundariesException
+	 * @throws InvalidMovementException
+	 * @throws IllegalCarException
+	 * @throws NullBoardException
 	 */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException,
+			LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException,
+			MovementOutOfBoundariesException, NullBoardException {
 		logger.info("Undoing movement...");
 		if (!history.isEmpty() && !this.isLevelFinished(board)) {
 			Pair<Character, Pair<Integer, Character>> mov = history.get(history.size() - 1);
@@ -196,7 +215,8 @@ public class Level {
 			score = previousScore;
 			history = new ArrayList<>(previousHistory);
 
-			// Limpiar los estados guardados para evitar restauraciones múltiples no deseadas
+			// Limpiar los estados guardados para evitar restauraciones múltiples no
+			// deseadas
 			previousBoard = null;
 			previousCars = null;
 			previousScore = 0;
@@ -210,7 +230,6 @@ public class Level {
 		}
 	}
 
-
 	/**
 	 * Moves the specified car in the specified direction and updates the board
 	 * state.
@@ -221,15 +240,17 @@ public class Level {
 	 * @param undo   boolean indicating whether the movement is a new movement or an
 	 *               undo movement.
 	 * @return the new board state or an empty matrix if the move is not possible.
-	 * @throws SameMovementException if the same movement is repeated.
-	 * @throws IllegalDirectionException 
-	 * @throws LevelAlreadyFinishedException 
-	 * @throws IllegalCarException 
-	 * @throws InvalidMovementException 
-	 * @throws MovementOutOfBoundariesException 
-	 * @throws NullBoardException 
+	 * @throws SameMovementException            if the same movement is repeated.
+	 * @throws IllegalDirectionException
+	 * @throws LevelAlreadyFinishedException
+	 * @throws IllegalCarException
+	 * @throws InvalidMovementException
+	 * @throws MovementOutOfBoundariesException
+	 * @throws NullBoardException
 	 */
-	public char[][] moveCar(char car, int length, char way, boolean undo) throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+	public char[][] moveCar(char car, int length, char way, boolean undo)
+			throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException,
+			InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		logger.info("Moving car '{}'...", car);
 		// Check if the car exists in the game
 		if (cars.get(car) == null) {
@@ -264,22 +285,22 @@ public class Level {
 
 			// Determine the new coordinates based on the direction and length of the move
 			switch (way) {
-			case 'L': // Move left
-				logger.info("Moving car '{}' {} units left...", car, length);
-				coord = new Coordinates(xCar - Math.abs(length), yCar);
-				break;
-			case 'R': // Move right
-				logger.info("Moving car '{}' {} units right...", car, length);
-				coord = new Coordinates(xCar + Math.abs(length), yCar);
-				break;
-			case 'U': // Move up
-				logger.info("Moving car '{}' {} units up...", car, length);
-				coord = new Coordinates(xCar, yCar - Math.abs(length));
-				break;
-			default: // Move down
-				logger.info("Moving car '{}' {} units down...", car, length);
-				coord = new Coordinates(xCar, yCar + Math.abs(length));
-				break;
+				case 'L': // Move left
+					logger.info("Moving car '{}' {} units left...", car, length);
+					coord = new Coordinates(xCar - Math.abs(length), yCar);
+					break;
+				case 'R': // Move right
+					logger.info("Moving car '{}' {} units right...", car, length);
+					coord = new Coordinates(xCar + Math.abs(length), yCar);
+					break;
+				case 'U': // Move up
+					logger.info("Moving car '{}' {} units up...", car, length);
+					coord = new Coordinates(xCar, yCar - Math.abs(length));
+					break;
+				default: // Move down
+					logger.info("Moving car '{}' {} units down...", car, length);
+					coord = new Coordinates(xCar, yCar + Math.abs(length));
+					break;
 			}
 			// Check if the new coordinates are within the board boundaries
 			if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1
@@ -307,7 +328,7 @@ public class Level {
 					} else {
 						logger.warn("Cannot move car '{}', there's an obstacle", car);
 						throw new InvalidMovementException();
-					}					
+					}
 				}
 
 			} else {
@@ -348,7 +369,7 @@ public class Level {
 	 * 
 	 * @param original the original char matrix.
 	 * @return a deep copy of the char matrix.
-	 * @throws NullBoardException 
+	 * @throws NullBoardException
 	 */
 	private char[][] deepCopy(char[][] original) throws NullBoardException {
 		if (original == null) {
@@ -366,7 +387,8 @@ public class Level {
 	 * Resets the level to its initial state.
 	 * The score is reset to 0, the board and cars are restored to their default
 	 * states.
-	 * @throws NullBoardException 
+	 * 
+	 * @throws NullBoardException
 	 */
 	public void resetLevel() throws NullBoardException {
 		logger.info("Resetting level...");
@@ -381,11 +403,10 @@ public class Level {
 		history = new ArrayList<>();
 		this.score = 0;
 		this.board = deepCopy(boardDefault); // Restores the deep copy of the initial board
-		this.cars = deepCopyCars(carsDefault); //Restores the deep copy of the initial cars
+		this.cars = deepCopyCars(carsDefault); // Restores the deep copy of the initial cars
 
 		logger.info("Level has been reset.");
 	}
-
 
 	/**
 	 * Deletes a car from the board.
@@ -528,7 +549,6 @@ public class Level {
 		return true;
 	}
 
-
 	/**
 	 * Retrieves the map of cars.
 	 * 
@@ -599,7 +619,7 @@ public class Level {
 	 * number.
 	 * 
 	 * @param levelNumber the level number to reset.
-	 * @throws NullBoardException 
+	 * @throws NullBoardException
 	 */
 	public void resetOriginalLevel(int levelNumber) throws NullBoardException {
 		logger.info("Resetting original level...");
@@ -619,7 +639,8 @@ public class Level {
 			this.cars = deepCopyCars(new LevelConverter().convertLevel(originalBoard)); // deep copy of the cars
 
 			this.boardDefault = deepCopy(originalBoard); // deep copy of the initial state
-			this.carsDefault = deepCopyCars(new LevelConverter().convertLevel(originalBoard)); // deep copy of the initial cars
+			this.carsDefault = deepCopyCars(new LevelConverter().convertLevel(originalBoard)); // deep copy of the
+																								// initial cars
 
 		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
 			logger.error("There was an error resetting the original level: {}", e.getLocalizedMessage());
