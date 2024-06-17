@@ -17,8 +17,9 @@ public interface ControllerInterface {
 	 * 
 	 * @throws IllegalExitsNumberException if the number of exits is illegal
 	 * @throws IllegalCarDimensionException if the car dimensions are illegal
+	 * @throws NullBoardException 
 	 */
-	void loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException;
+	void loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException;
 
 	/**
 	 * Loads a saved level in the game.
@@ -26,15 +27,17 @@ public interface ControllerInterface {
 	 * @return the level number of the loaded saved level
 	 * @throws IllegalExitsNumberException if the number of exits is illegal
 	 * @throws IllegalCarDimensionException if the car dimensions are illegal
+	 * @throws NullBoardException 
 	 */
-	int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException;
+	int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException;
 
 	/**
 	 * Loads a specific level by its number.
 	 * 
 	 * @param levelNumber the number of the level to load
+	 * @throws NullBoardException 
 	 */
-	void loadLevel(int levelNumber);
+	void loadLevel(int levelNumber) throws NullBoardException;
 
 	/**
 	 * Moves a car on the board.
@@ -43,25 +46,36 @@ public interface ControllerInterface {
 	 * @param length the length to move the car
 	 * @param way the direction to move the car
 	 * @return the updated board state after the move
+	 * @throws NullBoardException 
 	 * @throws SameMovementException if the same movement is attempted consecutively
 	 * @throws IllegalDirectionException 
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws IllegalCarException 
+	 * @throws InvalidMovementException 
+	 * @throws MovementOutOfBoundariesException
 	 */
-	char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException;
+	char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException, InvalidMovementException, LevelAlreadyFinishedException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException;
 
 	/**
 	 * Undoes the last car movement.
 	 * 
 	 * @return the updated board state after undoing the move
 	 * @throws CannotUndoMovementException if no movements can be undone
-	 * @throws SameMovementException if the same movement is attempted consecutively
+     * @throws SameMovementException if the same movement is attempted consecutively
 	 * @throws IllegalDirectionException 
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
+	 * @throws IllegalCarException 
 	 */
-	char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException;
+	char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException;
 
 	/**
 	 * Resets the current level.
+	 * @throws NullBoardException
 	 */
-	void resetLevel();
+	void resetLevel() throws NullBoardException;
 
 	/**
 	 * Checks if a car movement is valid.
@@ -88,8 +102,9 @@ public interface ControllerInterface {
 
 	/**
      * Resets the level to its original state.
+     * @throws NullBoardException
      */
-	void resetOriginalLevel();
+	void resetOriginalLevel() throws NullBoardException;
 
 	/**
      * Gets the current state of the board.

@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.NullBoardException;
 import es.upm.pproject.parkingjam.parking_jam.view.Grid;
 
 public interface IMainFrame {
@@ -42,14 +43,16 @@ public interface IMainFrame {
     /**
 	 * Loads the specified level and starts the game for that level
 	 * @param levelNumber the number of the level to load
+	 * @throws NullBoardException 
 	 */
-	public void loadLevelAndStartGame(int levelNumber);
+	public void loadLevelAndStartGame(int levelNumber) throws NullBoardException;
 
     /**
 	 * Displays the level selection buttons for choosing a specific game level.
 	 * Creates a panel with buttons for levels 1 to 5 and a button to return to the main menu
+	 * @throws NullBoardException 
 	 */
-	public void showLevelButtons();
+	public void showLevelButtons() throws NullBoardException;
 
     /**
 	 * Add the title and start, load game and select level buttons of the main menu to the mainPanel

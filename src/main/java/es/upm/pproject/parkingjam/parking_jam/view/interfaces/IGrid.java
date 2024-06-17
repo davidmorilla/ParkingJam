@@ -3,7 +3,12 @@ package es.upm.pproject.parkingjam.parking_jam.view.interfaces;
 import java.awt.Point;
 import java.util.Map;
 
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.LevelAlreadyFinishedException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.MovementOutOfBoundariesException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.NullBoardException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.view.DataPanel;
@@ -56,8 +61,13 @@ public interface IGrid {
 	 * @return the new board if the movement was successful
 	 * @throws SameMovementException if the movement is to the same place.
 	 * @throws IllegalDirectionException 
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws IllegalCarException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
 	 */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException;
+	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException;
 
 	/**
 	 * Returns whether or not the level is completed

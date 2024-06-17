@@ -2,6 +2,11 @@ package es.upm.pproject.parkingjam.parking_jam.view.interfaces;
 
 import java.awt.Graphics;
 
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.LevelAlreadyFinishedException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.MovementOutOfBoundariesException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.NullBoardException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 
 public interface IMovableCar {
@@ -41,8 +46,13 @@ public interface IMovableCar {
 
     /**
 	 * Ends the dragging process and moves the car if it has been dragged
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws IllegalCarException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
 	 */
-	public void endDrag();
+	public void endDrag() throws LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException;
 
 
     /**
@@ -59,8 +69,13 @@ public interface IMovableCar {
 	 *
 	 * @param dx X axis offset
 	 * @param dy Y axis offset
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws IllegalCarException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
 	 */
-	public void moveCar(int dx, int dy);
+	public void moveCar(int dx, int dy) throws LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException;
 
     /**
 	 * Load the car's image from resources folders

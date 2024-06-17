@@ -32,7 +32,6 @@ public class Level {
 	private int previousScore;
 	private List<Pair<Character, Pair<Integer, Character>>> previousHistory;
 
-	private char[][] arrayFail = new char[0][0]; // This array will be returned when a method fails, instead of null 
 	private static final Logger logger = LoggerFactory.getLogger(Level.class);
 
 	/**
@@ -41,8 +40,9 @@ public class Level {
 	 * @param board the initial board configuration.
 	 * @param cars  the initial set of cars on the board.
 	 * @param gs    the game saver utility for saving game states.
+	 * @throws NullBoardException 
 	 */
-	public Level(char[][] board, Map<Character, Car> cars, GameSaver gs) {
+	public Level(char[][] board, Map<Character, Car> cars, GameSaver gs) throws NullBoardException {
 		if(board != null) {
 			logger.info("Creating level...");
 			gameSaver = gs;
@@ -61,6 +61,7 @@ public class Level {
 		}
 		else {
 			logger.error("ERROR: The board given as a parameter when creating a Level object is null");
+			throw new NullBoardException();
 		}
 	}
 
@@ -162,25 +163,19 @@ public class Level {
 	}
 
 	/**
-	 * Sets the previous score to the value score
-	 * 
-	 * @param score the new score
-	 */
-	public void setPreviousScore(int score){
-		logger.info("Setting previous score = {}...", score);
-		logger.info("The previous score = {} has been given...", score);
-		previousScore = score;
-	}
-
-	/**
 	 * Undoes the last movement and restores the previous board state.
 	 * 
 	 * @return the restored board state.
 	 * @throws CannotUndoMovementException if there are no movements to undo.
 	 * @throws SameMovementException       if the movement is to the same position.
 	 * @throws IllegalDirectionException 
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
+	 * @throws IllegalCarException 
+	 * @throws NullBoardException 
 	 */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException {
+	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		logger.info("Undoing movement...");
 		if (!history.isEmpty() && !this.isLevelFinished(board)) {
 			Pair<Character, Pair<Integer, Character>> mov = history.get(history.size() - 1);
@@ -228,14 +223,26 @@ public class Level {
 	 * @return the new board state or an empty matrix if the move is not possible.
 	 * @throws SameMovementException if the same movement is repeated.
 	 * @throws IllegalDirectionException 
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws IllegalCarException 
+	 * @throws InvalidMovementException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws NullBoardException 
 	 */
-	public char[][] moveCar(char car, int length, char way, boolean undo) throws SameMovementException, IllegalDirectionException {
+	public char[][] moveCar(char car, int length, char way, boolean undo) throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		logger.info("Moving car '{}'...", car);
+		// Check if the car exists in the game
+		if (cars.get(car) == null) {
+			msgLog = "Car " + car + " does not exist.";
+			logger.error(msgLog);
+
+			throw new IllegalCarException();
+		}
 
 		// Check if the level is already finished
 		if (isLevelFinished(board)) {
 			logger.warn("Cannot move car '{}', level is finished", car);
-			return arrayFail;
+			throw new LevelAlreadyFinishedException();
 		}
 		if (!undo) { // If it's not an undo movement we must save the movement to the history list
 			char undoWay = opposite(way);
@@ -249,13 +256,6 @@ public class Level {
 		Coordinates coord = null; // Variable to store the new coordinates after moving the car
 		int xCar = 0; // X-coordinate of the car
 		int yCar = 0; // Y-coordinate of the car
-
-		// Check if the car exists in the game
-		if (cars.get(car) == null) {
-			msgLog = "Car " + car + " does not exist.";
-			logger.error(msgLog);
-			return arrayFail;
-		}
 
 		// Validate the direction of movement
 		if (way == 'L' || way == 'R' || way == 'U' || way == 'D') {
@@ -287,37 +287,33 @@ public class Level {
 
 				// Check if the movement is valid (no obstacles, etc.)
 				if (checkMovementValidity(car, coord, way)) {
-					try {
-						deleteCar(car, newBoard, cars); // Remove the car from the current position
-						addCar(car, newBoard, cars, coord); // Add the car to the new position
-						this.cars.get(car).setCoordinates(coord.getX(), coord.getY()); // Update the car's coordinates
 
-						// Update the board with the new state
-						board = newBoard;
+					deleteCar(car, newBoard, cars); // Remove the car from the current position
+					addCar(car, newBoard, cars, coord); // Add the car to the new position
+					this.cars.get(car).setCoordinates(coord.getX(), coord.getY()); // Update the car's coordinates
 
-						// Increase the score for the valid move if it's not an undo movement
-						if (!undo)
-							increaseScore();
+					// Update the board with the new state
+					board = newBoard;
 
-					} catch (IllegalCarException e) {
-						msgLog = "Car " + car + " does not exist.";
-						logger.error(msgLog);
-					}
+					// Increase the score for the valid move if it's not an undo movement
+					if (!undo)
+						increaseScore();
 				} else {
+					this.history.remove(history.size() - 1);
 					// Handle invalid movement due to obstacles or if the level is finished
 					if (this.isLevelFinished(newBoard)) {
 						logger.warn("Cannot move car '{}', level is finished", car);
+						throw new LevelAlreadyFinishedException();
 					} else {
 						logger.warn("Cannot move car '{}', there's an obstacle", car);
-					}
-					this.history.remove(history.size() - 1);
-					return arrayFail;
+						throw new InvalidMovementException();
+					}					
 				}
 
 			} else {
 				// Handle movement that goes out of board boundaries
 				logger.warn("Cannot move car '{}', new movement is out of reach.", car);
-				return arrayFail;
+				throw new MovementOutOfBoundariesException();
 			}
 		} else {
 			// Handle invalid movement direction
@@ -352,10 +348,11 @@ public class Level {
 	 * 
 	 * @param original the original char matrix.
 	 * @return a deep copy of the char matrix.
+	 * @throws NullBoardException 
 	 */
-	private char[][] deepCopy(char[][] original) {
+	private char[][] deepCopy(char[][] original) throws NullBoardException {
 		if (original == null) {
-			return arrayFail;
+			throw new NullBoardException();
 		}
 
 		final char[][] result = new char[original.length][];
@@ -369,8 +366,9 @@ public class Level {
 	 * Resets the level to its initial state.
 	 * The score is reset to 0, the board and cars are restored to their default
 	 * states.
+	 * @throws NullBoardException 
 	 */
-	public void resetLevel() {
+	public void resetLevel() throws NullBoardException {
 		logger.info("Resetting level...");
 
 		// Guardar el estado actual antes de resetear
@@ -601,8 +599,9 @@ public class Level {
 	 * number.
 	 * 
 	 * @param levelNumber the level number to reset.
+	 * @throws NullBoardException 
 	 */
-	public void resetOriginalLevel(int levelNumber) {
+	public void resetOriginalLevel(int levelNumber) throws NullBoardException {
 		logger.info("Resetting original level...");
 
 		previousBoard = deepCopy(board);

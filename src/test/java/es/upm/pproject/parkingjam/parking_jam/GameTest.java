@@ -25,7 +25,7 @@ public class GameTest {
 	class GameLevelTests {
 		
 		@Test
-		void getDimensionsTest1() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void getDimensionsTest1() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(-1);
 			
 			int x = game.getDimensions().getLeft();
@@ -35,7 +35,7 @@ public class GameTest {
 		}
 
 		@Test
-		void getDimensionsTest2() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void getDimensionsTest2() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(-13);
 			
 			int x = game.getDimensions().getLeft();
@@ -45,7 +45,7 @@ public class GameTest {
 		}
 		
 		@Test
-		void getInitialBoard() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void getInitialBoard() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		    game = new Game();
 		    char level1Board[][] = {
 		            {'+', '+', '+', '+', '+', '+', '+', '+'},
@@ -64,7 +64,7 @@ public class GameTest {
 
 
 		@Test
-		void getBoardTest1() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void getBoardTest1() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(-1);
 			
 			char expectedBoard[][] =	
@@ -81,7 +81,7 @@ public class GameTest {
 		}
 		
 		@Test
-		void getBoardTest2() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void getBoardTest2() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(-13);
 
 			char expectedBoard[][] =	
@@ -98,7 +98,7 @@ public class GameTest {
 		}
 
 		@Test
-		void loadNewLevelTest() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void loadNewLevelTest() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			int result = 1;
 			game = new Game(result);
 			result = game.loadNewLevel();
@@ -118,26 +118,26 @@ public class GameTest {
 		}
 		
 		@Test
-		void getLevelNumberTest() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void getLevelNumberTest() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(1);
 			assertEquals(1, game.getLevelNumber());
 		}
 		
 		@Test
-		void getLevelTest() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void getLevelTest() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(1);
 			Level level = game.getLevel();
 			assertNotNull(level);
 		}
 		@Test
-		void getCarsTest() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void getCarsTest() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
             game = new Game(1);
             assertNotNull(game.getCars());
         }
 		@Test
-		 void resetLevelTest() throws IllegalExitsNumberException, IllegalCarDimensionException, SameMovementException, IllegalDirectionException {
+		 void resetLevelTest() throws IllegalExitsNumberException, IllegalCarDimensionException, SameMovementException, IllegalDirectionException, NullBoardException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException {
 	            game = new Game(1);
-	            game.moveCar('c', 1, 'L');
+	            game.moveCar('c', 1, 'D');
 	            game.resetLevel();
 	            char[][] initialBoard = {
 	                {'+', '+', '+', '+', '+', '+', '+', '+'},
@@ -159,12 +159,12 @@ public class GameTest {
 	class GameMovementTests {	
 
 		@BeforeEach
-		void runBeforeEach()  throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void runBeforeEach()  throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(-1);
 		}
 		
 		@Test
-		void testMove1TileLeft() throws SameMovementException, IllegalDirectionException {
+		void testMove1TileLeft() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			char[][] newBoard = game.moveCar('g',1,'L');
 
 			char expectedBoard[][] =	{
@@ -180,7 +180,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testMove1TileRight() throws SameMovementException, IllegalDirectionException {
+		void testMove1TileRight() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			char[][] newBoard = game.moveCar('f',1,'R');
 
 			char expectedBoard[][] =	{
@@ -197,7 +197,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testMove1TileUp() throws SameMovementException, IllegalDirectionException {
+		void testMove1TileUp() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			char[][] newBoard = game.moveCar('e',1,'U');
 
 			char expectedBoard[][] =	{
@@ -213,7 +213,7 @@ public class GameTest {
 			assertArrayEquals(expectedBoard, newBoard);
 		}
 		@Test
-        void testMove1TileDown() throws SameMovementException, IllegalDirectionException {
+        void testMove1TileDown() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
             char[][] newBoard = game.moveCar('c', 1, 'D');
 
 			char expectedBoard[][] =	{
@@ -229,7 +229,7 @@ public class GameTest {
             assertArrayEquals(expectedBoard, newBoard);
         }
 		@Test
-		void testMove2TilesLeft() throws SameMovementException, IllegalDirectionException {
+		void testMove2TilesLeft() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			// To do this tests we need to move another vehicle first to make space for the 2-tiles left movement
 			game.moveCar('e',1,'U');
 			char[][] newBoard = game.moveCar('g', 2, 'L');
@@ -249,7 +249,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testMove2TilesRight() throws SameMovementException, IllegalDirectionException {
+		void testMove2TilesRight() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			// To do this tests we need to move t vehicle first to make space for the 2-tiles left movement
 			game.moveCar('f',1,'L');
 			char[][] newBoard = game.moveCar('f', 2, 'R');
@@ -269,7 +269,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testMove2TilesUp() throws SameMovementException, IllegalDirectionException {
+		void testMove2TilesUp() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			char[][] newBoard = game.moveCar('e', 2, 'U');
 
 			char expectedBoard[][] =	{
@@ -286,7 +286,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testMove2TilesDown() throws SameMovementException, IllegalDirectionException {
+		void testMove2TilesDown() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			char[][] newBoard = game.moveCar('c', 2, 'D');
 
 			char expectedBoard[][] =	{
@@ -303,67 +303,48 @@ public class GameTest {
 		}
 
 		@Test
-		void testMoveAgainstLeftWall() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('c', 1, 'U');
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);
+		void testMoveAgainstLeftWall() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+			
+			assertThrows(MovementOutOfBoundariesException.class, () -> game.moveCar('c', 1, 'U'));
 		}
 
 		@Test
-		void testMoveAgainstRightWall() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('g', 5, 'R');
-
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);		}
-
-		@Test
-		void testMoveAgainstUpperWall() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('a', 1, 'L');
-
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);		}
+		void testMoveAgainstRightWall() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+			
+			assertThrows(MovementOutOfBoundariesException.class, () -> game.moveCar('g', 5, 'R'));
+		}
 
 		@Test
-		void testMoveAgainstBottomWall() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('d', 5, 'D');
+		void testMoveAgainstUpperWall() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);		}
-
-		@Test
-		void testMoveInvalidDirection() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('d', 1, 'R');
-
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);		}
+			assertThrows(MovementOutOfBoundariesException.class, () -> game.moveCar('a', 1, 'L'));
+		}
 
 		@Test
-		void testMoveInvalidDirection2() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('a', 1, 'U');
+		void testMoveAgainstBottomWall() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);		}
+			assertThrows(MovementOutOfBoundariesException.class, () -> game.moveCar('d', 5, 'D'));
+		}
+
+		@Test
+		void testMoveInvalidDirection() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+			assertThrows(InvalidMovementException.class, () -> game.moveCar('d', 1, 'R'));
+		}
 		
 		@Test
-		void testMoveInvalidDirection3() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('a', 1, 'D');
-
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);		}
+		void testMoveInvalidDirection2() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+			assertThrows(InvalidMovementException.class, () -> game.moveCar('a', 1, 'D'));
+		}
 
 		@Test
-		void testMoveAgainstOtherCar() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('a', 1, 'R');
-
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);		}
+		void testMoveAgainstOtherCar() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+			assertThrows(InvalidMovementException.class, () -> game.moveCar('a', 1, 'R'));
+		}
 
 		@Test
-		void testMoveAgainstOtherCar2() throws SameMovementException, IllegalDirectionException {
-			char[][] newBoard = game.moveCar('*', 1, 'D');
-
-			char[][] expected = new char[0][0];
-			assertArrayEquals(expected, newBoard);		}
+		void testMoveAgainstOtherCar2() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+			assertThrows(InvalidMovementException.class, () -> game.moveCar('*', 1, 'D'));
+		}
 	}
 	
 	@DisplayName ("Tests related to testing the undo movement of the cars")
@@ -372,13 +353,13 @@ public class GameTest {
 		private char levelBaseBoard[][];
 
 		@BeforeEach
-		void runBeforeEach() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void runBeforeEach() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(-1);
 			levelBaseBoard = game.getBoard();
 		}
 		
 		@Test
-		void testUndoMovement() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
+		void testUndoMovement() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 
 			game.moveCar('c', 2, 'D');
 			game.undoMovement();
@@ -387,7 +368,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testUndoMovement2() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
+		void testUndoMovement2() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 
 			game.moveCar('g', 1, 'L');
 			game.undoMovement();
@@ -396,7 +377,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testUndoMovement3() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
+		void testUndoMovement3() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			game.moveCar('e', 1, 'U');
 			game.moveCar('g', 3, 'L');
 			game.moveCar('c', 1, 'D');
@@ -415,7 +396,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testUndoMovement4() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
+		void testUndoMovement4() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			game.moveCar('e', 1, 'U');
 			game.moveCar('g', 3, 'L');
 			game.moveCar('c', 1, 'D');
@@ -434,7 +415,7 @@ public class GameTest {
 		}
 
 		@Test
-		void testUndoMovementInvalid2() throws SameMovementException, IllegalDirectionException {
+		void testUndoMovementInvalid2() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			game.moveCar('e', 1, 'U');
 			assertDoesNotThrow(() -> game.undoMovement());
 			assertThrows(CannotUndoMovementException.class, () -> game.undoMovement());
@@ -446,7 +427,7 @@ public class GameTest {
 	class GameScoreTests {
 
 		@BeforeEach
-		void runBeforeEach() throws IllegalExitsNumberException, IllegalCarDimensionException {
+		void runBeforeEach() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 			game = new Game(2);
 		}
 
@@ -457,14 +438,14 @@ public class GameTest {
 		}
 
 		@Test
-		void testScoreAfter1Move() throws SameMovementException, IllegalDirectionException {
+		void testScoreAfter1Move() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			game.moveCar('b', 1, 'L');
 			assertEquals(1, game.getLevelScore());
 			assertEquals(1, game.getGameScore());
 		}
 
 		@Test
-		void testScoreAfterSomeMoves() throws SameMovementException, IllegalDirectionException {
+		void testScoreAfterSomeMoves() throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 			game.moveCar('*', 1, 'R');
 			game.moveCar('a', 1, 'D');
 			game.moveCar('b', 2, 'L');
@@ -472,26 +453,9 @@ public class GameTest {
 			assertEquals(3, game.getGameScore());
 		}
 
-		@Test
-		void testScoreAfterSomeInvalidMoves() throws SameMovementException, IllegalDirectionException {
-			game.moveCar('c', 2, 'D');
-			game.moveCar('h', 1, 'U');
-			assertEquals(0, game.getLevelScore());
-			assertEquals(0, game.getGameScore());
-		}
 
 		@Test
-		void testScoreAfterSomeValidAndInvalidMoves() throws SameMovementException, IllegalDirectionException {
-			game.moveCar('c', 2, 'D');
-			game.moveCar('b', 1, 'L');
-			game.moveCar('i', 1, 'R');
-			game.moveCar('*', 1, 'R');
-			assertEquals(2, game.getLevelScore());
-			assertEquals(2, game.getGameScore());
-		}
-
-		@Test
-		void testGameScoreAfter2Levels() throws SameMovementException, IllegalExitsNumberException, IllegalCarDimensionException, IllegalDirectionException{
+		void testGameScoreAfter2Levels() throws SameMovementException, IllegalExitsNumberException, IllegalCarDimensionException, IllegalDirectionException, NullBoardException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException{
 			game.moveCar('*', 1, 'R');
 			game.moveCar('a', 1, 'D');
 			game.moveCar('b', 1, 'L');
@@ -503,7 +467,7 @@ public class GameTest {
 		}
 		
 		@Test
-        void testScoreAfterUndo() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException {
+        void testScoreAfterUndo() throws SameMovementException, CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
             game.moveCar('*', 1, 'R');
             game.undoMovement();
             assertEquals(0, game.getLevelScore());

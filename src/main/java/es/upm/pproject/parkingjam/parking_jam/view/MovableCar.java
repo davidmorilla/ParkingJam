@@ -12,7 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.LevelAlreadyFinishedException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.MovementOutOfBoundariesException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.NullBoardException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
@@ -166,8 +171,13 @@ public class MovableCar implements IMovableCar{
 
 	/**
 	 * Ends the dragging process and moves the car if it has been dragged
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws IllegalCarException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
 	 */
-	public void endDrag() {
+	public void endDrag() throws LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException {
 		dragging = false;
 		int dx = col - initialCol;
 		int dy = row - initialRow;
@@ -219,8 +229,13 @@ public class MovableCar implements IMovableCar{
 	 *
 	 * @param dx X axis offset
 	 * @param dy Y axis offset
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws IllegalCarException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
 	 */
-	public void moveCar(int dx, int dy) {
+	public void moveCar(int dx, int dy) throws LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException {
 		try {
 			// Try to move the car and the new board
 			char[][] newBoard = null;

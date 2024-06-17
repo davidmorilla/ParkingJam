@@ -150,17 +150,5 @@ public class Car {
     @Override
     public int hashCode() {
         return Objects.hash(symbol, coordinates.getX(), coordinates.getY(), length, orientation);
-    }
-    
-    /**
-     * Returns a string representation of the car.
-     *
-     * @return a string representing the car.
-     */
-    @Override
-    public String toString() {
-        return this.symbol + ": {x=" + this.coordinates.getX() + ", y=" + this.coordinates.getY() + "}\nOrientation: " + this.orientation + "\nLength: " + this.length;
-    }
+    }   
 }
-
-

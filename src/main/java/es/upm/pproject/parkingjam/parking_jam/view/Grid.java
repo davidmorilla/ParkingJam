@@ -18,7 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.LevelAlreadyFinishedException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.MovementOutOfBoundariesException;
+import es.upm.pproject.parkingjam.parking_jam.model.exceptions.NullBoardException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
@@ -132,9 +137,9 @@ public class Grid extends JPanel implements IGrid {
 			int x = (cols * squareSize - textWidth) / 2;
 			int y = (rows * squareSize + textHeight) / 2;
 			g.setColor(Color.BLUE);
-			g.fillRect(x-15,y-40, 325, 55);
+			g.fillRect(x-15,y-40, 345, 55);
 			g.setColor(Color.cyan);
-			g.fillRect(x-10,y-35, 315, 45);
+			g.fillRect(x-10,y-35, 335, 45);
 			g.setColor(Color.BLACK);
 			g.drawString(message, x, y);
 		}
@@ -259,8 +264,13 @@ public class Grid extends JPanel implements IGrid {
 	 * @return the new board if the movement was successful
 	 * @throws SameMovementException if the movement is to the same place.
 	 * @throws IllegalDirectionException 
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws IllegalCarException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
 	 */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException {
+	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException {
 		return controller.moveCar(car, length, way);
 	}
 

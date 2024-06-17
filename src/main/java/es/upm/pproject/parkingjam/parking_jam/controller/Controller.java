@@ -25,8 +25,9 @@ public class Controller implements ControllerInterface {
      * 
      * @throws IllegalExitsNumberException if the number of exits is illegal
      * @throws IllegalCarDimensionException if the car dimensions are illegal
+	 * @throws NullBoardException 
      */
-	public Controller() throws IllegalExitsNumberException, IllegalCarDimensionException {
+	public Controller() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		game = new Game();
 		mf = new MainFrame(this);
 		gameSaver = game.getGameSaver();
@@ -37,8 +38,9 @@ public class Controller implements ControllerInterface {
      * 
      * @throws IllegalExitsNumberException if the number of exits is illegal
      * @throws IllegalCarDimensionException if the car dimensions are illegal
+	 * @throws NullBoardException 
      */
-	public void loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
+	public void loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		game.loadNewLevel();
 
 	}
@@ -49,8 +51,9 @@ public class Controller implements ControllerInterface {
      * @return the level number of the loaded saved level
      * @throws IllegalExitsNumberException if the number of exits is illegal
      * @throws IllegalCarDimensionException if the car dimensions are illegal
+	 * @throws NullBoardException 
      */
-	public int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException {
+	public int loadSavedLevel() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		return game.loadSavedLevel(gameSaver);
 
 	}
@@ -59,8 +62,9 @@ public class Controller implements ControllerInterface {
      * Loads a specific level by its number.
      * 
      * @param levelNumber the number of the level to load
+	 * @throws NullBoardException 
      */
-	public void loadLevel(int levelNumber) {
+	public void loadLevel(int levelNumber) throws NullBoardException {
 		game.loadLevel(levelNumber);
 	}
 	
@@ -73,8 +77,13 @@ public class Controller implements ControllerInterface {
      * @return the updated board state after the move
      * @throws SameMovementException if the same movement is attempted consecutively
 	 * @throws IllegalDirectionException 
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
+	 * @throws IllegalCarException 
      */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException {
+	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		return game.moveCar(car, length, way);
 	}
 	
@@ -85,15 +94,21 @@ public class Controller implements ControllerInterface {
      * @throws CannotUndoMovementException if no movements can be undone
      * @throws SameMovementException if the same movement is attempted consecutively
 	 * @throws IllegalDirectionException 
+	 * @throws LevelAlreadyFinishedException 
+	 * @throws NullBoardException 
+	 * @throws MovementOutOfBoundariesException 
+	 * @throws InvalidMovementException 
+	 * @throws IllegalCarException 
      */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException {
+	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		return game.undoMovement();
 	}
 	
 	/**
      * Resets the current level.
+	 * @throws NullBoardException 
      */
-	public void resetLevel(){
+	public void resetLevel() throws NullBoardException{
 		game.resetLevel();
 	}
 	
@@ -129,8 +144,9 @@ public class Controller implements ControllerInterface {
 	
 	/**
      * Resets the level to its original state.
+	 * @throws NullBoardException 
      */
-	public void resetOriginalLevel() {
+	public void resetOriginalLevel() throws NullBoardException {
 		int newGamePunctuation = game.getAccumulatedScore();
 		this.setGameScore(newGamePunctuation);
 		game.getLevel().setOldScore(game.getLevelScore());
