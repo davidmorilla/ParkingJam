@@ -71,7 +71,7 @@ public class Level {
 		}
 	}
 
-	public boolean allCarsOK(Map<Character, Car> cars) {
+	public final boolean allCarsOK(Map<Character, Car> cars) {
 		boolean allOk = true;
 		for (Car c : cars.values()) {
 			allOk = c.getLength() > 1;
