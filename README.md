@@ -227,18 +227,24 @@ These files are inside the folder `parking-jam/src/main/resources/savedGame`. He
 ## Controls to use the application
 
 Once the game is run, it opens the next window:
-[Main window](readmeImages/main_window.png)
+
+<img src="readmeImages/main_window.png" width="25%" height="25%">
+
 In this window it's possible to see three buttons:
   1. **NEW GAME**: By clicking it, it allows the user to start a new game, loading the first level.
   2. **LOAD LAST GAME**: By clicking it, it allows the user to load the last saved game.
   3. **SELECT LEVEL**: By clicking it, it allows the user to select the specific level they want to play. It's not allowed to save a game when entering in it through the select level button. it's only possible to do so when the **NEW GAME** button is clicked.
 
 The level selection window looks like this:
-[Level selection window](readmeImages/level_selection_window.png)
+
+<img src="readmeImages/level_selection_window.png" width="25%" height="25%">
+
 The user can then select any available level or go back to the main menu.
 
 When a level is started, it'll show the next window:
-[Main window](readmeImages/level_window.png)
+
+<img src="readmeImages/level_window.png" width="25%" height="25%">
+
 The user can now start playing the game by clicking on any car and dragging it to their desired position. The allowed movements are only backward and forward and it's not possible to move the car laterally or diagonally.
 At any time, the user can choose to press any of the buttons located right under the board.
   1. **UNDO**: By clicking it, it allows the user to undo the last recorded movement.
