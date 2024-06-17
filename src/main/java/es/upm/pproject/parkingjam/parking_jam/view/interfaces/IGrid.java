@@ -1,4 +1,4 @@
-package es.upm.pproject.parkingjam.parking_jam.view;
+package es.upm.pproject.parkingjam.parking_jam.view.interfaces;
 
 import java.awt.Point;
 import java.util.Map;
@@ -6,6 +6,8 @@ import java.util.Map;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
+import es.upm.pproject.parkingjam.parking_jam.view.DataPanel;
+import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
 
 /**
  * Represents the grid where the game is displayed, including cars, walls and exits

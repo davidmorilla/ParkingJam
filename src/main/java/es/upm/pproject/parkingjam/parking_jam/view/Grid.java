@@ -22,6 +22,7 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionE
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
+import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IGrid;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;
 
 import java.awt.event.MouseAdapter;

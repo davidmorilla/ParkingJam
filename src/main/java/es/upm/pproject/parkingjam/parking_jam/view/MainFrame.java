@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
+import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IGrid;
+import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IMainFrame;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.BackgroundPanel;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MusicPlayer;
 import org.slf4j.Logger;
@@ -174,7 +176,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		updateDataPanel();
 		logger.info("Game components initialized.");
 	}
-	
+
 	@Override
 	/**
 	 * Add the title and start, load game and select level buttons of the main menu
@@ -204,13 +206,16 @@ public class MainFrame extends JFrame implements IMainFrame {
 		buttonPanel.add(selectLevel);
 
 		// Start button functionality
-		startButton.addActionListener(arg0 -> newGameAction(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel));
+		startButton.addActionListener(
+				arg0 -> newGameAction(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel));
 
 		// Load game button functionality
-		loadGameButton.addActionListener(arg0 -> loadLastGameAction(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel));
+		loadGameButton.addActionListener(
+				arg0 -> loadLastGameAction(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel));
 
 		// Select level button functionality
-		selectLevel.addActionListener(arg0 -> selectLevelAction(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel));
+		selectLevel.addActionListener(
+				arg0 -> selectLevelAction(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel));
 
 		gbc.gridy = 1;
 		mainPanel.add(buttonPanel, gbc);
@@ -218,7 +223,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		mainPanel.repaint();
 		logger.info("Ttitle and start, load game and select level buttons have been added to the main menu");
 	}
-	
+
 	@Override
 	/**
 	 * Displays the level selection buttons for choosing a specific game level.
@@ -245,7 +250,6 @@ public class MainFrame extends JFrame implements IMainFrame {
 		level4Button.addActionListener(arg0 -> level4Action());
 		level5Button.addActionListener(arg0 -> level5Action());
 
-
 		levelPanel.add(level1Button);
 		levelPanel.add(level2Button);
 		levelPanel.add(level3Button);
@@ -265,11 +269,12 @@ public class MainFrame extends JFrame implements IMainFrame {
 		logger.info("Level buttons displayed.");
 	}
 
-	//--------BUTTON FUNCTIONALITIES------------
+	// --------BUTTON FUNCTIONALITIES------------
 	/**
 	 * Handles the action of the "Back to Menu" button.
 	 * <p>
-	 * This method is triggered when the "Back to Menu" button is clicked. It logs an informational message,
+	 * This method is triggered when the "Back to Menu" button is clicked. It logs
+	 * an informational message,
 	 * clears the main panel, and displays the level selection buttons.
 	 */
 	private void backToMenuAction() {
@@ -284,7 +289,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * Handles the action of the "Next Level" button.
 	 * <p>
 	 * Advances the game to the next level if the current level is completed.
-	 * If all levels are completed, displays a congratulations message and total score.
+	 * If all levels are completed, displays a congratulations message and total
+	 * score.
 	 */
 	private void nextLevelAction() {
 		try {
@@ -292,7 +298,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 			if (gridPanel.isLevelCompleted()) {
 				controller.loadNewLevel();
 				updateDataPanel();
-				gridPanel.setCarsMap(controller.getCars(),dataPanel);
+				gridPanel.setCarsMap(controller.getCars(), dataPanel);
 				gridPanel.setCars(controller.getCars());
 				gridPanel.setBoard(controller.getBoard());
 				((Grid) gridPanel).repaint();
@@ -345,7 +351,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 	/**
 	 * Handles the action of the "Save Game" button.
 	 * <p>
-	 * This method is triggered when the "Save Game" button is clicked. It saves the current
+	 * This method is triggered when the "Save Game" button is clicked. It saves the
+	 * current
 	 * state of the level.
 	 */
 	private void saveGameAction() {
@@ -358,7 +365,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 			JOptionPane.showMessageDialog(MainFrame.this, "There was an error saving the game.");
 		}
 	}
-	
+
 	/**
 	 * Handles the action of the "Undo" button.
 	 * <p>
@@ -379,7 +386,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		}
 		updateDataPanel();
 	}
-	
+
 	/**
 	 * Handles the action of the "Reset" button.
 	 * <p>
@@ -404,12 +411,13 @@ public class MainFrame extends JFrame implements IMainFrame {
 			musicPlayer.playLevelStart();
 		}
 	}
-	
+
 	/**
 	 * Handles the action when the 'New Game' button is clicked.
 	 * It starts a new game from the first level
 	 */
-	private void newGameAction(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton, JLabel titleLabel) {
+	private void newGameAction(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton,
+			JLabel titleLabel) {
 		logger.info("New Game button clicked.");
 		clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
 
@@ -424,43 +432,50 @@ public class MainFrame extends JFrame implements IMainFrame {
 		startGame();
 		musicPlayer.playLevelStart();
 	}
-	
+
 	/**
 	 * Handles the action when the 'Load Last Game' button is clicked.
 	 * Loads the level and its state as it was last saved.
 	 */
-	private void loadLastGameAction(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton, JLabel titleLabel) {
+	private void loadLastGameAction(JButton startButton, JButton selectLevel, JPanel buttonPanel,
+			JButton loadGameButton, JLabel titleLabel) {
 		logger.info("Load Last Game button clicked.");
-		clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
+		boolean levelExists = true;
 		try {
 			levelSavedLoaded = true;
 			controller.loadSavedLevel();
 
+		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
+			logger.error("Cannot load saved game: {}", e.getLocalizedMessage());
+			levelExists = false;
+		}
+		if (levelExists) {
+			clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
 			dataPanel = new DataPanel(controller);
 			dataPanel.loadPunctuation();
 			startGame();
 			musicPlayer.playLevelStart();
-		} catch (IllegalExitsNumberException | IllegalCarDimensionException e) {
-			logger.error("Cannot load saved game: {}", e.getLocalizedMessage());
 		}
 	}
-	
+
 	/**
 	 * Handles the action when the 'Select Level' button is clicked.
 	 * Loads the menu to choose a specific level.
-	 * @param titleLabel 
-	 * @param loadGameButton 
-	 * @param buttonPanel 
-	 * @param selectLevel 
-	 * @param startButton 
+	 * 
+	 * @param titleLabel
+	 * @param loadGameButton
+	 * @param buttonPanel
+	 * @param selectLevel
+	 * @param startButton
 	 */
-	private void selectLevelAction(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton, JLabel titleLabel) {
+	private void selectLevelAction(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton,
+			JLabel titleLabel) {
 		logger.info("Select Level button clicked.");
 		clearMainPanel(startButton, selectLevel, buttonPanel, loadGameButton, titleLabel);
 		// Show select level screen
 		showLevelButtons();
 	}
-	
+
 	/**
 	 * Handles the action when the 'Go to main menu' button is clicked.
 	 * Navigates the user back to the main menu.
@@ -472,7 +487,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		mainPanel.repaint();
 		addMainMenuTitleAndButtons();
 	}
-	
+
 	/**
 	 * Handles the action when the Level 1 button is clicked.
 	 * Loads level 1 and starts the game.
@@ -481,7 +496,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		logger.info("Level 1 button clicked.");
 		loadLevelAndStartGame(1);
 	}
-	
+
 	/**
 	 * Handles the action when the Level 2 button is clicked.
 	 * Loads level 2 and starts the game.
@@ -490,7 +505,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		logger.info("Level 2 button clicked.");
 		loadLevelAndStartGame(2);
 	}
-	
+
 	/**
 	 * Handles the action when the Level 3 button is clicked.
 	 * Loads level 3 and starts the game.
@@ -499,7 +514,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		logger.info("Level 3 button clicked.");
 		loadLevelAndStartGame(3);
 	}
-	
+
 	/**
 	 * Handles the action when the Level 4 button is clicked.
 	 * Loads level 4 and starts the game.
@@ -508,7 +523,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		logger.info("Level 4 button clicked.");
 		loadLevelAndStartGame(4);
 	}
-	
+
 	/**
 	 * Handles the action when the Level 5 button is clicked.
 	 * Loads level 5 and starts the game.
@@ -518,7 +533,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		loadLevelAndStartGame(5);
 	}
 
-	//--------END OF BUTTON FUNCTIONALITIES------------
+	// --------END OF BUTTON FUNCTIONALITIES------------
 
 	@Override
 	/**
@@ -556,9 +571,6 @@ public class MainFrame extends JFrame implements IMainFrame {
 		musicPlayer.playLevelStart();
 		levelSavedLoaded = false;
 	}
-
-
-	
 
 	@Override
 	/**

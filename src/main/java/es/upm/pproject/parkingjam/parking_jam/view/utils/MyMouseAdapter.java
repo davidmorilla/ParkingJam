@@ -3,8 +3,9 @@ package es.upm.pproject.parkingjam.parking_jam.view.utils;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import es.upm.pproject.parkingjam.parking_jam.view.IGrid;
+
 import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
+import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IGrid;
 
 /**
  * MyMouseAdapter extends MouseAdapter for managing mouse events on

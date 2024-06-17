@@ -8,8 +8,8 @@ import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
-import es.upm.pproject.parkingjam.parking_jam.view.IGrid;
 import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
+import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IGrid;
 
 /**
  * Controller class that manages the interaction between the view (MainFrame) and the model (Game).

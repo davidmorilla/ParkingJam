@@ -1,8 +1,10 @@
-package es.upm.pproject.parkingjam.parking_jam.view;
+package es.upm.pproject.parkingjam.parking_jam.view.interfaces;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import es.upm.pproject.parkingjam.parking_jam.view.Grid;
 
 public interface IMainFrame {
     

@@ -17,6 +17,7 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementExcep
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
+import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IMovableCar;
 
 /**
  * MovableCar represents a car that can be moved on the board.

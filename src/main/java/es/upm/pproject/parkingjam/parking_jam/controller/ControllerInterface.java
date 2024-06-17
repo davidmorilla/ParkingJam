@@ -5,7 +5,7 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
-import es.upm.pproject.parkingjam.parking_jam.view.IGrid;
+import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IGrid;
 
 /**
  * Interface that defines the contract for a game controller.

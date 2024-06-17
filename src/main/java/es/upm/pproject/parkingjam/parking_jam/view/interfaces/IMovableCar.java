@@ -1,4 +1,4 @@
-package es.upm.pproject.parkingjam.parking_jam.view;
+package es.upm.pproject.parkingjam.parking_jam.view.interfaces;
 
 import java.awt.Graphics;
 
