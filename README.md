@@ -50,7 +50,6 @@ Moves a car on the board and returns the updated board state after the move.
   - `way` (char): Specifies the direction to move the car.
 - **Exceptions:**
   - `IllegalCarDimensionException `: When a car dimensions are illegal (different from 1xN or Nx1, red car only 2x1 or 1x2).
-  - `SameMovementException`: When the same movement is attempted consecutively.
 
 ### `public char[][] undoMovement()`
 
@@ -58,7 +57,6 @@ Undoes the last car movement done and returns the updated board state after undo
 
 - **Exceptions:**
   - `IllegalCarDimensionException `: When a car dimensions are illegal (different from 1xN or Nx1, red car only 2x1 or 1x2).
-  - `SameMovementException`: When the same movement is attempted consecutively.
   - `CannotUndoMovementException` : When there are no movements to be undone.
 
 ### `public char[][] getBoard()`
@@ -97,8 +95,6 @@ Checks if a car movement is valid.It returns true if the movement is valid, fals
   - `car ` (char): Specifies the unique identifier of the car to move.
   - `newCoord  ` (Coordinates): Specifies the new coordinates for the car.
   - `way` (char): Specifies the direction to move the car.
-- **Exceptions:**
-  - `SameMovementException`: When the same movement is attempted consecutively.
 
 ### `public boolean isLevelFinished()`
 
