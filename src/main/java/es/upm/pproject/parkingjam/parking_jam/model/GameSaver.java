@@ -103,11 +103,12 @@ public class GameSaver {
 	 * @param level the current level number.
 	 * @param board the current board configuration.
 	 */
-	public void saveGame(List<Pair<Character, Pair<Integer, Character>>> history, int total, int level, char[][] board, String levelName) {
+	public void saveGame(List<Pair<Character, Pair<Integer, Character>>> history, int total, int level, char[][] board, String levelName, String dimensions) {
 		logger.info("Saving game...");
 		saveLevelName(levelName);
 		saveHistory(history);
 		saveScore(total, level);
+		saveLevelDimensions(dimensions);
 		saveBoard(board);
 		logger.info("The game has been saved.");
 	}

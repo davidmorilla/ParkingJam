@@ -265,6 +265,6 @@ public class Game {
     * @param gameSaver the 'GameSaver' instance used to save the game state.
     */
 	public void saveGame(GameSaver gameSaver) {
-		gameSaver.saveGame(level.getHistory(), this.getGameScore(), this.getLevelScore(), getBoard(), "Level " + levelNumber);
+		gameSaver.saveGame(level.getHistory(), this.getGameScore(), this.getLevelScore(), getBoard(), "Level " + levelNumber, this.getDimensions().getLeft() + " " + this.getDimensions().getRight());
 	}
 }

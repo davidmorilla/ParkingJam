@@ -176,10 +176,8 @@ class GameSaverTest {
 					{'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
 					{'+', '+', '+', '+', '@', '+', '+', '+'}
 			};
-			gameSaver.saveLevelName(levelName);
-			gameSaver.saveLevelDimensions("8x8");
 
-			gameSaver.saveGame(history, totalScore, level, board, levelName);
+			gameSaver.saveGame(history, totalScore, level, board, levelName, "8x8");
 
 			List<String> historyLines = Files.readAllLines(Paths.get(historyFilePath));
 			assertEquals("c 1 D", historyLines.get(0));
@@ -204,10 +202,8 @@ class GameSaverTest {
 					{'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
 					{'+', '+', '+', '+', '@', '+', '+', '+'}
 			};
-			gameSaver.saveLevelName(levelName);
-			gameSaver.saveLevelDimensions("8x8");
 
-			gameSaver.saveGame(history, totalScore, level, board, levelName);
+			gameSaver.saveGame(history, totalScore, level, board, levelName, "8x8");
 			List<String> scoreLines = Files.readAllLines(Paths.get(scoreFilePath));
 			assertEquals(String.valueOf(totalScore), scoreLines.get(0));
 			assertEquals(String.valueOf(level), scoreLines.get(1));
@@ -231,9 +227,7 @@ class GameSaverTest {
 					{'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
 					{'+', '+', '+', '+', '@', '+', '+', '+'}
 			};
-			gameSaver.saveLevelName(levelName);
-			gameSaver.saveLevelDimensions("8x8");
-			gameSaver.saveGame(history, totalScore, level, board, levelName);
+			gameSaver.saveGame(history, totalScore, level, board, levelName,"8x8");
 
 			List<String> boardLines = Files.readAllLines(Paths.get(levelFilePath));
 			assertEquals("Level 1", boardLines.get(0));
@@ -261,9 +255,7 @@ class GameSaverTest {
 					{'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
 					{'+', '+', '+', '+', '@', '+', '+', '+'}
 			};
-			gameSaver.saveLevelName(levelName);
-			gameSaver.saveLevelDimensions("8x8");
-			gameSaver.saveGame(history, totalScore, level, board, levelName);
+			gameSaver.saveGame(history, totalScore, level, board, levelName, "8x8");
 
 			List<String> boardLines = Files.readAllLines(Paths.get(levelFilePath));
 			assertEquals("+   * c+", boardLines.get(4));

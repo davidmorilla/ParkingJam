@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
+import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
 
 public class GameTest {
@@ -471,6 +472,36 @@ public class GameTest {
             game.undoMovement();
             assertEquals(0, game.getLevelScore());
         }
+	}
+	
+	@DisplayName ("Tests related to testing the load saved game functionality")
+	@Nested
+	class LoadGameTests {
+		@Test
+		void loadSavedGame() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException {
+			game = new Game(1);
+			GameSaver gs = new GameSaver();
+			game.moveCar('c', 1, 'D');
+			
+			System.out.println(game.getDimensions().getLeft() + game.getDimensions().getRight());
+			game.saveGame(gs);
+			System.out.println(gs.getDimensions());
+			game.moveCar('d', 1, 'U');
+			
+			game.loadSavedLevel(gs); // The board should have now recorded just the first move (the one before saving)
+			
+			char expectedBoard[][] = {
+		            {'+', '+', '+', '+', '+', '+', '+', '+'},
+		            {'+', 'a', 'a', 'b', 'b', 'b', ' ', '+'},
+		            {'+', ' ', ' ', ' ', '*', ' ', 'c', '+'},
+		            {'+', 'd', ' ', ' ', '*', ' ', 'c', '+'},
+		            {'+', 'd', ' ', 'f', 'f', 'f', ' ', '+'},
+		            {'+', 'd', 'e', ' ', ' ', ' ', ' ', '+'},
+		            {'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
+		            {'+', '+', '+', '+', '@', '+', '+', '+'}
+		    };
+			assertArrayEquals(expectedBoard, game.getBoard());
+		}
 	}
 	
 	@DisplayName ("Tests related to testing the getters and setters")
