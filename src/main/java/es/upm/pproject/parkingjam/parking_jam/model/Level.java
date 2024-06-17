@@ -276,69 +276,67 @@ public class Level {
 		int yCar = 0; // Y-coordinate of the car
 
 		// Validate the direction of movement
-		if (way == 'L' || way == 'R' || way == 'U' || way == 'D') {
-			xCar = cars.get(car).getCoordinates().getX();
-			yCar = cars.get(car).getCoordinates().getY();
-
-			// Determine the new coordinates based on the direction and length of the move
-			switch (way) {
-				case 'L': // Move left
-					logger.info("Moving car '{}' {} units left...", car, length);
-					coord = new Coordinates(xCar - Math.abs(length), yCar);
-					break;
-				case 'R': // Move right
-					logger.info("Moving car '{}' {} units right...", car, length);
-					coord = new Coordinates(xCar + Math.abs(length), yCar);
-					break;
-				case 'U': // Move up
-					logger.info("Moving car '{}' {} units up...", car, length);
-					coord = new Coordinates(xCar, yCar - Math.abs(length));
-					break;
-				default: // Move down
-					logger.info("Moving car '{}' {} units down...", car, length);
-					coord = new Coordinates(xCar, yCar + Math.abs(length));
-					break;
-			}
-			// Check if the new coordinates are within the board boundaries
-			if (coord.getX() >= 1 && coord.getX() < board[0].length - 1 && coord.getY() >= 1
-					&& coord.getY() < board.length - 1) {
-
-				// Check if the movement is valid (no obstacles, etc.)
-				if (checkMovementValidity(car, coord, way)) {
-
-					deleteCar(car, newBoard, cars); // Remove the car from the current position
-					addCar(car, newBoard, cars, coord); // Add the car to the new position
-					this.cars.get(car).setCoordinates(coord.getX(), coord.getY()); // Update the car's coordinates
-
-					// Update the board with the new state
-					board = newBoard;
-
-					// Increase the score for the valid move if it's not an undo movement
-					if (!undo)
-						increaseScore();
-				} else {
-					this.history.remove(history.size() - 1);
-					// Handle invalid movement due to obstacles or if the level is finished
-					if (this.isLevelFinished(newBoard)) {
-						logger.warn("Cannot move car '{}', level is finished", car);
-						throw new LevelAlreadyFinishedException();
-					} else {
-						logger.warn("Cannot move car '{}', there's an obstacle", car);
-						throw new InvalidMovementException();
-					}
-				}
-
-			} else {
-				// Handle movement that goes out of board boundaries
-				logger.warn("Cannot move car '{}', new movement is out of reach.", car);
-				throw new MovementOutOfBoundariesException();
-			}
-		} else {
+		if (way != 'L' && way != 'R' && way != 'U' && way != 'D') {
 			// Handle invalid movement direction
 			msgLog = "The direction '" + way + "' is not valid";
 			logger.error(msgLog);
 			throw new IllegalDirectionException();
 		}
+		xCar = cars.get(car).getCoordinates().getX();
+		yCar = cars.get(car).getCoordinates().getY();
+
+		// Determine the new coordinates based on the direction and length of the move
+		switch (way) {
+		case 'L': // Move left
+			logger.info("Moving car '{}' {} units left...", car, length);
+			coord = new Coordinates(xCar - Math.abs(length), yCar);
+			break;
+		case 'R': // Move right
+			logger.info("Moving car '{}' {} units right...", car, length);
+			coord = new Coordinates(xCar + Math.abs(length), yCar);
+			break;
+		case 'U': // Move up
+			logger.info("Moving car '{}' {} units up...", car, length);
+			coord = new Coordinates(xCar, yCar - Math.abs(length));
+			break;
+		default: // Move down
+			logger.info("Moving car '{}' {} units down...", car, length);
+			coord = new Coordinates(xCar, yCar + Math.abs(length));
+			break;
+		}
+		// Check if the new coordinates are within the board boundaries
+		if (coord.getX() < 1 || coord.getX() >= board[0].length - 1 || coord.getY() < 1
+				|| coord.getY() >= board.length - 1) {
+			// Handle movement that goes out of board boundaries
+			logger.warn("Cannot move car '{}', new movement is out of reach.", car);
+			throw new MovementOutOfBoundariesException();
+		}
+
+		// Check if the movement is valid (no obstacles, etc.)
+		if (checkMovementValidity(car, coord, way)) {
+
+			deleteCar(car, newBoard, cars); // Remove the car from the current position
+			addCar(car, newBoard, cars, coord); // Add the car to the new position
+			this.cars.get(car).setCoordinates(coord.getX(), coord.getY()); // Update the car's coordinates
+
+			// Update the board with the new state
+			board = newBoard;
+
+			// Increase the score for the valid move if it's not an undo movement
+			if (!undo)
+				increaseScore();
+		} else {
+			this.history.remove(history.size() - 1);
+			// Handle invalid movement due to obstacles or if the level is finished
+			if (this.isLevelFinished(newBoard)) {
+				logger.warn("Cannot move car '{}', level is finished", car);
+				throw new LevelAlreadyFinishedException();
+			} else {
+				logger.warn("Cannot move car '{}', there's an obstacle", car);
+				throw new InvalidMovementException();
+			}
+		}
+
 		logger.info("Car '{}' has been moved.", car);
 		return newBoard; // Return the new board state after the move
 	}
@@ -493,8 +491,24 @@ public class Level {
 
 			return false;
 		}
+		// Check if the car's movement is valid (only forward or backward)
+		if(!movesBackwardOrForward(carOrientation, newCoordinates, carCoordinates, carLength)){
+			return false;
+		}
+		// Verify all cells along the path of the movement
+		if(thereAreObstacles(carChar, carOrientation, newCoordinates, carCoordinates, carLength)) {
+			return false;
+		}
 
-		// Check if the car's movement is valid within the board dimensions
+		// If all checks pass, the movement is valid
+		logger.info("Valid movement.");
+		return true;
+	}
+
+	private boolean movesBackwardOrForward(char carOrientation, Coordinates newCoordinates, Coordinates carCoordinates, int carLength) {
+		int boardWidth = board[0].length;
+		int boardHeight = board.length;
+		// Check if the car's movement is valid (only forward or backward)
 		if (carOrientation == 'V') { // Car is oriented vertically
 			// Check if the car stays within the vertical bounds and doesn't move
 			// horizontally
@@ -514,7 +528,10 @@ public class Level {
 				return false;
 			}
 		}
+		return true;
+	}
 
+	private boolean thereAreObstacles(char carChar, char carOrientation, Coordinates newCoordinates, Coordinates carCoordinates, int carLength) {
 		// Verify all cells along the path of the movement
 		if (carOrientation == 'V') { // Car is oriented vertically
 			int startY = Math.min(carCoordinates.getY(), newCoordinates.getY());
@@ -524,7 +541,7 @@ public class Level {
 				if (board[y][carCoordinates.getX()] != ' ' && board[y][carCoordinates.getX()] != carChar
 						&& board[y][carCoordinates.getX()] != '@') {
 					logger.warn("Invalid movement: Trying to move to an invalid cell.");
-					return false;
+					return true;
 				}
 			}
 		} else { // Car is oriented horizontally
@@ -535,14 +552,13 @@ public class Level {
 				if (board[carCoordinates.getY()][x] != ' ' && board[carCoordinates.getY()][x] != carChar
 						&& board[carCoordinates.getY()][x] != '@') {
 					logger.warn("Invalid movement: Trying to move to an invalid cell.");
-					return false;
+					return true;
 				}
 			}
 		}
-		// If all checks pass, the movement is valid
-		logger.info("Valid movement.");
-		return true;
+		return false;
 	}
+
 
 	/**
 	 * Retrieves the map of cars.

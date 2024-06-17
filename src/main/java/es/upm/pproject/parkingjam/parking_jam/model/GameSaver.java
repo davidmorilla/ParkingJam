@@ -33,53 +33,66 @@ public class GameSaver {
 		score = new File("src/main/resources/savedGame/punctuation.txt");
 		history = new File("src/main/resources/savedGame/history.txt");
 		try {
-			boolean isCreated;
-			if (!level.exists()) {
-				logger.info("Creating level.txt file...");
-				if (level.getParentFile().mkdirs()) {
-                    logger.info("Directories for level.txt created.");
-                } else {
-                    logger.warn("Directories for level.txt already exist or could not be created.");
-                }
-				isCreated = level.createNewFile();
-                if (isCreated) {
-                    logger.info("The file level.txt has been created.");
-                } else {
-                    logger.warn("The file level.txt already exists and was not created.");
-                }
-			}
-			if (!score.exists()) {
-				logger.info("Creating punctuation.txt file...");
-				if (score.getParentFile().mkdirs()) {
-                    logger.info("Directories for punctuation.txt created.");
-                } else {
-                    logger.warn("Directories for punctuation.txt already exist or could not be created.");
-                }
-				isCreated = score.createNewFile();
-                if (isCreated) {
-                    logger.info("The file punctuation.txt has been created.");
-                } else {
-                    logger.warn("The file punctuation.txt already exists and was not created.");
-                }
-			}
-			if (!history.exists()) {
-				logger.info("Creating history.txt file...");
-				if (history.getParentFile().mkdirs()) {
-                    logger.info("Directories for history.txt created.");
-                } else {
-                    logger.warn("Directories for history.txt already exist or could not be created.");
-                }
-				isCreated = history.createNewFile();
-                if (isCreated) {
-                    logger.info("The file history.txt has been created.");
-                } else {
-                    logger.warn("The file history.txt already exists and was not created.");
-                }
-			}
-			logger.info("GameSaver created.");
+			createLevelFile(level);
+			createScoreFile(score);
+			createHistoryFile(history);
 		} catch (IOException e) {
 			msgLog = "There was a problem creating GameSaver: " + e.getLocalizedMessage();
 			logger.error(msgLog);
+		}
+	}
+	
+	private void createLevelFile(File level) throws IOException {
+		boolean isCreated;
+		if (!level.exists()) {  
+			logger.info("Creating level.txt file...");
+			if (level.getParentFile().mkdirs()) {
+                logger.info("Directories for level.txt created.");
+            } else {
+                logger.warn("Directories for level.txt already exist or could not be created.");
+            }
+			isCreated = level.createNewFile();
+            if (isCreated) {
+                logger.info("The file level.txt has been created.");
+            } else {
+                logger.warn("The file level.txt already exists and was not created.");
+            }
+		}
+	}
+	
+	private void createScoreFile(File score) throws IOException {
+		boolean isCreated;
+		if (!score.exists()) {
+			logger.info("Creating punctuation.txt file...");
+			if (score.getParentFile().mkdirs()) {
+                logger.info("Directories for punctuation.txt created.");
+            } else {
+                logger.warn("Directories for punctuation.txt already exist or could not be created.");
+            }
+			isCreated = score.createNewFile();
+            if (isCreated) {
+                logger.info("The file punctuation.txt has been created.");
+            } else {
+                logger.warn("The file punctuation.txt already exists and was not created.");
+            }
+		}
+	}
+	
+	private void createHistoryFile(File history) throws IOException {
+		boolean isCreated;
+		if (!history.exists()) {
+			logger.info("Creating history.txt file...");
+			if (history.getParentFile().mkdirs()) {
+                logger.info("Directories for history.txt created.");
+            } else {
+                logger.warn("Directories for history.txt already exist or could not be created.");
+            }
+			isCreated = history.createNewFile();
+            if (isCreated) {
+                logger.info("The file history.txt has been created.");
+            } else {
+                logger.warn("The file history.txt already exists and was not created.");
+            }
 		}
 	}
 	/**
