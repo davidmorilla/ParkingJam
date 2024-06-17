@@ -56,7 +56,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setBounds(0, 0, 600, 600);
+		setBounds(0, 0, 900, 900);
 
 		// Play music
 		String musicUrl = "ambience.wav";

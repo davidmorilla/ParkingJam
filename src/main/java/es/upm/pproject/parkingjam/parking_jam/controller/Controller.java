@@ -75,7 +75,6 @@ public class Controller implements ControllerInterface {
      * @param length the length to move the car
      * @param way the direction to move the car
      * @return the updated board state after the move
-     * @throws SameMovementException if the same movement is attempted consecutively
 	 * @throws IllegalDirectionException 
 	 * @throws LevelAlreadyFinishedException 
 	 * @throws NullBoardException 
@@ -83,7 +82,7 @@ public class Controller implements ControllerInterface {
 	 * @throws InvalidMovementException 
 	 * @throws IllegalCarException 
      */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+	public char[][] moveCar(char car, int length, char way) throws IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		return game.moveCar(car, length, way);
 	}
 	
@@ -92,7 +91,6 @@ public class Controller implements ControllerInterface {
      * 
      * @return the updated board state after undoing the move
      * @throws CannotUndoMovementException if no movements can be undone
-     * @throws SameMovementException if the same movement is attempted consecutively
 	 * @throws IllegalDirectionException 
 	 * @throws LevelAlreadyFinishedException 
 	 * @throws NullBoardException 
@@ -100,7 +98,7 @@ public class Controller implements ControllerInterface {
 	 * @throws InvalidMovementException 
 	 * @throws IllegalCarException 
      */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+	public char[][] undoMovement() throws CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		return game.undoMovement();
 	}
 	
@@ -119,9 +117,8 @@ public class Controller implements ControllerInterface {
     * @param newCoord the new coordinates for the car
     * @param way the direction of the movement
     * @return true if the movement is valid, false otherwise
-    * @throws SameMovementException if the same movement is attempted consecutively
     */
-	public boolean isMoveValid(char car, Coordinates newCoord, char way) throws SameMovementException {
+	public boolean isMoveValid(char car, Coordinates newCoord, char way) {
 		return game.getLevel().checkMovementValidity(car, newCoord, way);
 	}
 	

@@ -47,21 +47,19 @@ public interface ControllerInterface {
 	 * @param way the direction to move the car
 	 * @return the updated board state after the move
 	 * @throws NullBoardException 
-	 * @throws SameMovementException if the same movement is attempted consecutively
 	 * @throws IllegalDirectionException 
 	 * @throws LevelAlreadyFinishedException 
 	 * @throws IllegalCarException 
 	 * @throws InvalidMovementException 
 	 * @throws MovementOutOfBoundariesException
 	 */
-	char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException, InvalidMovementException, LevelAlreadyFinishedException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException;
+	char[][] moveCar(char car, int length, char way) throws IllegalDirectionException, InvalidMovementException, LevelAlreadyFinishedException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException;
 
 	/**
 	 * Undoes the last car movement.
 	 * 
 	 * @return the updated board state after undoing the move
 	 * @throws CannotUndoMovementException if no movements can be undone
-     * @throws SameMovementException if the same movement is attempted consecutively
 	 * @throws IllegalDirectionException 
 	 * @throws LevelAlreadyFinishedException 
 	 * @throws NullBoardException 
@@ -69,7 +67,7 @@ public interface ControllerInterface {
 	 * @throws InvalidMovementException 
 	 * @throws IllegalCarException 
 	 */
-	char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException;
+	char[][] undoMovement() throws CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException;
 
 	/**
 	 * Resets the current level.
@@ -84,9 +82,8 @@ public interface ControllerInterface {
 	 * @param newCoord the new coordinates for the car
 	 * @param way the direction of the movement
 	 * @return true if the movement is valid, false otherwise
-	 * @throws SameMovementException if the same movement is attempted consecutively
 	 */
-	boolean isMoveValid(char car, Coordinates newCoord, char way) throws SameMovementException;
+	boolean isMoveValid(char car, Coordinates newCoord, char way);
 
 	/**
 	 * Checks if the current level is finished.

@@ -9,7 +9,6 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementEx
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.LevelAlreadyFinishedException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.MovementOutOfBoundariesException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.NullBoardException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.view.DataPanel;
 import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
@@ -59,7 +58,6 @@ public interface IGrid {
 	 * @param length the length of the car
 	 * @param way the orientation of the car, vertical or horizontal
 	 * @return the new board if the movement was successful
-	 * @throws SameMovementException if the movement is to the same place.
 	 * @throws IllegalDirectionException 
 	 * @throws LevelAlreadyFinishedException 
 	 * @throws NullBoardException 
@@ -67,7 +65,7 @@ public interface IGrid {
 	 * @throws MovementOutOfBoundariesException 
 	 * @throws InvalidMovementException 
 	 */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException;
+	public char[][] moveCar(char car, int length, char way) throws IllegalDirectionException, LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException;
 
 	/**
 	 * Returns whether or not the level is completed

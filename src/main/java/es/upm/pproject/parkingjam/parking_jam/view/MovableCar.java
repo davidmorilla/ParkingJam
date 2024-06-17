@@ -18,7 +18,6 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementEx
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.LevelAlreadyFinishedException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.MovementOutOfBoundariesException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.NullBoardException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.SameMovementException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
@@ -253,7 +252,7 @@ public class MovableCar implements IMovableCar{
 				// Repaint the board after moving the car on the model
 				((Component) controller.getGrid()).repaint();
 			}
-		} catch (SameMovementException | IllegalDirectionException e) {
+		} catch (IllegalDirectionException e) {
 			logger.error("ERROR: The movement of the car is the same or the direction is not valid");
 		}
 	}

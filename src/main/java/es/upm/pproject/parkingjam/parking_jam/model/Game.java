@@ -114,7 +114,6 @@ public class Game {
      * @param length the distance to move the car.
      * @param way the direction (either 'H' for horizontal or 'V' for vertical) to move the car.
      * @return a 2D char array representing the updated board configuration after the movement.
-     * @throws SameMovementException if the same movement has been attempted twice consecutively.
      * @throws IllegalDirectionException 
      * @throws LevelAlreadyFinishedException 
      * @throws NullBoardException 
@@ -122,7 +121,7 @@ public class Game {
      * @throws InvalidMovementException 
      * @throws IllegalCarException 
      */
-	public char[][] moveCar(char car, int length, char way) throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+	public char[][] moveCar(char car, int length, char way) throws IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		return level.moveCar(car, length, way, false);
 	}
     /**
@@ -130,7 +129,6 @@ public class Game {
      *
      * @return an 'OldBoardData' object representing the board state before the last movement.
      * @throws CannotUndoMovementException if there is no movement to undo.
-     * @throws SameMovementException if the movement is to the same place.
      * @throws IllegalDirectionException 
      * @throws LevelAlreadyFinishedException 
      * @throws NullBoardException 
@@ -138,7 +136,7 @@ public class Game {
      * @throws InvalidMovementException 
      * @throws IllegalCarException 
      */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
+	public char[][] undoMovement() throws CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		return level.undoMovement();
 	}
     /**

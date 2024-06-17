@@ -183,8 +183,6 @@ public class Level {
 	 * 
 	 * @return the restored board state.
 	 * @throws CannotUndoMovementException      if there are no movements to undo.
-	 * @throws SameMovementException            if the movement is to the same
-	 *                                          position.
 	 * @throws IllegalDirectionException
 	 * @throws LevelAlreadyFinishedException
 	 * @throws MovementOutOfBoundariesException
@@ -192,7 +190,7 @@ public class Level {
 	 * @throws IllegalCarException
 	 * @throws NullBoardException
 	 */
-	public char[][] undoMovement() throws CannotUndoMovementException, SameMovementException, IllegalDirectionException,
+	public char[][] undoMovement() throws CannotUndoMovementException, IllegalDirectionException,
 			LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException,
 			MovementOutOfBoundariesException, NullBoardException {
 		logger.info("Undoing movement...");
@@ -240,7 +238,6 @@ public class Level {
 	 * @param undo   boolean indicating whether the movement is a new movement or an
 	 *               undo movement.
 	 * @return the new board state or an empty matrix if the move is not possible.
-	 * @throws SameMovementException            if the same movement is repeated.
 	 * @throws IllegalDirectionException
 	 * @throws LevelAlreadyFinishedException
 	 * @throws IllegalCarException
@@ -249,7 +246,7 @@ public class Level {
 	 * @throws NullBoardException
 	 */
 	public char[][] moveCar(char car, int length, char way, boolean undo)
-			throws SameMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException,
+			throws IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException,
 			InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		logger.info("Moving car '{}'...", car);
 		// Check if the car exists in the game
@@ -475,11 +472,9 @@ public class Level {
 	 * @param newCoordinates the new coordinates for the car.
 	 * @param way            the direction of the movement ('L', 'R', 'U', 'D').
 	 * @return true if the movement is valid, false otherwise.
-	 * @throws SameMovementException if the movement is invalid due to repeating the
 	 *                               same movement.
 	 */
-	public boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way)
-			throws SameMovementException {
+	public boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way) {
 		logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...", carChar,
 				newCoordinates.getX(), newCoordinates.getY(), way);
 
