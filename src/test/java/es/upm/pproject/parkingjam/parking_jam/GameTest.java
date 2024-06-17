@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
@@ -472,5 +471,32 @@ public class GameTest {
             game.undoMovement();
             assertEquals(0, game.getLevelScore());
         }
+	}
+	
+	@DisplayName ("Tests related to testing the getters and setters")
+	@Nested
+	class GettersSettersTests {
+		@Test
+		void testSetGameScore() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
+			game = new Game(1);
+			game.setGameScore(5);
+			
+			assertEquals(5, game.getGameScore());
+		}
+		
+		@Test
+		void testSetLevelScore() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
+			game = new Game(1);
+			game.setLevelScore(5);
+			
+			assertEquals(5, game.getLevelScore());
+		}
+		
+		@Test
+		void testGetSaverGame() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
+			game = new Game(2);
+			
+			assertNotNull(game.getGameSaver());
+		}
 	}
 }
