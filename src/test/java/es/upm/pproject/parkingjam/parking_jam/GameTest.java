@@ -305,58 +305,65 @@ public class GameTest {
 		@Test
 		void testMoveAgainstLeftWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = game.moveCar('c', 1, 'U');
-
-			assertNull(newBoard);
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);
 		}
 
 		@Test
 		void testMoveAgainstRightWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = game.moveCar('g', 5, 'R');
 
-			assertNull(newBoard);
-		}
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);		}
 
 		@Test
 		void testMoveAgainstUpperWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = game.moveCar('a', 1, 'L');
 
-			assertNull(newBoard);
-		}
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);		}
 
 		@Test
 		void testMoveAgainstBottomWall() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = game.moveCar('d', 5, 'D');
 
-			assertNull(newBoard);
-		}
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);		}
 
 		@Test
 		void testMoveInvalidDirection() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = game.moveCar('d', 1, 'R');
 
-			assertNull(newBoard);
-		}
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);		}
 
 		@Test
 		void testMoveInvalidDirection2() throws SameMovementException, IllegalDirectionException {
+			char[][] newBoard = game.moveCar('a', 1, 'U');
+
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);		}
+		
+		@Test
+		void testMoveInvalidDirection3() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = game.moveCar('a', 1, 'D');
 
-			assertNull(newBoard);
-		}
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);		}
 
 		@Test
 		void testMoveAgainstOtherCar() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = game.moveCar('a', 1, 'R');
 
-			assertNull(newBoard);
-		}
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);		}
 
 		@Test
 		void testMoveAgainstOtherCar2() throws SameMovementException, IllegalDirectionException {
 			char[][] newBoard = game.moveCar('*', 1, 'D');
 
-			assertNull(newBoard);
-		}
+			char[][] expected = new char[0][0];
+			assertArrayEquals(expected, newBoard);		}
 	}
 	
 	@DisplayName ("Tests related to testing the undo movement of the cars")

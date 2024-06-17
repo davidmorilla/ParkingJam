@@ -15,6 +15,7 @@ public class LevelReader {
 	// File name formats for level data and saved game data
 	public static final String LEVEL_FILE_NAME_FORMAT = "src/main/resources/levels/level_%d.txt";
 	public static final String LEVEL_SAVED_FILE_NAME_FORMAT = "src/main/resources/savedGame/level.txt";
+	private char[][] arrayFail = new char[0][0]; // This array will be returned when a method fails, instead of null 
 
 	private static final Logger logger = LoggerFactory.getLogger(LevelReader.class);
 	private GameSaver gameSaver = new GameSaver();
@@ -51,7 +52,7 @@ public class LevelReader {
 				gameSaver.saveLevelName(levelName);
 				levelNumber = extractLevelNumber(levelName); // Extract and store the level number
 				if (levelNumber == -1) {
-					return new char[0][0];
+					return arrayFail;
 				}
 				// Read the second line containing the board dimensions
 				String secondLine = reader.readLine();
@@ -75,40 +76,40 @@ public class LevelReader {
 											board[i][j] = row.charAt(j);
 										} catch (IndexOutOfBoundsException e) {
 											logger.error("The dimensions of the board do not match the ones specified in the file.");
-											return new char[0][0];
+											return arrayFail;
 										}
 									}
 									realRows++;
 								} else {
 									logger.error("Unexpected end of file while reading board rows.");
-									return new char[0][0];
+									return arrayFail;
 								}
 							}
 
 							// Check if each row matches the specified number of columns
 							if (realCols != nColumns || realRows != nRows) {
 								logger.error("The dimensions of the board do not match the ones specified in the file.");
-								return new char[0][0];
+								return arrayFail;
 							}
 						} else {
 							logger.error("The board is too small.");
-							return new char[0][0];
+							return arrayFail;
 						}
 					} else {
 						logger.error("The dimensions of the board are not in the correct format.");
-						return new char[0][0];
+						return arrayFail;
 					}
 				} else {
 					logger.error("The dimensions of the board are not specified.");
-					return new char[0][0];
+					return arrayFail;
 				}
 			} else {
 				logger.error("The name of the board is not specified.");
-				return new char[0][0];
+				return arrayFail;
 			}
 		} catch (Exception e) {
 			logger.error("ERROR: Cannot read map configuration for the given level: {}", e.getMessage());
-			return new char[0][0];
+			return arrayFail;
 		}
 
 		// Log the read map if successfully read

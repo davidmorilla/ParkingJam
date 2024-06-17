@@ -32,6 +32,7 @@ public class Level {
 	private int previousScore;
 	private List<Pair<Character, Pair<Integer, Character>>> previousHistory;
 
+	private char[][] arrayFail = new char[0][0]; // This array will be returned when a method fails, instead of null 
 	private static final Logger logger = LoggerFactory.getLogger(Level.class);
 
 	/**
@@ -234,7 +235,7 @@ public class Level {
 		// Check if the level is already finished
 		if (isLevelFinished(board)) {
 			logger.warn("Cannot move car '{}', level is finished", car);
-			return new char[0][0];
+			return arrayFail;
 		}
 		if (!undo) { // If it's not an undo movement we must save the movement to the history list
 			char undoWay = opposite(way);
@@ -253,7 +254,7 @@ public class Level {
 		if (cars.get(car) == null) {
 			msgLog = "Car " + car + " does not exist.";
 			logger.error(msgLog);
-			return new char[0][0];
+			return arrayFail;
 		}
 
 		// Validate the direction of movement
@@ -310,13 +311,13 @@ public class Level {
 						logger.warn("Cannot move car '{}', there's an obstacle", car);
 					}
 					this.history.remove(history.size() - 1);
-					return new char[0][0];
+					return arrayFail;
 				}
 
 			} else {
 				// Handle movement that goes out of board boundaries
 				logger.warn("Cannot move car '{}', new movement is out of reach.", car);
-				return new char[0][0];
+				return arrayFail;
 			}
 		} else {
 			// Handle invalid movement direction
@@ -354,7 +355,7 @@ public class Level {
 	 */
 	private char[][] deepCopy(char[][] original) {
 		if (original == null) {
-			return new char[0][0];
+			return arrayFail;
 		}
 
 		final char[][] result = new char[original.length][];
@@ -458,71 +459,77 @@ public class Level {
 	 * @throws SameMovementException if the movement is invalid due to repeating the
 	 *                               same movement.
 	 */
-	public boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way) throws SameMovementException {
-	    logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...", carChar, newCoordinates.getX(), newCoordinates.getY(), way);
+	public boolean checkMovementValidity(char carChar, Coordinates newCoordinates, char way)
+			throws SameMovementException {
+		logger.info("Checking movement validity (car: '{}', x: {}, y: {}, way: '{}') ...", carChar,
+				newCoordinates.getX(), newCoordinates.getY(), way);
 
-	    Car car = cars.get(carChar);
+		// Retrieve car details
+		Car car = cars.get(carChar);
+		Coordinates carCoordinates = car.getCoordinates();
+		int carLength = car.getLength();
+		char carOrientation = car.getOrientation();
+		int boardWidth = board[0].length;
+		int boardHeight = board.length;
 
-	    if (!areCoordinatesWithinBoard(newCoordinates, car.getOrientation(), car.getLength())) {
-	        logger.warn("Invalid movement: Trying to move out of board limits.");
-	        return false;
-	    }
+		// Check if the new coordinates are within the board limits
+		if (newCoordinates.getX() < 0 || newCoordinates.getX() >= boardWidth || newCoordinates.getY() < 0
+				|| newCoordinates.getY() >= boardHeight) {
+			logger.warn("Invalid movement: Trying to move out of board limits.");
 
-	    if (!areCellsValidForMovement(carChar, newCoordinates, car.getOrientation(), car.getLength())) {
-	        logger.warn("Invalid movement: Trying to move to an invalid cell.");
-	        return false;
-	    }
+			return false;
+		}
 
-	    logger.info("Valid movement.");
-	    return true;
+		// Check if the car's movement is valid within the board dimensions
+		if (carOrientation == 'V') { // Car is oriented vertically
+			// Check if the car stays within the vertical bounds and doesn't move
+			// horizontally
+			if (newCoordinates.getY() < 0 || newCoordinates.getY() + carLength > boardHeight
+					|| newCoordinates.getX() != carCoordinates.getX()) {
+				logger.warn(
+						"Invalid movement: Trying to move out of board limits or make a horizontal move in an vertical car.");
+				return false;
+			}
+		} else { // Car is oriented horizontally
+			// Check if the car stays within the horizontal bounds and doesn't move
+			// vertically
+			if (newCoordinates.getX() < 0 || newCoordinates.getX() + carLength > boardWidth
+					|| newCoordinates.getY() != carCoordinates.getY()) {
+				logger.warn(
+						"Invalid movement: Trying to move out of board limits or make a vertical move in an horizontal car.");
+				return false;
+			}
+		}
+
+		// Verify all cells along the path of the movement
+		if (carOrientation == 'V') { // Car is oriented vertically
+			int startY = Math.min(carCoordinates.getY(), newCoordinates.getY());
+			int endY = Math.max(carCoordinates.getY() + carLength, newCoordinates.getY() + carLength);
+			for (int y = startY; y < endY; y++) {
+				// Check if the cell is empty or occupied by the car itself or an exit '@'
+				if (board[y][carCoordinates.getX()] != ' ' && board[y][carCoordinates.getX()] != carChar
+						&& board[y][carCoordinates.getX()] != '@') {
+					logger.warn("Invalid movement: Trying to move to an invalid cell.");
+					return false;
+				}
+			}
+		} else { // Car is oriented horizontally
+			int startX = Math.min(carCoordinates.getX(), newCoordinates.getX());
+			int endX = Math.max(carCoordinates.getX() + carLength, newCoordinates.getX() + carLength);
+			for (int x = startX; x < endX; x++) {
+				// Check if the cell is empty or occupied by the car itself or an exit '@'
+				if (board[carCoordinates.getY()][x] != ' ' && board[carCoordinates.getY()][x] != carChar
+						&& board[carCoordinates.getY()][x] != '@') {
+					logger.warn("Invalid movement: Trying to move to an invalid cell.");
+					return false;
+				}
+			}
+		}
+		// If all checks pass, the movement is valid
+		logger.info("Valid movement.");
+		return true;
 	}
 
-	/**
-	 * Checks if the coordinates allow a car to exist there 
-	 * 
-	 * @param newCoordinates the new coordinates for the car
-	 * @param carOrientation the orientation of the car ('V' or 'H')
-	 * @param carLength the length of the car
-	 * @return true if the car can fit, false otherwise
-	 */
-	private boolean areCoordinatesWithinBoard(Coordinates newCoordinates, char carOrientation, int carLength) {
-	    int boardWidth = board[0].length;
-	    int boardHeight = board.length;
-
-	    if (carOrientation == 'V') {
-	        return newCoordinates.getY() >= 0 && newCoordinates.getY() + carLength <= boardHeight;
-	    } else {
-	        return newCoordinates.getX() >= 0 && newCoordinates.getX() + carLength <= boardWidth;
-	    }
-	}
-
-	/**
-	 * Checks if the cells to be occupied by the car are valid to use
-	 * 
-	 * @param carChar the symbol of the car to move
-	 * @param newCoordinates the coordinates for the car
-	 * @param carOrientation the orientation of the car ('V' or 'H')
-	 * @param carLength the length of the car
-	 * @return true if all the cells are valid to use, false otherwise
-	 */
-	private boolean areCellsValidForMovement(char carChar, Coordinates newCoordinates, char carOrientation, int carLength) {
-	    if (carOrientation == 'V') {
-	        for (int y = newCoordinates.getY(); y < newCoordinates.getY() + carLength; y++) {
-	            int x = newCoordinates.getX();
-	            //If cell not valid
-	            if (!(board[y][x] == ' ' || board[y][x] == carChar || board[y][x] == '@'))
-	                return false;
-	        }
-	    } else {
-	        for (int x = newCoordinates.getX(); x < newCoordinates.getX() + carLength; x++) {
-	        	int y = newCoordinates.getY();
-	        	// If cell not valid
-	        	if (!(board[y][x] == ' ' || board[y][x] == carChar || board[y][x] == '@'))
-	                return false;
-	        }
-	    }
-	    return true;
-	}
 
 	/**
 	 * Retrieves the map of cars.
