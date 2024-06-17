@@ -43,7 +43,7 @@ public interface IGrid {
 	 * 
 	 * @param cars map of cars to create their drawable instances
 	 */
-	public void setCarsMap(Map<Character, Car> cars);
+	public void setCarsMap(Map<Character, Car> cars, DataPanel dataPanel);
 
 	/**
 	 * Triest to move the car. If successful, returns the new board result of the movement

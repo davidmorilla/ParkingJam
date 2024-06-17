@@ -3,7 +3,7 @@ package es.upm.pproject.parkingjam.parking_jam.view.utils;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import es.upm.pproject.parkingjam.parking_jam.view.Grid;
+import es.upm.pproject.parkingjam.parking_jam.view.IGrid;
 import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
 
 /**
@@ -12,7 +12,7 @@ import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
  */
 public class MyMouseAdapter extends MouseAdapter {
     private int squareSize;
-    private Grid grid;
+    private IGrid grid;
     private MovableCar movableSquare;
     private int initialRow;
     private int initialCol;
@@ -22,7 +22,7 @@ public class MyMouseAdapter extends MouseAdapter {
      *
      * @param grid the game grid where the cars visually move
      */
-    public MyMouseAdapter(Grid grid) {
+    public MyMouseAdapter(IGrid grid) {
         this.grid = grid;
         this.squareSize = grid.getSquareSize();
     }
@@ -35,7 +35,7 @@ public class MyMouseAdapter extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         Point point = e.getPoint();
-        movableSquare = grid.getMovableCarAt(point);
+        movableSquare = (MovableCar) grid.getMovableCarAt(point);
         if (movableSquare != null) {
             movableSquare.startDrag();
             initialRow = movableSquare.getRow();

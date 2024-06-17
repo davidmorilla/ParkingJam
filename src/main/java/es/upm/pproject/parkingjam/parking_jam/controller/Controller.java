@@ -8,6 +8,7 @@ import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
+import es.upm.pproject.parkingjam.parking_jam.view.IGrid;
 import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
 
 /**
@@ -15,6 +16,7 @@ import es.upm.pproject.parkingjam.parking_jam.view.MainFrame;
  * It provides methods to control the game flow, such as loading levels, moving cars, and saving the game state.
  */
 public class Controller implements ControllerInterface {
+	private MainFrame mf;
 	private Game game; 
 	private GameSaver gameSaver;
 	
@@ -26,7 +28,7 @@ public class Controller implements ControllerInterface {
      */
 	public Controller() throws IllegalExitsNumberException, IllegalCarDimensionException {
 		game = new Game();
-		new MainFrame(this);
+		mf = new MainFrame(this);
 		gameSaver = game.getGameSaver();
 	}
 	
@@ -208,6 +210,27 @@ public class Controller implements ControllerInterface {
      */
 	public void setGameScore(int totalPoints) {
 		game.setGameScore(totalPoints);
+	}
+
+
+	/**
+	 * Gets the current grid
+	 * 
+	 * @return the current grid
+	 */
+	@Override
+	public IGrid getGrid() {
+		return mf.getGrid();
+	}
+
+	@Override
+	public void setCars() {
+		mf.getGrid().setCars(getCars());
+	}
+
+	@Override
+	public void setBoard(char[][] newBoard) {
+		mf.getGrid().setBoard(newBoard);
 	}
 	
 }

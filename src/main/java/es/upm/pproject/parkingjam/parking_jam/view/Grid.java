@@ -20,6 +20,8 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MyMouseAdapter;
 
+import java.awt.event.MouseAdapter;
+
 /**
  * Represents the grid where the game is displayed, including cars, walls and exits.
  * Extends JPanel to provide graphical rendering capabilities.
@@ -28,13 +30,12 @@ public class Grid extends JPanel implements IGrid {
 	private int rows;
 	private int cols;
 	private int squareSize = 50;
-	private Map<Character, MovableCar> movableCars; // Stores the drawable cars
+	private Map<Character, Manager> movableCars; // Stores the drawable cars
 	private ControllerInterface controller;
 	private char[][] board;
 	private boolean levelCompleted;
-	private MainFrame mf;
 	private Map<Integer, String[]> carImages;
-	Random rnd = new Random();
+	private Random rnd = new Random();
 
 	/**
 	 * Constructor for Grid class.
@@ -46,23 +47,23 @@ public class Grid extends JPanel implements IGrid {
 	 * @param mf MainFrame object representing the main application frame
 	 */
 	public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, ControllerInterface controller,
-			MainFrame mf) {
+			DataPanel dataPanel) {
 		this.rows = dimensions.getLeft();
 		this.cols = dimensions.getRight();
 		this.board = board;
 		this.controller = controller;
 		this.levelCompleted = false;
-		this.mf = mf;
+		//this.mf = mf;
 		this.setPreferredSize(new Dimension(cols * squareSize, rows * squareSize));
 		this.carImages = new HashMap<>();
 		carImages.put(2, new String[] { "car2", "car4", "car7", "car9", "car10", "car11", "car12" });
 		carImages.put(3, new String[] { "car3", "car5", "car6", "car8" });
 
 		// Create drawable cars equivalent instances (MovableCar) and store them
-		setCarsMap(cars);
+		setCarsMap(cars,dataPanel);
 
 		// Add a mouse adapter for all the grid
-		MyMouseAdapter mouseAdapter = new MyMouseAdapter(this);
+		MouseAdapter mouseAdapter = new MyMouseAdapter(this);
 		this.addMouseListener(mouseAdapter);
 		this.addMouseMotionListener(mouseAdapter);
 	}
@@ -73,9 +74,10 @@ public class Grid extends JPanel implements IGrid {
 	 * @return MovableCar object at the specified point, or null if no car is found
 	 */
 	public MovableCar getMovableCarAt(Point point) {
-		for (MovableCar car : movableCars.values()) {
-			if (car.contains(point)) {
-				return car;
+		for (Manager car : movableCars.values()) {
+			
+			if (car.getMovableCar().contains(point)) {
+				return car.getMovableCar();
 			}
 		}
 		return null;
@@ -147,8 +149,8 @@ public class Grid extends JPanel implements IGrid {
 		}
 
 		// Paint all cars
-		for (MovableCar movableCar : movableCars.values()) {
-			movableCar.draw(g);
+		for (Manager movableCar : movableCars.values()) {
+			movableCar.getMovableCar().draw(g);
 		}
 
 		if (isLevelCompleted()) {
@@ -234,9 +236,9 @@ public class Grid extends JPanel implements IGrid {
 	 */
 	public void setCars(Map<Character, Car> cars) {
 		for (Map.Entry<Character, Car> entry : cars.entrySet()) {
-			MovableCar movableCar = movableCars.get(entry.getKey());
+			Manager movableCar = movableCars.get(entry.getKey());
 			if (movableCar != null) {
-				movableCar.updatePosition(entry.getValue().getCoordinates());
+				movableCar.getMovableCar().updatePosition(entry.getValue().getCoordinates());
 			}
 		}
 	}
@@ -246,9 +248,9 @@ public class Grid extends JPanel implements IGrid {
 	 * 
 	 * @param cars map of cars to create their drawable instances
 	 */
-	public void setCarsMap(Map<Character, Car> cars) {
+	public final void setCarsMap(Map<Character, Car> cars, DataPanel dataPanel) {
 		this.movableCars = new HashMap<>();
-
+		
 		for (Map.Entry<Character, Car> entry : cars.entrySet()) {
 			Car car = entry.getValue();
 			String[] imagePaths = carImages.get(car.getLength());
@@ -258,8 +260,8 @@ public class Grid extends JPanel implements IGrid {
 			} else {
 				imagePath = imagePaths[rnd.nextInt(imagePaths.length)];
 			}
-			MovableCar movableCar = new MovableCar(car, new Pair<>(rows, cols), squareSize, this, controller, this.mf, imagePath);
-			movableCars.put(entry.getKey(), movableCar);
+			MovableCar movableCar = new MovableCar(car, new Pair<>(rows, cols), squareSize, controller, dataPanel, imagePath);
+			movableCars.put(entry.getKey(), new Manager(movableCar));
 		}
 	}
 

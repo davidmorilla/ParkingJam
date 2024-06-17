@@ -5,6 +5,7 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
+import es.upm.pproject.parkingjam.parking_jam.view.IGrid;
 
 /**
  * Interface that defines the contract for a game controller.
@@ -145,4 +146,15 @@ public interface ControllerInterface {
      * @param totalPoints the total points to set as the game score
      */
 	void setGameScore(int totalPoints);
+
+	/**
+	 * Gets the current grid
+	 * 
+	 * @return the current grid
+	 */
+    IGrid getGrid();
+
+	void setCars();
+
+	void setBoard(char[][] newBoard);
 }

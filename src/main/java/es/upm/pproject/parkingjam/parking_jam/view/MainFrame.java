@@ -17,25 +17,26 @@ import es.upm.pproject.parkingjam.parking_jam.view.utils.MusicPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * The MainFrame class is the main window of the Parking Jam game application. 
- * It handles the initialization of the game, display of the main menu, and transitions between different game states
+ * The MainFrame class is the main window of the Parking Jam game application.
+ * It handles the initialization of the game, display of the main menu, and
+ * transitions between different game states
  */
-public class MainFrame extends JFrame {
-	private ControllerInterface controller;
-	private ImageIcon icon;
-	private MusicPlayer musicPlayer;
-	private JPanel mainPanel;
-	private DataPanel dataPanel;
-	private IGrid gridPanel;
+public class MainFrame extends JFrame implements IMainFrame {
+	public ControllerInterface controller;
+	public ImageIcon icon;
+	public MusicPlayer musicPlayer;
+	public JPanel mainPanel;
+	public DataPanel dataPanel;
+	public IGrid gridPanel;
 
-	private boolean levelSavedLoaded = false;
+	public boolean levelSavedLoaded = false;
 
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
 	/**
 	 * Constructs a new MainFrame with the specified game controller.
+	 * 
 	 * @param controller the controller managing the game logic
 	 */
 	public MainFrame(final ControllerInterface controller) {
@@ -45,10 +46,11 @@ public class MainFrame extends JFrame {
 		mainMenu();
 	}
 
+	@Override
 	/**
 	 * Initializes and displays the main menu of the game
 	 */
-	private void mainMenu() {
+	public final void mainMenu() {
 		logger.info("Initializing main menu...");
 		// Set frame configuration
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -77,7 +79,8 @@ public class MainFrame extends JFrame {
 		mainPanel = new BackgroundPanel(backgroundImage);
 		mainPanel.setLayout(new GridBagLayout());
 
-		// Add the title and start, load game and select level buttons of the main menu to the mainPanel
+		// Add the title and start, load game and select level buttons of the main menu
+		// to the mainPanel
 		addMainMenuTitleAndButtons();
 
 		// Display as visible all the components on main menu screen
@@ -86,26 +89,32 @@ public class MainFrame extends JFrame {
 		logger.info("Main menu initialized and displayed.");
 	}
 
+	@Override
 	/**
-	 * Starts the game by initializing the game components and adding them to the main panel
+	 * Starts the game by initializing the game components and adding them to the
+	 * main panel
 	 */
-	private void startGame() {
+	public void startGame() {
 		logger.info("Starting game...");
 		initializeGameComponents(false); // false because it's not just one level
 	}
 
+	@Override
 	/**
-	 * Starts an only level game by initializing the game components and adding them to the main panel
+	 * Starts an only level game by initializing the game components and adding them
+	 * to the main panel
 	 */
-	private void startOnlyOneLevelGame() {
+	public void startOnlyOneLevelGame() {
 		logger.info("Starting only one level game...");
 		initializeGameComponents(true); // true because it's only one level
 	}
 
+	@Override
 	/**
-	 * Initialize the components depending on whether it's a full game or a single level game
+	 * Initialize the components depending on whether it's a full game or a single
+	 * level game
 	 */
-	private void initializeGameComponents(boolean onlyOneLevel) {
+	public void initializeGameComponents(boolean onlyOneLevel) {
 		logger.info("Initializing game components (onlyOneLevel={})...", onlyOneLevel);
 		GridBagConstraints gbc = new GridBagConstraints();
 		Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
@@ -119,7 +128,7 @@ public class MainFrame extends JFrame {
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(dataPanel, gbc);
 
-		gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, this);
+		gridPanel = new Grid(dimensions, controller.getCars(), controller.getBoard(), controller, dataPanel);
 		gbc.gridx = 1;
 		gbc.gridy = 1;
 		gbc.anchor = GridBagConstraints.CENTER;
@@ -159,7 +168,7 @@ public class MainFrame extends JFrame {
 						if (gridPanel.isLevelCompleted()) {
 							controller.loadNewLevel();
 							updateDataPanel();
-							gridPanel.setCarsMap(controller.getCars());
+							gridPanel.setCarsMap(controller.getCars(),dataPanel);
 							gridPanel.setCars(controller.getCars());
 							gridPanel.setBoard(controller.getBoard());
 							((Grid) gridPanel).repaint();
@@ -182,7 +191,8 @@ public class MainFrame extends JFrame {
 						congratsLabel2.setFont(new Font("Impact", Font.PLAIN, 40));
 						congratsLabel2.setForeground(Color.BLACK);
 
-						JLabel totalScore = new JLabel("TOTAL SCORE: " + dataPanel.getGameScore(), SwingConstants.CENTER);
+						JLabel totalScore = new JLabel("TOTAL SCORE: " + dataPanel.getGameScore(),
+								SwingConstants.CENTER);
 						totalScore.setFont(new Font("Impact", Font.PLAIN, 40));
 						totalScore.setForeground(Color.BLACK);
 
@@ -247,11 +257,11 @@ public class MainFrame extends JFrame {
 					char[][] oldBoard = controller.undoMovement();
 					gridPanel.setCars(controller.getCars());
 					gridPanel.setBoard(oldBoard);
-					((Grid)gridPanel).repaint();
+					((Grid) gridPanel).repaint();
 					musicPlayer.playErase();
 				} catch (Exception e) {
 					logger.error("Couldn´t undo movement: {}", e.getLocalizedMessage());
-				} 
+				}
 				updateDataPanel();
 			}
 		});
@@ -284,8 +294,10 @@ public class MainFrame extends JFrame {
 		logger.info("Game components initialized.");
 	}
 
+	@Override
 	/**
 	 * Gets the board grid
+	 * 
 	 * @return the board grid
 	 */
 	public IGrid getGrid() {
@@ -294,8 +306,10 @@ public class MainFrame extends JFrame {
 		return this.gridPanel;
 	}
 
+	@Override
 	/**
 	 * Sets the board grid to a new one
+	 * 
 	 * @param grid the new grid
 	 */
 	public void setGrid(Grid grid) {
@@ -304,6 +318,7 @@ public class MainFrame extends JFrame {
 		logger.info("New grid set.");
 	}
 
+	@Override
 	/**
 	 * Updates the data panel with the new level and scores
 	 */
@@ -313,6 +328,7 @@ public class MainFrame extends JFrame {
 		logger.info("Panel data updated.");
 	}
 
+	@Override
 	/**
 	 * Updates the data panel adding 1 to level and total scores
 	 */
@@ -322,11 +338,13 @@ public class MainFrame extends JFrame {
 		logger.info("Score increased.");
 	}
 
+	@Override
 	/**
 	 * Loads the specified level and starts the game for that level
+	 * 
 	 * @param levelNumber the number of the level to load
 	 */
-	private void loadLevelAndStartGame(int levelNumber) {
+	public void loadLevelAndStartGame(int levelNumber) {
 		logger.info("Loading level {} and starting game...", levelNumber);
 		mainPanel.removeAll();
 		mainPanel.revalidate();
@@ -337,11 +355,13 @@ public class MainFrame extends JFrame {
 		levelSavedLoaded = false;
 	}
 
+	@Override
 	/**
 	 * Displays the level selection buttons for choosing a specific game level.
-	 * Creates a panel with buttons for levels 1 to 5 and a button to return to the main menu
+	 * Creates a panel with buttons for levels 1 to 5 and a button to return to the
+	 * main menu
 	 */
-	private void showLevelButtons() {
+	public void showLevelButtons() {
 		logger.info("Displaying level buttons...");
 		JPanel levelPanel = new JPanel(new GridLayout(2, 5, 10, 10));
 		levelPanel.setOpaque(false);
@@ -424,10 +444,12 @@ public class MainFrame extends JFrame {
 		logger.info("Level buttons displayed.");
 	}
 
+	@Override
 	/**
-	 * Add the title and start, load game and select level buttons of the main menu to the mainPanel
+	 * Add the title and start, load game and select level buttons of the main menu
+	 * to the mainPanel
 	 */
-	private void addMainMenuTitleAndButtons() {
+	public void addMainMenuTitleAndButtons() {
 		logger.info("Adding title and start, load game and select level buttons of the main menu...");
 		// Add title
 		JLabel titleLabel = createTitleLabel("PARKING JAM");
@@ -505,28 +527,42 @@ public class MainFrame extends JFrame {
 		mainPanel.add(buttonPanel, gbc);
 		mainPanel.revalidate();
 		mainPanel.repaint();
-logger.info("Ttitle and start, load game and select level buttons have been added to the main menu");
-	}
-	
-	private void clearMainPanel(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton, JLabel titleLabel) {
-		logger.info("Clearing main panel...");
-		mainPanel.remove(startButton);
-	    mainPanel.remove(selectLevel);
-	    buttonPanel.remove(selectLevel);
-	    buttonPanel.remove(startButton);
-	    buttonPanel.remove(loadGameButton);
-	    mainPanel.remove(titleLabel);
-	    mainPanel.revalidate();
-	    mainPanel.repaint();
-	    logger.info("Main panel cleared.");
+		logger.info("Ttitle and start, load game and select level buttons have been added to the main menu");
 	}
 
+	@Override
+	/**
+	 * Clears the entire mainPanel
+	 * 
+	 * @param startButton
+	 * @param selectLevel
+	 * @param buttonPanel
+	 * @param loadGameButton
+	 * @param titleLabel
+	 */
+	public void clearMainPanel(JButton startButton, JButton selectLevel, JPanel buttonPanel, JButton loadGameButton,
+			JLabel titleLabel) {
+		logger.info("Clearing main panel...");
+		mainPanel.remove(startButton);
+		mainPanel.remove(selectLevel);
+		buttonPanel.remove(selectLevel);
+		buttonPanel.remove(startButton);
+		buttonPanel.remove(loadGameButton);
+		mainPanel.remove(titleLabel);
+		mainPanel.revalidate();
+		mainPanel.repaint();
+		logger.info("Main panel cleared.");
+	}
+
+
+	@Override
 	/**
 	 * Creates a title label with the specified text with a shadow
+	 * 
 	 * @param text the text for the title label
 	 * @return the created title label
 	 */
-	private JLabel createTitleLabel(String text) {
+	public JLabel createTitleLabel(String text) {
 		logger.info("Creating title label...");
 		JLabel label = new JLabel(text) {
 			@Override

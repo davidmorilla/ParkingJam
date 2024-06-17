@@ -5,7 +5,6 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.upm.pproject.parkingjam.parking_jam.model.Level;
 /**
  * The Car class represents a car in the Parking Jam game. Each car has a symbol, coordinates,
  * length, and orientation. The car can move within the constraints of the game board and its 

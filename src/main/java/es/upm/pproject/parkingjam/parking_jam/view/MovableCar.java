@@ -1,6 +1,7 @@
 package es.upm.pproject.parkingjam.parking_jam.view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -21,8 +22,8 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
  * MovableCar represents a car that can be moved on the board.
  * This class manages its graphical representation and the logic of movements
  */
-public class MovableCar {
-	private Grid parent;
+public class MovableCar implements IMovableCar{
+	
 	private int row;
 	private int col;
 	private int rows;
@@ -35,7 +36,7 @@ public class MovableCar {
 	private char carSymbol;
 	private int length;
 	private ControllerInterface controller;
-	private MainFrame mf;
+	private DataPanel dataPanel;
 	private boolean dragging;
 	private BufferedImage horizontalCarImage;
 	private BufferedImage verticalCarImage;
@@ -54,8 +55,8 @@ public class MovableCar {
 	 * @param mf         	The mainframe of the application
 	 * @param image      	Name of the car's image
 	 */
-	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, Grid grid, ControllerInterface controller, MainFrame mf, String image) {
-		this.parent = grid;
+	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, ControllerInterface controller, DataPanel dataPanel, String image) {
+		
 		this.carSymbol = car.getSymbol();
 		this.row = car.getCoordinates().getY();
 		this.col = car.getCoordinates().getX();
@@ -65,7 +66,7 @@ public class MovableCar {
 		this.orientation = car.getOrientation();
 		this.length = car.getLength();
 		this.controller = controller;
-		this.mf = mf;
+		this.dataPanel = dataPanel;
 
 		// Load car's image
 		if(car.getSymbol() == '*') {
@@ -77,6 +78,7 @@ public class MovableCar {
 		}
 	}
 	
+	@Override
 	/**
 	 * Returns the current column (horizontal) position of the car
 	 * 
@@ -86,6 +88,8 @@ public class MovableCar {
 		return col;
 	}
 
+
+	@Override
 	/**
 	 * Returns the current row (vertical) position of the car
 	 * 
@@ -95,6 +99,8 @@ public class MovableCar {
 		return row;
 	}
 
+
+	@Override
 	/**
 	 * Update the position of the car
 	 *
@@ -105,6 +111,8 @@ public class MovableCar {
 		this.col = coordinates.getX();
 	}
 
+
+	@Override
 	/**
 	 * Draw the car on the given graphical component given
 	 *
@@ -135,6 +143,7 @@ public class MovableCar {
 		}
 	}
 
+
 	/**
 	 * Verify if a given point is inside the car's area
 	 *      
@@ -151,6 +160,7 @@ public class MovableCar {
 		}
 	}
 
+	@Override
 	/**
 	 * Initiates the dragging process
 	 */
@@ -160,6 +170,7 @@ public class MovableCar {
 		dragging = true;
 	}
 
+	@Override
 	/**
 	 * Ends the dragging process and moves the car if it has been dragged
 	 */
@@ -172,6 +183,7 @@ public class MovableCar {
 		}
 	}
 
+	@Override
 	/**
 	 * Drag the car to a new position
 	 *
@@ -203,48 +215,52 @@ public class MovableCar {
 			if (!controller.isLevelFinished() && controller.isMoveValid(carSymbol, new Coordinates(newCol, newRow), direction)) {
 				row = newRow;
 				col = newCol;
-				parent.repaint();
+				((Component) controller.getGrid()).repaint();
 			}
 		} catch (Exception e) {
 			logger.error("ERROR: The position of the car could not be updated and repainted");
 		}
 	}
 
+
+	@Override
 	/**
 	 * Move the car con the board and update its graphical representation
 	 *
 	 * @param dx X axis offset
 	 * @param dy Y axis offset
 	 */
-	private void moveCar(int dx, int dy) {
+	public void moveCar(int dx, int dy) {
 		try {
 			// Try to move the car and the new board
 			char[][] newBoard = null;
 			if (orientation == 'V') {
-				newBoard = parent.moveCar(carSymbol, Math.abs(dy), dy > 0 ? 'D' : 'U');
+				newBoard = controller.moveCar(carSymbol, Math.abs(dy), dy > 0 ? 'D' : 'U');
 			} else {
-				newBoard = parent.moveCar(carSymbol, Math.abs(dx), dx > 0 ? 'R' : 'L');
+				newBoard = controller.moveCar(carSymbol, Math.abs(dx), dx > 0 ? 'R' : 'L');
 			}
 
 			// If succesful moving the car, update the graphical representation and data
 			if (newBoard != null) {
-				mf.increaseScore();
-				parent.setCars(controller.getCars());
-				parent.setBoard(newBoard);
+				dataPanel.addPoint();
+				controller.setCars(); 
+				controller.setBoard(newBoard);
 				// Repaint the board after moving the car on the model
-				parent.repaint();
+				((Component) controller.getGrid()).repaint();
 			}
 		} catch (SameMovementException | IllegalDirectionException e) {
 			logger.error("ERROR: The movement of the car is the same or the direction is not valid");
 		}
 	}
 	
+
+	@Override
 	/**
 	 * Load the car's image from resources folders
 	 *
 	 * @param image Name of car's image
 	 */
-	private void loadImage(String image) {
+	public final void loadImage(String image) {
 		try {
 			// Path for such resources
 			String horizontalPath = "cars/" + image + "_horizontal.png";
