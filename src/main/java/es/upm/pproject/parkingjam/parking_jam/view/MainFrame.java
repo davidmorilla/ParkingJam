@@ -3,8 +3,11 @@ package es.upm.pproject.parkingjam.parking_jam.view;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+
 import javax.imageio.ImageIO;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
@@ -38,6 +41,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	private boolean levelSavedLoaded = false;
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
+	String msgLog;
 	private static final String FONT = "impact";
 
 	/**
@@ -119,7 +123,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 */
 	public void initializeGameComponents(boolean onlyOneLevel) {
 		logger.info("Initializing game components (onlyOneLevel={})...", onlyOneLevel);
-		
+
 		GridBagConstraints gbc = new GridBagConstraints();
 		Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
 
@@ -259,64 +263,62 @@ public class MainFrame extends JFrame implements IMainFrame {
 
 	/**
 	 * Displays the level selection buttons for choosing a specific game level.
-	 * Creates a panel with buttons for levels 1 to 5 and a button to return to the
-	 * main menu
+	 * It will only show as much buttons as levels the game has.
+	 * Creates a panel with buttons for levels and a button to return to the
+	 * main menu.
 	 */
 	public void showLevelButtons() throws NullBoardException {
 		logger.info("Displaying level buttons...");
-		JPanel levelPanel = new JPanel(new GridLayout(2, 5, 10, 10));
+		JPanel levelPanel = new JPanel(new GridLayout(0, 5, 10, 10));
 		levelPanel.setOpaque(false);
+
+		// Define the directory and pattern
+		String directoryPath = "src/main/resources/levels"; // Replace with your directory path
+		String filePattern = "level_\\d+\\.txt"; // Pattern for files like level_1.txt, level_2.txt, etc.
+
+		File dir = new File(directoryPath);
+		if (!dir.exists() || !dir.isDirectory()) {
+			msgLog = "Directory does not exist or is not a directory: " + directoryPath;
+			logger.error(msgLog);
+			JOptionPane.showMessageDialog(null, "Directory does not exist or is not a directory: " + directoryPath);
+			return;
+		}
+
+		// List files that match the pattern
+	    File[] levelFiles = dir.listFiles((d, name) -> name.matches(filePattern));
+
+		if (levelFiles == null || levelFiles.length == 0) {
+			msgLog = "No level files found in the directory: " + directoryPath;
+			logger.error(msgLog);
+			JOptionPane.showMessageDialog(null, "No level files found in the directory: " + directoryPath);
+			return;
+		}
+
+		// Sort the level files by level number
+	    Arrays.sort(levelFiles, (f1, f2) -> {
+	        int level1 = Integer.parseInt(f1.getName().split("_")[1].replaceAll("\\D+", ""));
+	        int level2 = Integer.parseInt(f2.getName().split("_")[1].replaceAll("\\D+", ""));
+	        return Integer.compare(level1, level2);
+	    });
+
+		// Create a button for each level file
+		for (File levelFile : levelFiles) {
+			String levelName = levelFile.getName().replaceFirst("[.][^.]+$", ""); // Remove file extension
+			int levelNumber = Integer.parseInt(levelName.split("_")[1]); // Extract the level number
+			JButton levelButton = new JButton("Level " + levelNumber);
+			levelButton.addActionListener(arg0 -> {
+				try {
+					levelAction(levelNumber);
+				} catch (NullBoardException e) {
+					msgLog = "ERROR: Cannot load level " + levelName;
+					logger.error(msgLog);
+				}
+			});
+			levelPanel.add(levelButton);
+		}
 
 		JButton backButton = new JButton("GO TO MAIN MENU");
 		backButton.addActionListener(arg0 -> backToMainMenuAction());
-
-		JButton level1Button = new JButton("Level 1");
-		JButton level2Button = new JButton("Level 2");
-		JButton level3Button = new JButton("Level 3");
-		JButton level4Button = new JButton("Level 4");
-		JButton level5Button = new JButton("Level 5");
-
-		level1Button.addActionListener(arg0 -> {
-			try {
-				level1Action();
-			} catch (NullBoardException e) {
-				logger.error("ERROR: Cannot show level 1 Button");
-			}
-		});
-		level2Button.addActionListener(arg0 -> {
-			try {
-				level2Action();
-			} catch (NullBoardException e) {
-				logger.error("ERROR: Cannot show level 2 Button");
-			}
-		});
-		level3Button.addActionListener(arg0 -> {
-			try {
-				level3Action();
-			} catch (NullBoardException e) {
-				logger.error("ERROR: Cannot show level 3 Button");
-			}
-		});
-		level4Button.addActionListener(arg0 -> {
-			try {
-				level4Action();
-			} catch (NullBoardException e) {
-				logger.error("ERROR: Cannot show level 4 Button");
-			}
-		});
-		level5Button.addActionListener(arg0 -> {
-			try {
-				level5Action();
-			} catch (NullBoardException e) {
-				logger.error("ERROR: Cannot show level 5 Button");
-			}
-		});
-
-		levelPanel.add(level1Button);
-		levelPanel.add(level2Button);
-		levelPanel.add(level3Button);
-		levelPanel.add(level4Button);
-		levelPanel.add(level5Button);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -587,58 +589,15 @@ public class MainFrame extends JFrame implements IMainFrame {
 	}
 
 	/**
-	 * Handles the action when the Level 1 button is clicked.
-	 * Loads level 1 and starts the game.
+	 * Handles the action when a level button is clicked.
+	 * Loads that level and starts the game.
 	 * 
 	 * @throws NullBoardException
 	 */
-	private void level1Action() throws NullBoardException {
-		logger.info("Level 1 button clicked.");
-		loadLevelAndStartGame(1);
-	}
-
-	/**
-	 * Handles the action when the Level 2 button is clicked.
-	 * Loads level 2 and starts the game.
-	 * 
-	 * @throws NullBoardException
-	 */
-	private void level2Action() throws NullBoardException {
-		logger.info("Level 2 button clicked.");
-		loadLevelAndStartGame(2);
-	}
-
-	/**
-	 * Handles the action when the Level 3 button is clicked.
-	 * Loads level 3 and starts the game.
-	 * 
-	 * @throws NullBoardException
-	 */
-	private void level3Action() throws NullBoardException {
-		logger.info("Level 3 button clicked.");
-		loadLevelAndStartGame(3);
-	}
-
-	/**
-	 * Handles the action when the Level 4 button is clicked.
-	 * Loads level 4 and starts the game.
-	 * 
-	 * @throws NullBoardException
-	 */
-	private void level4Action() throws NullBoardException {
-		logger.info("Level 4 button clicked.");
-		loadLevelAndStartGame(4);
-	}
-
-	/**
-	 * Handles the action when the Level 5 button is clicked.
-	 * Loads level 5 and starts the game.
-	 * 
-	 * @throws NullBoardException
-	 */
-	private void level5Action() throws NullBoardException {
-		logger.info("Level 5 button clicked.");
-		loadLevelAndStartGame(5);
+	private void levelAction(int numLevel) throws NullBoardException {
+		msgLog  = "Level " + numLevel + " clicked";
+		logger.info(msgLog);
+		loadLevelAndStartGame(numLevel);
 	}
 
 	// --------END OF BUTTON FUNCTIONALITIES------------
