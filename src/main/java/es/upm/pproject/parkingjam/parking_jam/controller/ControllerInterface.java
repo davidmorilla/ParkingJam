@@ -12,6 +12,16 @@ import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IGrid;
  * It provides methods to control the game flow, such as loading levels, moving cars, and saving the game state.
  */
 public interface ControllerInterface {
+
+	/**
+     * Initializes a new game.
+     * 
+     * @throws IllegalExitsNumberException if the number of exits is illegal
+     * @throws IllegalCarDimensionException if the car dimensions are illegal
+	 * @throws NullBoardException 
+     */
+	public void startNewGame() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException;
+
 	/**
 	 * Loads a new level in the game.
 	 * 

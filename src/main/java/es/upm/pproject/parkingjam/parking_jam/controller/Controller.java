@@ -32,6 +32,17 @@ public class Controller implements ControllerInterface {
 		mf = new MainFrame(this);
 		gameSaver = game.getGameSaver();
 	}
+
+	/**
+     * Initializes a new game.
+     * 
+     * @throws IllegalExitsNumberException if the number of exits is illegal
+     * @throws IllegalCarDimensionException if the car dimensions are illegal
+	 * @throws NullBoardException 
+     */
+	public void startNewGame() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException{
+		this.game = new Game();
+	}
 	
 	 /**
      * Loads a new level in the game.

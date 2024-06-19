@@ -27,6 +27,11 @@ public class MainFrame extends JFrame implements IMainFrame {
 	private transient ControllerInterface controller;
 	private transient MusicPlayer musicPlayer;
 	private JPanel mainPanel;
+	private JPanel buttonPanel;
+	private JButton startButton;
+	private JButton loadGameButton;
+	private JButton selectLevel;
+	private JLabel titleLabel;
 	private DataPanel dataPanel;
 	private transient IGrid gridPanel;
 
@@ -114,6 +119,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 */
 	public void initializeGameComponents(boolean onlyOneLevel) {
 		logger.info("Initializing game components (onlyOneLevel={})...", onlyOneLevel);
+		
 		GridBagConstraints gbc = new GridBagConstraints();
 		Pair<Integer, Integer> dimensions = controller.getBoardDimensions();
 
@@ -132,7 +138,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		gbc.anchor = GridBagConstraints.CENTER;
 		mainPanel.add((Grid) gridPanel, gbc);
 
-		JPanel buttonPanel = new JPanel();
+		buttonPanel = new JPanel();
 		JButton undoButton = new JButton("UNDO");
 		buttonPanel.add(undoButton);
 
@@ -164,6 +170,10 @@ public class MainFrame extends JFrame implements IMainFrame {
 			buttonPanel.add(saveGameButton);
 
 			saveGameButton.addActionListener(arg0 -> saveGameAction());
+			JButton backToMenu = new JButton("BACK TO MAIN MENU");
+			buttonPanel.add(backToMenu);
+
+			backToMenu.addActionListener(arg0 -> backToMainMenuAction());
 		}
 
 		gbc.gridx = 1;
@@ -194,8 +204,9 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 */
 	public void addMainMenuTitleAndButtons() {
 		logger.info("Adding title and start, load game and select level buttons of the main menu...");
+		clearMainPanel(buttonPanel, startButton, selectLevel, loadGameButton, titleLabel);
 		// Add title
-		JLabel titleLabel = createTitleLabel("PARKING JAM");
+		titleLabel = createTitleLabel("PARKING JAM");
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -203,16 +214,16 @@ public class MainFrame extends JFrame implements IMainFrame {
 		mainPanel.add(titleLabel, gbc);
 
 		// Add start button
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		JButton startButton = new JButton("NEW GAME");
+		buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		startButton = new JButton("NEW GAME");
 		buttonPanel.add(startButton);
 
 		// Add load gamebutton
-		JButton loadGameButton = new JButton("LOAD LAST GAME");
+		loadGameButton = new JButton("LOAD LAST SAVED GAME");
 		buttonPanel.add(loadGameButton);
 
 		// Add select level button
-		JButton selectLevel = new JButton("SELECT LEVEL");
+		selectLevel = new JButton("SELECT LEVEL");
 		buttonPanel.add(selectLevel);
 
 		// Start button functionality
@@ -327,7 +338,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * This method is triggered when the "Back to Menu" button is clicked. It logs
 	 * an informational message,
 	 * clears the main panel, and displays the level selection buttons.
-	 * @throws NullBoardException 
+	 * 
+	 * @throws NullBoardException
 	 */
 	private void backToMenuAction() throws NullBoardException {
 		logger.info("Back to menu button clicked.");
@@ -336,6 +348,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 		mainPanel.repaint();
 		showLevelButtons();
 	}
+
+	
 
 	/**
 	 * Handles the action of the "Next Level" button.
@@ -443,7 +457,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * <p>
 	 * This method is triggered when the "Reset" button is clicked.
 	 * Resets the current level in the game.
-	 * @throws NullBoardException 
+	 * 
+	 * @throws NullBoardException
 	 */
 	private void resetLevelAction() throws NullBoardException {
 		logger.info("Reset button clicked.");
@@ -468,11 +483,11 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * Handles the action when the 'New Game' button is clicked.
 	 * It starts a new game from the first level
 	 * 
-	 * @param buttonPanel panel that will hold the buttons
-	 * @param startButton button for starting the game
-	 * @param selectLevel button for selecting a level
+	 * @param buttonPanel    panel that will hold the buttons
+	 * @param startButton    button for starting the game
+	 * @param selectLevel    button for selecting a level
 	 * @param loadGameButton button for loading the game
-	 * @param titleLabel title displayed
+	 * @param titleLabel     title displayed
 	 */
 	private void newGameAction(JPanel buttonPanel, JButton startButton, JButton selectLevel,
 			JButton loadGameButton, JLabel titleLabel) {
@@ -492,19 +507,19 @@ public class MainFrame extends JFrame implements IMainFrame {
 	}
 
 	/**
-	 * Handles the action when the 'Load Last Game' button is clicked.
+	 * Handles the action when the 'Load Last Saved Game' button is clicked.
 	 * Loads the level and its state as it was last saved.
 	 * 
-	 * @param buttonPanel panel that will hold the buttons
-	 * @param startButton button for starting the game
-	 * @param selectLevel button for selecting a level
+	 * @param buttonPanel    panel that will hold the buttons
+	 * @param startButton    button for starting the game
+	 * @param selectLevel    button for selecting a level
 	 * @param loadGameButton button for loading the game
-	 * @param titleLabel title displayed
-	 * @throws NullBoardException 
+	 * @param titleLabel     title displayed
+	 * @throws NullBoardException
 	 */
 	private void loadLastGameAction(JPanel buttonPanel, JButton startButton, JButton selectLevel,
 			JButton loadGameButton, JLabel titleLabel) throws NullBoardException {
-		logger.info("Load Last Game button clicked.");
+		logger.info("Load Last Saved Game button clicked.");
 		boolean levelExists = true;
 		try {
 			levelSavedLoaded = true;
@@ -527,12 +542,12 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * Handles the action when the 'Select Level' button is clicked.
 	 * Loads the menu to choose a specific level.
 	 * 
-	 * @param buttonPanel panel that will hold the buttons
-	 * @param startButton button for starting the game
-	 * @param selectLevel button for selecting a level
+	 * @param buttonPanel    panel that will hold the buttons
+	 * @param startButton    button for starting the game
+	 * @param selectLevel    button for selecting a level
 	 * @param loadGameButton button for loading the game
-	 * @param titleLabel title displayed
-	 * @throws NullBoardException 
+	 * @param titleLabel     title displayed
+	 * @throws NullBoardException
 	 */
 	private void selectLevelAction(JPanel buttonPanel, JButton startButton, JButton selectLevel,
 			JButton loadGameButton, JLabel titleLabel) throws NullBoardException {
@@ -551,13 +566,21 @@ public class MainFrame extends JFrame implements IMainFrame {
 		mainPanel.removeAll();
 		mainPanel.revalidate();
 		mainPanel.repaint();
+		controller.setGameScore(0);
+		controller.setPunctuation(0);
+		try {
+			controller.startNewGame();
+		} catch (IllegalExitsNumberException | IllegalCarDimensionException | NullBoardException e) {
+			logger.error("Could not load main menu: {}.", e.getLocalizedMessage());
+		}
 		addMainMenuTitleAndButtons();
 	}
 
 	/**
 	 * Handles the action when the Level 1 button is clicked.
 	 * Loads level 1 and starts the game.
-	 * @throws NullBoardException 
+	 * 
+	 * @throws NullBoardException
 	 */
 	private void level1Action() throws NullBoardException {
 		logger.info("Level 1 button clicked.");
@@ -567,7 +590,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 	/**
 	 * Handles the action when the Level 2 button is clicked.
 	 * Loads level 2 and starts the game.
-	 * @throws NullBoardException 
+	 * 
+	 * @throws NullBoardException
 	 */
 	private void level2Action() throws NullBoardException {
 		logger.info("Level 2 button clicked.");
@@ -577,7 +601,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 	/**
 	 * Handles the action when the Level 3 button is clicked.
 	 * Loads level 3 and starts the game.
-	 * @throws NullBoardException 
+	 * 
+	 * @throws NullBoardException
 	 */
 	private void level3Action() throws NullBoardException {
 		logger.info("Level 3 button clicked.");
@@ -587,7 +612,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 	/**
 	 * Handles the action when the Level 4 button is clicked.
 	 * Loads level 4 and starts the game.
-	 * @throws NullBoardException 
+	 * 
+	 * @throws NullBoardException
 	 */
 	private void level4Action() throws NullBoardException {
 		logger.info("Level 4 button clicked.");
@@ -597,7 +623,8 @@ public class MainFrame extends JFrame implements IMainFrame {
 	/**
 	 * Handles the action when the Level 5 button is clicked.
 	 * Loads level 5 and starts the game.
-	 * @throws NullBoardException 
+	 * 
+	 * @throws NullBoardException
 	 */
 	private void level5Action() throws NullBoardException {
 		logger.info("Level 5 button clicked.");
@@ -628,7 +655,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * Loads the specified level and starts the game for that level
 	 * 
 	 * @param levelNumber the number of the level to load
-	 * @throws NullBoardException 
+	 * @throws NullBoardException
 	 */
 	public void loadLevelAndStartGame(int levelNumber) throws NullBoardException {
 		logger.info("Loading level {} and starting game...", levelNumber);
@@ -644,21 +671,29 @@ public class MainFrame extends JFrame implements IMainFrame {
 	/**
 	 * Clears the entire mainPanel
 	 * 
-	 * @param buttonPanel panel that will hold the buttons
-	 * @param startButton button for starting the game
-	 * @param selectLevel button for selecting a level
+	 * @param buttonPanel    panel that will hold the buttons
+	 * @param startButton    button for starting the game
+	 * @param selectLevel    button for selecting a level
 	 * @param loadGameButton button for loading the game
-	 * @param titleLabel title displayed
+	 * @param titleLabel     title displayed
 	 */
 	public void clearMainPanel(JPanel buttonPanel, JButton startButton, JButton selectLevel, JButton loadGameButton,
 			JLabel titleLabel) {
 		logger.info("Clearing main panel...");
-		mainPanel.remove(startButton);
-		mainPanel.remove(selectLevel);
-		buttonPanel.remove(selectLevel);
-		buttonPanel.remove(startButton);
-		buttonPanel.remove(loadGameButton);
-		mainPanel.remove(titleLabel);
+		if (startButton != null)
+			mainPanel.remove(startButton);
+		if (selectLevel != null)
+			mainPanel.remove(selectLevel);
+		if (buttonPanel != null) {
+			if (selectLevel != null)
+				buttonPanel.remove(selectLevel);
+			if (startButton != null)
+				buttonPanel.remove(startButton);
+			if (loadGameButton != null)
+				buttonPanel.remove(loadGameButton);
+		}
+		if (titleLabel != null)
+			mainPanel.remove(titleLabel);
 		mainPanel.revalidate();
 		mainPanel.repaint();
 		logger.info("Main panel cleared.");
