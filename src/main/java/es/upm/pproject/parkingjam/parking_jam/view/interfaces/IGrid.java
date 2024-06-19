@@ -10,6 +10,7 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.LevelAlreadyFinis
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.MovementOutOfBoundariesException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.NullBoardException;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
+import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.DataPanel;
 import es.upm.pproject.parkingjam.parking_jam.view.MovableCar;
 
@@ -80,4 +81,11 @@ public interface IGrid {
 	 * @return square size
 	 */
 	public int getSquareSize();
+
+	/**
+	 * Sets the dimensions of the board of the current level
+	 * 
+	 * @param dimensions the dimensions of the level
+	 */
+	public void setDimensions(Pair<Integer, Integer> dimensions);
 }

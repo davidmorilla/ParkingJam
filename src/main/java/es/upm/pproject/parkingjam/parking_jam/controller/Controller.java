@@ -53,6 +53,7 @@ public class Controller implements ControllerInterface {
      */
 	public void loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		game.loadNewLevel();
+		mf.setDimensions(getBoardDimensions());
 
 	}
 	

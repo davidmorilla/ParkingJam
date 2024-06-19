@@ -349,7 +349,17 @@ public class MainFrame extends JFrame implements IMainFrame {
 		showLevelButtons();
 	}
 
-	
+
+	/**
+	 * Sets the dimensions of the board of the current level
+	 * 
+	 * @param dimensions the dimensions of the level
+	 */
+	public void setDimensions(Pair<Integer, Integer> dimensions){
+		gridPanel.setDimensions(dimensions);
+	}
+
+
 
 	/**
 	 * Handles the action of the "Next Level" button.

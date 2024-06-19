@@ -101,7 +101,6 @@ public class Grid extends JPanel implements IGrid {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
 		// Paint the board
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
@@ -142,6 +141,16 @@ public class Grid extends JPanel implements IGrid {
 			g.setColor(Color.BLACK);
 			g.drawString(message, x, y);
 		}
+	}
+
+	/**
+	 * Sets the dimensions of the board of the current level
+	 * 
+	 * @param dimensions the dimensions of the level
+	 */
+	public void setDimensions(Pair<Integer, Integer> dimensions){
+		this.rows = dimensions.getLeft();
+		this.cols = dimensions.getRight();
 	}
 
 	/**
