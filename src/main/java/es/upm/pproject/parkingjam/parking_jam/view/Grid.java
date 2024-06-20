@@ -134,20 +134,29 @@ public class Grid extends JPanel implements IGrid {
 		logger.info("Board and cars painted.");
 		if (isLevelCompleted()) {
 			logger.info("Showing 'level completed' message...");
-			// Show the level completed message
+
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Arial", Font.BOLD, 30));
 			String message = "LEVEL COMPLETED";
 			int textWidth = g.getFontMetrics().stringWidth(message);
 			int textHeight = g.getFontMetrics().getHeight();
-			int x = (cols * squareSize - textWidth) / 2;
-			int y = (rows * squareSize + textHeight) / 2;
+			
+			int rectWidth = textWidth + 30;
+			int rectHeight = textHeight + 10;
+			
+			int rectX = (getWidth() - rectWidth) / 2;
+			int rectY = (getHeight() - rectHeight) / 2;
+			
+			int textX = rectX + (rectWidth - textWidth) / 2;
+			int textY = rectY + ((rectHeight - textHeight) / 2) + textHeight - g.getFontMetrics().getDescent();
+			
 			g.setColor(Color.BLUE);
-			g.fillRect(x-15,y-40, 345, 55);
-			g.setColor(Color.cyan);
-			g.fillRect(x-10,y-35, 335, 45);
+			g.fillRect(rectX - 5, rectY - 5, rectWidth + 10, rectHeight + 10);
+			g.setColor(Color.CYAN);
+			g.fillRect(rectX, rectY, rectWidth, rectHeight);
+			
 			g.setColor(Color.BLACK);
-			g.drawString(message, x, y);
+			g.drawString(message, textX, textY);
 			logger.info("'Level completed' message displayed.");
 		}
 	}

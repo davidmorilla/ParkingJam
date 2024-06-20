@@ -418,6 +418,12 @@ public class MainFrame extends JFrame implements IMainFrame {
 			gbc.gridy = 2;
 
 			mainPanel.add(totalScore, gbc);
+
+			JButton backToMenu = new JButton("BACK TO MAIN MENU");
+			gbc.gridy = 3;
+			mainPanel.add(backToMenu,gbc);
+
+			backToMenu.addActionListener(arg0 -> backToMainMenuAction());
 			mainPanel.revalidate();
 			mainPanel.repaint();
 
