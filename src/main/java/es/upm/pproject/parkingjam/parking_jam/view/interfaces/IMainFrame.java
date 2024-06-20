@@ -43,14 +43,14 @@ public interface IMainFrame {
     /**
 	 * Loads the specified level and starts the game for that level
 	 * @param levelNumber the number of the level to load
-	 * @throws NullBoardException 
+	 * @throws NullBoardException if the board is null
 	 */
 	public void loadLevelAndStartGame(int levelNumber) throws NullBoardException;
 
     /**
 	 * Displays the level selection buttons for choosing a specific game level.
 	 * Creates a panel with buttons for levels 1 to 5 and a button to return to the main menu
-	 * @throws NullBoardException 
+	 * @throws NullBoardException if the boarrd is null
 	 */
 	public void showLevelButtons() throws NullBoardException;
 

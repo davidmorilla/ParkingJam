@@ -6,6 +6,7 @@ package es.upm.pproject.parkingjam.parking_jam.model.exceptions;
  */
 public class CannotUndoMovementException extends Exception {
 	
+
 	/**
 	 * CannotUndoMovementException constructor. Creates exception
 	 * with a predefined message

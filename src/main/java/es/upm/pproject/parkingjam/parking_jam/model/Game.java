@@ -25,7 +25,7 @@ public class Game {
      * @param numLevel the starting level number.
      * @throws IllegalExitsNumberException if there is an illegal number of exits in the level.
      * @throws IllegalCarDimensionException if there are illegal dimensions for cars in the level.
-	 * @throws NullBoardException 
+	 * @throws NullBoardException if the board is null
      */
 	public Game(int numLevel) throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		logger.info("Creating new game...");
@@ -39,7 +39,7 @@ public class Game {
      *
      * @throws IllegalExitsNumberException if there is an illegal number of exits in the level.
      * @throws IllegalCarDimensionException if there are illegal dimensions for cars in the level.
-	 * @throws NullBoardException 
+	 * @throws NullBoardException if the board is null
      */
 	public Game() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		logger.info("Creating new game...");
@@ -73,7 +73,7 @@ public class Game {
      * @return the level number of the loaded saved level.
      * @throws IllegalExitsNumberException if there is an illegal number of exits in the level.
      * @throws IllegalCarDimensionException if there are illegal dimensions for cars in the level.
-	 * @throws NullBoardException 
+	 * @throws NullBoardException if the board is null
      */
 	public int loadSavedLevel(GameSaver gs) throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		logger.info("Loading saved level...");
@@ -95,7 +95,7 @@ public class Game {
      * @return the level number of the loaded new level.
      * @throws IllegalExitsNumberException if there is an illegal number of exits in the level.
      * @throws IllegalCarDimensionException if there are illegal dimensions for cars in the level.
-	 * @throws NullBoardException 
+	 * @throws NullBoardException if the board is null
      */
 	public final int loadNewLevel() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
 		logger.info("Loading new level...");
@@ -114,12 +114,12 @@ public class Game {
      * @param length the distance to move the car.
      * @param way the direction (either 'H' for horizontal or 'V' for vertical) to move the car.
      * @return a 2D char array representing the updated board configuration after the movement.
-     * @throws IllegalDirectionException 
-     * @throws LevelAlreadyFinishedException 
-     * @throws NullBoardException 
-     * @throws MovementOutOfBoundariesException 
-     * @throws InvalidMovementException 
-     * @throws IllegalCarException 
+     * @throws IllegalDirectionException if the direction specified is not valid. 
+     * @throws LevelAlreadyFinishedException if the user attempts to make a movement after the level has finished.
+     * @throws NullBoardException if the board is null.
+     * @throws MovementOutOfBoundariesException if the movement attempted is out of boundaries
+     * @throws InvalidMovementException if the movement is invalid
+     * @throws IllegalCarException if the car does not exist
      */
 	public char[][] moveCar(char car, int length, char way) throws IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		return level.moveCar(car, length, way, false);
@@ -129,12 +129,12 @@ public class Game {
      *
      * @return an 'OldBoardData' object representing the board state before the last movement.
      * @throws CannotUndoMovementException if there is no movement to undo.
-     * @throws IllegalDirectionException 
-     * @throws LevelAlreadyFinishedException 
-     * @throws NullBoardException 
-     * @throws MovementOutOfBoundariesException 
-     * @throws InvalidMovementException 
-     * @throws IllegalCarException 
+     * @throws IllegalDirectionException if the direction specified is not valid. 
+     * @throws LevelAlreadyFinishedException if the user attempts to make a movement after the level has finished.
+     * @throws NullBoardException if the board is null.
+     * @throws MovementOutOfBoundariesException if the movement attempted is out of boundaries
+     * @throws InvalidMovementException if the movement is invalid
+     * @throws IllegalCarException if the car does not exist
      */
 	public char[][] undoMovement() throws CannotUndoMovementException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException, NullBoardException {
 		return level.undoMovement();
@@ -234,7 +234,7 @@ public class Game {
      * Loads a specific level.
      * 
      * @param levelNumber the number of the level to load.
-     * @throws NullBoardException 
+     * @throws NullBoardException if the boar dis null.
      */
 	public void loadLevel(int levelNumber) throws NullBoardException {
 		

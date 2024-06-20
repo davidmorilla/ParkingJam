@@ -40,8 +40,8 @@ public class Level {
 	 * @param board the initial board configuration.
 	 * @param cars  the initial set of cars on the board.
 	 * @param gs    the game saver utility for saving game states.
-	 * @throws NullBoardException
-	 * @throws IllegalCarDimensionException 
+	 * @throws NullBoardException if the board is null.
+	 * @throws IllegalCarDimensionException if the car dimensions do not adjust to 2x1 or 1x2 for the red car and 1xN or Nx1 for the rest of the vehicles.
 	 */
 	public Level(char[][] board, Map<Character, Car> cars, GameSaver gs) throws NullBoardException, IllegalCarDimensionException {
 		if (board != null) {
@@ -70,7 +70,11 @@ public class Level {
 			throw new NullBoardException();
 		}
 	}
-
+	/**
+	 * Checks whether all cars have a valid length(>1).
+	 * @param cars a map with keys (car char) mapped to their corresponding Car objects.
+	 * @return true if all cars have valid dimensions, false otherwise.
+	 */
 	public final boolean allCarsOK(Map<Character, Car> cars) {
 		boolean allOk = true;
 		for (Car c : cars.values()) {
@@ -81,12 +85,6 @@ public class Level {
 		return allOk;
 	}
 
-	/**
-	 * Converts a char matrix to a string representation.
-	 * 
-	 * @param board the char matrix to convert.
-	 * @return the string representation of the board.
-	 */
 	private String charMatrixToString(char[][] board) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < board.length; i++) {
@@ -109,18 +107,14 @@ public class Level {
 		return this.history;
 	}
 
-	/**
-	 * Increases the score by 1.
-	 */
+
 	private void increaseScore() {
 		logger.info("Increasing score...");
 		logger.info("Score has been increased by 1 unit (new score: {}).", score + 1);
 		score++;
 	}
 
-	/**
-	 * Decreases the score by 1.
-	 */
+
 	private void decreaseScore() {
 		logger.info("Decreasing score...");
 		logger.info("Score has been decreased by 1 unit(new score: {}).", score - 1);
@@ -182,13 +176,13 @@ public class Level {
 	 * Undoes the last movement and restores the previous board state.
 	 * 
 	 * @return the restored board state.
-	 * @throws CannotUndoMovementException      if there are no movements to undo.
-	 * @throws IllegalDirectionException
-	 * @throws LevelAlreadyFinishedException
-	 * @throws MovementOutOfBoundariesException
-	 * @throws InvalidMovementException
-	 * @throws IllegalCarException
-	 * @throws NullBoardException
+	 * @throws CannotUndoMovementException if there are no movements to undo.
+	 * @throws IllegalDirectionException if the direction specified is not valid. 
+     * @throws LevelAlreadyFinishedException if the user attempts to make a movement after the level has finished.
+     * @throws NullBoardException if the board is null.
+     * @throws MovementOutOfBoundariesException if the movement attempted is out of boundaries
+     * @throws InvalidMovementException if the movement is invalid
+     * @throws IllegalCarException if the car does not exist
 	 */
 	public char[][] undoMovement() throws CannotUndoMovementException, IllegalDirectionException,
 			LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException,
@@ -238,12 +232,12 @@ public class Level {
 	 * @param undo   boolean indicating whether the movement is a new movement or an
 	 *               undo movement.
 	 * @return the new board state or an empty matrix if the move is not possible.
-	 * @throws IllegalDirectionException
-	 * @throws LevelAlreadyFinishedException
-	 * @throws IllegalCarException
-	 * @throws InvalidMovementException
-	 * @throws MovementOutOfBoundariesException
-	 * @throws NullBoardException
+	 * @throws IllegalDirectionException if the direction specified is not valid. 
+     * @throws LevelAlreadyFinishedException if the user attempts to make a movement after the level has finished.
+     * @throws NullBoardException if the board is null.
+     * @throws MovementOutOfBoundariesException if the movement attempted is out of boundaries
+     * @throws InvalidMovementException if the movement is invalid
+     * @throws IllegalCarException if the car does not exist
 	 */
 	public char[][] moveCar(char car, int length, char way, boolean undo)
 			throws IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException,
@@ -364,7 +358,7 @@ public class Level {
 	 * 
 	 * @param original the original char matrix.
 	 * @return a deep copy of the char matrix.
-	 * @throws NullBoardException
+	 * @throws NullBoardException if the board is null.
 	 */
 	private char[][] deepCopy(char[][] original) throws NullBoardException {
 		if (original == null) {
@@ -383,7 +377,7 @@ public class Level {
 	 * The score is reset to 0, the board and cars are restored to their default
 	 * states.
 	 * 
-	 * @throws NullBoardException
+	 * @throws NullBoardException if the board is null.
 	 */
 	public void resetLevel() throws NullBoardException {
 		logger.info("Resetting level...");
@@ -630,7 +624,7 @@ public class Level {
 	 * number.
 	 * 
 	 * @param levelNumber the level number to reset.
-	 * @throws NullBoardException
+	 * @throws NullBoardException if thr board is null
 	 */
 	public void resetOriginalLevel(int levelNumber) throws NullBoardException {
 		logger.info("Resetting original level...");

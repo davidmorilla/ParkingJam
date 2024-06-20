@@ -144,7 +144,7 @@ public class MovableCar implements IMovableCar{
 
 
 	/**
-	 * Verify if a given point is inside the car's area
+	 * Verifies if a given point is inside the car's area
 	 *      
 	 * @param p The point to verify
 	 * @return true if the point is insde the car's area, false otherwise
@@ -170,11 +170,11 @@ public class MovableCar implements IMovableCar{
 
 	/**
 	 * Ends the dragging process and moves the car if it has been dragged
-	 * @throws LevelAlreadyFinishedException 
-	 * @throws NullBoardException 
-	 * @throws IllegalCarException 
-	 * @throws MovementOutOfBoundariesException 
-	 * @throws InvalidMovementException 
+     * @throws LevelAlreadyFinishedException if the user attempts to make a movement after the level has finished.
+     * @throws NullBoardException if the board is null.
+     * @throws MovementOutOfBoundariesException if the movement attempted is out of boundaries
+     * @throws InvalidMovementException if the movement is invalid
+     * @throws IllegalCarException if the car does not exist 
 	 */
 	public void endDrag() throws LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException {
 		dragging = false;
@@ -228,11 +228,11 @@ public class MovableCar implements IMovableCar{
 	 *
 	 * @param dx X axis offset
 	 * @param dy Y axis offset
-	 * @throws LevelAlreadyFinishedException 
-	 * @throws NullBoardException 
-	 * @throws IllegalCarException 
-	 * @throws MovementOutOfBoundariesException 
-	 * @throws InvalidMovementException 
+     * @throws LevelAlreadyFinishedException if the user attempts to make a movement after the level has finished.
+     * @throws NullBoardException if the board is null.
+     * @throws MovementOutOfBoundariesException if the movement attempted is out of boundaries
+     * @throws InvalidMovementException if the movement is invalid
+     * @throws IllegalCarException if the car does not exist
 	 */
 	public void moveCar(int dx, int dy) throws LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException {
 		try {

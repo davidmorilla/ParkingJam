@@ -341,7 +341,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * an informational message,
 	 * clears the main panel, and displays the level selection buttons.
 	 * 
-	 * @throws NullBoardException
+	 * @throws NullBoardException if the board is null
 	 */
 	private void backToMenuAction() throws NullBoardException {
 		logger.info("Back to menu button clicked.");
@@ -527,7 +527,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * @param selectLevel    button for selecting a level
 	 * @param loadGameButton button for loading the game
 	 * @param titleLabel     title displayed
-	 * @throws NullBoardException
+	 * @throws NullBoardException if the board is null.
 	 */
 	private void loadLastGameAction(JPanel buttonPanel, JButton startButton, JButton selectLevel,
 			JButton loadGameButton, JLabel titleLabel) throws NullBoardException {
@@ -559,7 +559,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * @param selectLevel    button for selecting a level
 	 * @param loadGameButton button for loading the game
 	 * @param titleLabel     title displayed
-	 * @throws NullBoardException
+	 * @throws NullBoardException if the board is null.
 	 */
 	private void selectLevelAction(JPanel buttonPanel, JButton startButton, JButton selectLevel,
 			JButton loadGameButton, JLabel titleLabel) throws NullBoardException {
@@ -592,7 +592,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * Handles the action when a level button is clicked.
 	 * Loads that level and starts the game.
 	 * 
-	 * @throws NullBoardException
+	 * @throws NullBoardException if the board is null
 	 */
 	private void levelAction(int numLevel) throws NullBoardException {
 		msgLog  = "Level " + numLevel + " clicked";
@@ -624,7 +624,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * Loads the specified level and starts the game for that level
 	 * 
 	 * @param levelNumber the number of the level to load
-	 * @throws NullBoardException
+	 * @throws NullBoardException if the board is null
 	 */
 	public void loadLevelAndStartGame(int levelNumber) throws NullBoardException {
 		logger.info("Loading level {} and starting game...", levelNumber);

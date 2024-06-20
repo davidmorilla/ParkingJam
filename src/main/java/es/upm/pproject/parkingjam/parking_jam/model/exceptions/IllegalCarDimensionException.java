@@ -1,7 +1,7 @@
 package es.upm.pproject.parkingjam.parking_jam.model.exceptions;
 
 /**
- * IllegalCarDimensionException is thrown then the red car size
+ * IllegalCarDimensionException is thrown when the red car size
  * does not match the 2x1 or the 1x2 dimensions
  */
 public class IllegalCarDimensionException extends Exception{

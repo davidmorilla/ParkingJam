@@ -139,7 +139,7 @@ public class LevelReader {
 	 * @return the extracted level number, or -1 if it cannot be extracted.
 	 */
 	private int extractLevelNumber(String levelName) {
-		if("Initial level".equals(levelName))
+		if("Initial level".equals(levelName.trim()))
 			return 1; // Special case for the initial level
 		String[] parts = levelName.split(" ");
 		if (parts.length > 1 && "Level".equalsIgnoreCase(parts[0])) {

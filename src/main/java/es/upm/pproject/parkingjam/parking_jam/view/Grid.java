@@ -270,12 +270,12 @@ public class Grid extends JPanel implements IGrid {
 	 * @param length the length of the car
 	 * @param way the orientation of the car, vertical or horizontal
 	 * @return the new board if the movement was successful
-	 * @throws IllegalDirectionException 
-	 * @throws LevelAlreadyFinishedException 
-	 * @throws NullBoardException 
-	 * @throws IllegalCarException 
-	 * @throws MovementOutOfBoundariesException 
-	 * @throws InvalidMovementException 
+     * @throws IllegalDirectionException if the direction specified is not valid. 
+     * @throws LevelAlreadyFinishedException if the user attempts to make a movement after the level has finished.
+     * @throws NullBoardException if the board is null.
+     * @throws MovementOutOfBoundariesException if the movement attempted is out of boundaries
+     * @throws InvalidMovementException if the movement is invalid
+     * @throws IllegalCarException if the car does not exist
 	 */
 	public char[][] moveCar(char car, int length, char way) throws IllegalDirectionException, LevelAlreadyFinishedException, InvalidMovementException, MovementOutOfBoundariesException, IllegalCarException, NullBoardException {
 		return controller.moveCar(car, length, way);
