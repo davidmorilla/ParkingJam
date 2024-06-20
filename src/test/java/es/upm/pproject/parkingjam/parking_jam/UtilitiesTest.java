@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Coordinates;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 
-
+@DisplayName("Tests related to testing the classes Pair and Coordinates ")
+@Nested
 public class UtilitiesTest {
 	
 	@DisplayName ("Tests related to testing the class Coordinates")
@@ -57,7 +58,7 @@ public class UtilitiesTest {
 		}
 	}
 	
-	@DisplayName ("Tests related to testing the class pAIR")
+	@DisplayName ("Tests related to testing the class Pair")
 	@Nested
 	class PairTests {
 		

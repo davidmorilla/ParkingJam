@@ -24,7 +24,8 @@ import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Car;
 import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
-
+@DisplayName("Tests related to testing the class Level")
+@Nested
 public class LevelTest {
 	private Level level;
 

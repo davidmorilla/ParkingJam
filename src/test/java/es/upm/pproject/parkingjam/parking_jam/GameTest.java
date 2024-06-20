@@ -16,7 +16,8 @@ import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.model.Level;
-
+@DisplayName("Tests related to testing the class Game")
+@Nested
 public class GameTest {
 	Game game;
 
