@@ -23,6 +23,14 @@ The goal of this project is the development of the Parking Jam game using a Java
 ## Interface Description
 
 The `ControllerInterface` interface provides the following public methods:
+### `public void startNewGame()`
+
+  Initializes a new game.
+
+- **Exceptions:**
+  - `IllegalExitsNumberException`: When there's an illegal number of exits (there can only be one exit).
+  - `IllegalCarDimensionException `: When a car dimensions are illegal (different from 1xN or Nx1, Red car only 2x1 or 1x2).
+  - `NullBoardException` : when the board is null.
 
 ### `public void loadNewLevel()`
 
@@ -31,6 +39,7 @@ Loads a new level in the game.
 - **Exceptions:**
   - `IllegalExitsNumberException`: When there's an illegal number of exits (there can only be one exit).
   - `IllegalCarDimensionException `: When a car dimensions are illegal (different from 1xN or Nx1, Red car only 2x1 or 1x2).
+  - `NullBoardException` : when the board is null.
 
 ### `public int loadSavedLevel()`
 
@@ -39,6 +48,7 @@ Loads a saved level in the game and returns the number of the loaded level.
 - **Exceptions:**
   - `IllegalExitsNumberException`: When there's an illegal number of exits (there can only be one exit).
   - `IllegalCarDimensionException `: When a car dimensions are illegal (different from 1xN or Nx1, red car only 2x1 or 1x2).
+  - `NullBoardException` : when the board is null.
 
 ### `public char[][] moveCar(char car, int length, char way)`
 
@@ -49,15 +59,25 @@ Moves a car on the board and returns the updated board state after the move.
   - `length ` (int): Specifies the length to move the car.
   - `way` (char): Specifies the direction to move the car.
 - **Exceptions:**
-  - `IllegalCarDimensionException `: When a car dimensions are illegal (different from 1xN or Nx1, red car only 2x1 or 1x2).
+  - `IllegalDirectionException`: if the direction specified is not valid. 
+  - `LevelAlreadyFinishedException`: if the user attempts to make a movement after the level has finished.
+  - `NullBoardException`: if the board is null.
+  - `MovementOutOfBoundariesException`: if the movement attempted is out of boundaries.
+  - `InvalidMovementException`: if the movement is invalid.
+  - `IllegalCarException`: if the car does not exist.
 
 ### `public char[][] undoMovement()`
 
 Undoes the last car movement done and returns the updated board state after undoing the movement.
 
 - **Exceptions:**
-  - `IllegalCarDimensionException `: When a car dimensions are illegal (different from 1xN or Nx1, red car only 2x1 or 1x2).
   - `CannotUndoMovementException` : When there are no movements to be undone.
+  - `IllegalDirectionException`: if the direction specified is not valid. 
+  - `LevelAlreadyFinishedException`: if the user attempts to make a movement after the level has finished.
+  - `NullBoardException`: if the board is null.
+  - `MovementOutOfBoundariesException`: if the movement attempted is out of boundaries.
+  - `InvalidMovementException`: if the movement is invalid.
+  - `IllegalCarException`: if the car does not exist.
 
 ### `public char[][] getBoard()`
 
@@ -83,9 +103,27 @@ Returns the current level score.
 
 Returns the current level number.
 
+### `public IGrid getGrid()`
+
+Returns the current grid.
+
+### `public void setCars()`
+
+Sets the car list on the grid.
+
+### `public void setBoard(char[][] newBoard)`
+
+Sets the board on the grid.
+
+- **Parameters:**
+  - `newBoard`: the new board to be set.
+
 ### `public void resetLevel()`
 
 Resets the current level.
+
+- **Exceptions:**
+  - `NullBoardException`: if the board is null.
 
 ### `public boolean isMoveValid(char car, Coordinates newCoord, char way)`
 
@@ -122,6 +160,8 @@ Sets the total game score.
 
 Resets the level to its original state.
 
+- **Exceptions:**
+  - `NullBoardException`: if the board is null.
 
 ### `public void loadLevel(int levelNumber)`
 
@@ -130,6 +170,8 @@ Loads a specific level by its number.
 - **Parameters:**
   - `levelNumber` (int): Specifies the number of the level to load.
 
+- **Exceptions:**
+  - `NullBoardException` : when the board is null.
 ***
 
 ## Installation
@@ -247,6 +289,7 @@ At any time, the user can choose to press any of the buttons located right under
   2. **RESET LEVEL**: By clicking it, it allows the user to reset the level, going back to its initial configuration.
   3. **SAVE GAME**: By clicking it, it allows the user to save their game progress for later.
   4. **NEXT LEVEL**: This button only works when a level is finished, this is whenever the red car exits the board and the 'LEVEL COMPLETED' message is displayed. Clicking this button allows the user to advance to the next level.
+  5. **BACK TO MAIN MENU**: By clicking it, it allows the user to go back to the main menu.
 
 Once all the levels have been completed, the game will show the user a congratulations message indicating that they have finished the game.
 
