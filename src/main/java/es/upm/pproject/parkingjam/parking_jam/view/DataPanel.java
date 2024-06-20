@@ -78,7 +78,7 @@ public class DataPanel extends JPanel {
             }
         };
         label.setForeground(Color.BLACK); // Set text color to black
-        label.setFont(new Font("Impact", Font.PLAIN, 20));
+        label.setFont(new Font("Arial Black", Font.PLAIN, 20));
         logger.info("Created label with text: '{}'", text);
         return label;
     }

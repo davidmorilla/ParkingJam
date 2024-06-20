@@ -42,7 +42,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	private static final Logger logger = LoggerFactory.getLogger(MainFrame.class);
 
 	String msgLog;
-	private static final String FONT = "impact";
+	private static final String FONT = "Arial Black";
 
 	/**
 	 * Constructs a new MainFrame with the specified game controller.
