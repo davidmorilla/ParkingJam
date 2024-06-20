@@ -206,7 +206,7 @@ To execute the test suite for the project, follow these steps:
     ```
 ## Level Files
 
-The level files must be located inside the parking-jam/src/main/resources/levels folder.
+The level files must be located inside the `parking-jam/src/main/resources/` levels folder.
 The level files must be named `levelN.txt` (where `N` is a positive number).
 
 ### Format
