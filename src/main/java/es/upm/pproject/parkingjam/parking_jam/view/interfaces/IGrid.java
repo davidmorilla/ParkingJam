@@ -49,6 +49,7 @@ public interface IGrid {
 	 * Create drawable cars equivalent instances (MovableCar) and store them
 	 * 
 	 * @param cars map of cars to create their drawable instances
+	 * @param dataPanel the datapanel used
 	 */
 	public void setCarsMap(Map<Character, Car> cars, DataPanel dataPanel);
 

@@ -56,6 +56,7 @@ public class Grid extends JPanel implements IGrid {
 	 * @param cars Map of characters to Car objects representing movable cars in the game
 	 * @param board 2D char array representing the initial layout of the game board
 	 * @param controller Controller object to handle game logic
+	 * @param dataPanel the datapanel used
 	 */
 	public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, ControllerInterface controller,
 			DataPanel dataPanel) {

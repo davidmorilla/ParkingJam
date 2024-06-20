@@ -52,13 +52,11 @@ public class MovableCar implements IMovableCar{
 	 * MovableCar's Constructor
 	 *
 	 * @param car        	The Car object that represents this car
-	 * @param rows       	Number of rows in the board
-	 * @param cols       	Number of columns in the board
+	 * @param dimensions    Number of rows in the board and number of columns in the board
 	 * @param squareSize 	Size of each cell in the board
-	 * @param grid       	The panel where the car is drawn
 	 * @param controller 	The game controller
-	 * @param mf         	The mainframe of the application
 	 * @param image      	Name of the car's image
+	 * @param dataPanel		the datapanel used	
 	 */
 	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, ControllerInterface controller,
 			DataPanel dataPanel, String image) {

@@ -198,7 +198,7 @@ public class Game {
 	}
     /**
      * Resets the current level to its initial state.
-     * @throws NullBoardException 
+     * @throws NullBoardException if the board is null
      */
 	public void resetLevel() throws NullBoardException {
 		level.resetLevel();
@@ -215,7 +215,7 @@ public class Game {
 	}
     /**
      * Resets the original configuration of the current level.
-     * @throws NullBoardException 
+     * @throws NullBoardException if the board is null
      * 
      */
 	public void resetOriginalLevel() throws NullBoardException {

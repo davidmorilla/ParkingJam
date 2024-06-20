@@ -183,6 +183,7 @@ public interface ControllerInterface {
 
 	/**
 	 * Set the board on the grid
+	 * @param newBoard the new board 
 	 */
 	void setBoard(char[][] newBoard);
 }

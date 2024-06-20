@@ -119,7 +119,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * Initialize the components depending on whether it's a full game or a single
 	 * level game
 	 * 
-	 * @param onylyOneLevel true if is a single level game, false if is a full game
+	 * @param onlyOneLevel true if is a single level game, false if is a full game
 	 */
 	public void initializeGameComponents(boolean onlyOneLevel) {
 		logger.info("Initializing game components (onlyOneLevel={})...", onlyOneLevel);
