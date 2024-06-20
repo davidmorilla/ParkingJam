@@ -76,12 +76,14 @@ public class Level {
 	 * @return true if all cars have valid dimensions, false otherwise.
 	 */
 	public final boolean allCarsOK(Map<Character, Car> cars) {
+		logger.info("Checking that all cars dimensions are valid...");
 		boolean allOk = true;
 		for (Car c : cars.values()) {
 			allOk = c.getLength() > 1;
 			if (!allOk)
 				break;
 		}
+		logger.info("All cars dimensions are valid: {}", allOk);
 		return allOk;
 	}
 

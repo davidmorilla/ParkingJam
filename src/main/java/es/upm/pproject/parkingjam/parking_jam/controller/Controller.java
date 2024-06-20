@@ -2,6 +2,9 @@ package es.upm.pproject.parkingjam.parking_jam.controller;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import es.upm.pproject.parkingjam.parking_jam.model.Game;
 import es.upm.pproject.parkingjam.parking_jam.model.GameSaver;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.*;
@@ -19,7 +22,7 @@ public class Controller implements ControllerInterface {
 	private MainFrame mf;
 	private Game game; 
 	private GameSaver gameSaver;
-	
+	private static final Logger logger = LoggerFactory.getLogger(Controller.class);
 	/**
      * Initializes the game, the main frame, and the game saver.
      * 
@@ -28,9 +31,11 @@ public class Controller implements ControllerInterface {
 	 * @throws NullBoardException if the board is null
      */
 	public Controller() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
+		logger.info("Creating new Controller...");
 		game = new Game();
 		mf = new MainFrame(this);
 		gameSaver = game.getGameSaver();
+		logger.info("New Controller created.");
 	}
 
 	/**

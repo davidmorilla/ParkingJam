@@ -44,6 +44,7 @@ public class MyMouseAdapter extends MouseAdapter {
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
+		logger.info("Mouse is being pressed...");
 		Point point = e.getPoint();
 		movableSquare = grid.getMovableCarAt(point);
 		if (movableSquare != null) {
@@ -60,6 +61,7 @@ public class MyMouseAdapter extends MouseAdapter {
 	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		logger.info("Mouse is being dragged...");
 		if (movableSquare != null) {
 			Point point = e.getPoint();
 			int dx = (point.x / squareSize) - initialCol;
@@ -75,12 +77,13 @@ public class MyMouseAdapter extends MouseAdapter {
 	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		logger.info("Mouse has been released...");
 		if (movableSquare != null) {
 			try {
 				movableSquare.endDrag();
 			} catch (LevelAlreadyFinishedException | InvalidMovementException | MovementOutOfBoundariesException
 					| IllegalCarException | NullBoardException e1) {
-				logger.error("ERROR: Cannot end drag when mouse released");
+				logger.error("Cannot end drag when mouse released");
 			}
 			movableSquare = null;
 		}

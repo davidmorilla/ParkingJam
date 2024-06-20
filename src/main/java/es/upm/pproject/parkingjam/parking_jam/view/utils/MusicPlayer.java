@@ -22,6 +22,7 @@ public class MusicPlayer {
      * @throws IllegalArgumentException if sound file not found
      */
     public MusicPlayer(String soundFilePath) {
+    	logger.info("Creating music player...");
         try {
         	// Get sound file and open it
             URL soundFile = getClass().getClassLoader().getResource(soundFilePath);
@@ -38,9 +39,9 @@ public class MusicPlayer {
                 volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 setVolume(0.5f);
             }
-
+            logger.info("Music player created.");
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            logger.error("Error when initializing the music player.", e);
+            logger.error("Cannot initialize the music player: {}", e.getLocalizedMessage());
         }
     }
 
@@ -48,6 +49,7 @@ public class MusicPlayer {
      * Plays the music on a loop
      */
     public void play() {
+    	logger.info("Playing music...");
         if (clip != null) {
             logger.info("Music started playing.");
             clip.setFramePosition(0);
@@ -60,6 +62,7 @@ public class MusicPlayer {
      * Play the erase sound
      */
     public void playErase() {
+    	logger.info("Playing erase sound...");
         Clip erase = null;
         try {
         	// Get sound file and open it
@@ -74,7 +77,7 @@ public class MusicPlayer {
             erase.open(audioInputStream);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            logger.error("Error when playing the erase sound.", e);
+            logger.error("Error when playing the erase sound: {}", e.getLocalizedMessage());
         }
         if (erase != null) {
             erase.setFramePosition(0);
@@ -88,12 +91,14 @@ public class MusicPlayer {
      * Play the level success sound
      */
     public void playLevelSuccess() {
+    	logger.info("Playing level success sound...");
+
         Clip levelSuccess = null;
         try {
         	// Get sound file and open it
             URL soundFile = getClass().getClassLoader().getResource("levelSuccess.wav");
             if (soundFile == null) {
-                logger.info("Success sound not played because it was not found.");
+                logger.info("Success sound was not played because it was not found.");
                 throw new IllegalArgumentException("Sound file not found: levelSuccess.wav");
             }
 
@@ -102,7 +107,7 @@ public class MusicPlayer {
             levelSuccess.open(audioInputStream);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            logger.error("Error when playing the level success sound.", e);
+            logger.error("Error when playing the level success sound: {}", e.getLocalizedMessage());
         }
         if (levelSuccess != null) {
             levelSuccess.setFramePosition(0);
@@ -116,12 +121,14 @@ public class MusicPlayer {
      * Play the level start sound
      */
     public void playLevelStart() {
+    	logger.info("Playing level start sound...");
+
         Clip restartLevel = null;
         try {
         	// Get sound file and open it
             URL soundFile = getClass().getClassLoader().getResource("restartLevel.wav");
             if (soundFile == null) {
-                logger.info("Start sound not played because it was not found.");
+                logger.info("Start sound was not played because it was not found.");
                 throw new IllegalArgumentException("Sound file not found: restartLevel.wav");
             }
 
@@ -130,7 +137,7 @@ public class MusicPlayer {
             restartLevel.open(audioInputStream);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            logger.error("Error when playing the level start sound.", e);
+            logger.error("Error when playing the level start sound: {}.", e.getLocalizedMessage());
         }
         if (restartLevel != null) {
             restartLevel.setFramePosition(0);
@@ -146,12 +153,15 @@ public class MusicPlayer {
      * @param volume the desired volumen (0.0 to 1.0)
      */
     private final void setVolume(float volume) {
+    	logger.info("Setting volume to {} ...", volume);
+
         if (volumeControl != null) {
             float min = volumeControl.getMinimum();
             float max = volumeControl.getMaximum();
             float range = max - min;
             float gain = min + (range * volume);
             volumeControl.setValue(gain);
+            logger.info("Volume set to {}.", volume);
         }
     }
 }

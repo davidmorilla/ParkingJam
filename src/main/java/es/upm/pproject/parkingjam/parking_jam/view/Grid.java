@@ -59,6 +59,7 @@ public class Grid extends JPanel implements IGrid {
 	 */
 	public Grid(Pair<Integer, Integer> dimensions, Map<Character, Car> cars, char[][] board, ControllerInterface controller,
 			DataPanel dataPanel) {
+		logger.info("Creating new grid...");
 		this.rows = dimensions.getLeft();
 		this.cols = dimensions.getRight();
 		this.board = board;
@@ -76,6 +77,7 @@ public class Grid extends JPanel implements IGrid {
 		MouseAdapter mouseAdapter = new MyMouseAdapter(this);
 		this.addMouseListener(mouseAdapter);
 		this.addMouseMotionListener(mouseAdapter);
+		logger.info("Grid created.");
 	}
 
 	/**
@@ -84,12 +86,15 @@ public class Grid extends JPanel implements IGrid {
 	 * @return MovableCar object at the specified point, or null if no car is found
 	 */
 	public MovableCar getMovableCarAt(Point point) {
+		logger.info("Getting movable car at point : ({}, {})", point.x, point.y);
 		for (Manager car : movableCars.values()) {
 
-			if (car.getMovableCar().contains(point)) {
+			if (car.getMovableCar().contains(point)) { {}
+				logger.info("The movable car at point ({}, {}) has been obtained.", point.x, point.y);
 				return car.getMovableCar();
 			}
 		}
+		logger.warn("Ther was no movable car at point ({{}, {}).", point.x, point.y);
 		return null;
 	}
 
@@ -100,6 +105,7 @@ public class Grid extends JPanel implements IGrid {
 	 */
 	@Override
 	protected void paintComponent(Graphics g) {
+		logger.info("Painting components...");
 		super.paintComponent(g);
 		// Paint the board
 		for (int i = 0; i < rows; i++) {
@@ -124,8 +130,9 @@ public class Grid extends JPanel implements IGrid {
 		for (Manager movableCar : movableCars.values()) {
 			movableCar.getMovableCar().draw(g);
 		}
-
+		logger.info("Board and cars painted.");
 		if (isLevelCompleted()) {
+			logger.info("Showing 'level completed' message...");
 			// Show the level completed message
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Arial", Font.BOLD, 30));
@@ -140,6 +147,7 @@ public class Grid extends JPanel implements IGrid {
 			g.fillRect(x-10,y-35, 335, 45);
 			g.setColor(Color.BLACK);
 			g.drawString(message, x, y);
+			logger.info("'Level completed' message displayed.");
 		}
 	}
 
@@ -149,8 +157,10 @@ public class Grid extends JPanel implements IGrid {
 	 * @param dimensions the dimensions of the level
 	 */
 	public void setDimensions(Pair<Integer, Integer> dimensions){
+		logger.info("Setting dimensions of the level...");
 		this.rows = dimensions.getLeft();
 		this.cols = dimensions.getRight();
+		logger.info("Dimensions of the level set.");
 	}
 
 	/**
@@ -161,6 +171,7 @@ public class Grid extends JPanel implements IGrid {
 	 * @param y vertical coordinate of the cell
 	 */
 	private void paintExit(Graphics g, int x, int y) {
+		logger.info("Painting exit at coordinates ({}, {}).", x ,y);
 		String image = "exits/exit%s.png";
 		levelCompleted = false;
 
@@ -178,9 +189,11 @@ public class Grid extends JPanel implements IGrid {
 		try {
 			BufferedImage imageToDraw = ImageIO.read(getClass().getClassLoader().getResourceAsStream(image));
 			g.drawImage(imageToDraw, y * squareSize, x * squareSize, squareSize, squareSize, null);
+			logger.info("Exit at coordinates ({}, {}) painted.", x ,y);
 		} catch (IOException e) {
-			logger.error("ERROR: Cannot load exit image");
+			logger.error("Cannot load exit image");
 		}
+		
 	}
 
 	/**
@@ -191,6 +204,7 @@ public class Grid extends JPanel implements IGrid {
 	 * @param y vertical coordinate of the cell
 	 */
 	private void paintWall(Graphics g, int x, int y) {
+		logger.info("Painting wall at coordinates ({}, {}).", x ,y);
 		String image = "wall_%s.png";
 
 		if(y == 0 && (x == 0 || x == rows - 1))
@@ -205,9 +219,11 @@ public class Grid extends JPanel implements IGrid {
 		try {
 			g.drawImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream(image)), y * squareSize, x * squareSize,
 					squareSize, squareSize, this);
+			logger.info("Wall at coordinates ({}, {}) painted.", x ,y);
 		} catch (IOException e) {
-			logger.error("ERROR: Cannot load wall images");
+			logger.error("Cannot load wall images.");
 		}
+		
 	}
 
 	/**
@@ -215,7 +231,10 @@ public class Grid extends JPanel implements IGrid {
 	 * @return the board
 	 */
 	public char[][] getBoard() {
+		logger.info("Getting the board...");
+		logger.info("The board has been obtained.");
 		return this.board;
+		
 	}
 
 	/**
@@ -223,7 +242,9 @@ public class Grid extends JPanel implements IGrid {
 	 * @param board the new board
 	 */
 	public void setBoard(char[][] board) {
+		logger.info("Setting the board...");
 		this.board = board;
+		logger.info("The board has been set.");
 	}
 
 	/**
@@ -232,12 +253,14 @@ public class Grid extends JPanel implements IGrid {
 	 * @param cars a map of cars
 	 */
 	public void setCars(Map<Character, Car> cars) {
+		logger.info("Setting the cars...");
 		for (Map.Entry<Character, Car> entry : cars.entrySet()) {
 			Manager movableCar = movableCars.get(entry.getKey());
 			if (movableCar != null) {
 				movableCar.getMovableCar().updatePosition(entry.getValue().getCoordinates());
 			}
 		}
+		logger.info("The cars have been set.");
 	}
 
 	/**
@@ -247,6 +270,7 @@ public class Grid extends JPanel implements IGrid {
 	 * @param dataPanel the data panel necessary to create the movable cars
 	 */
 	public final void setCarsMap(Map<Character, Car> cars, DataPanel dataPanel) {
+		logger.info("Transforming cars into movable cars...");
 		this.movableCars = new HashMap<>();
 
 		for (Map.Entry<Character, Car> entry : cars.entrySet()) {
@@ -261,10 +285,11 @@ public class Grid extends JPanel implements IGrid {
 			MovableCar movableCar = new MovableCar(car, new Pair<>(rows, cols), squareSize, controller, dataPanel, imagePath);
 			movableCars.put(entry.getKey(), new Manager(movableCar));
 		}
+		logger.info("Cars have been transformed into movable cars.");
 	}
 
 	/**
-	 * Triest to move the car. If successful, returns the new board result of the movement
+	 * Tries to move the car. If successful, returns the new board result of the movement
 	 * 
 	 * @param car the car symbol, which represents the car that will try to move
 	 * @param length the length of the car
@@ -287,6 +312,7 @@ public class Grid extends JPanel implements IGrid {
 	 * @return true when @ symbol is not found, false otherwhise
 	 */
 	public boolean isLevelCompleted() {
+		logger.info("Checking whether the level is completed...");
 		levelCompleted = true;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
@@ -295,6 +321,7 @@ public class Grid extends JPanel implements IGrid {
 					levelCompleted = false;
 			}
 		}
+		logger.info("Level is completed: {}.", levelCompleted);
 		return this.levelCompleted;
 	}
 
@@ -304,6 +331,8 @@ public class Grid extends JPanel implements IGrid {
 	 * @return square size
 	 */
 	public int getSquareSize() {
+		logger.info("Getting square size...");
+		logger.info("Square size : {}.", squareSize);
 		return squareSize;
 	}
 }

@@ -159,7 +159,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 				try {
 					backToMenuAction();
 				} catch (NullBoardException e) {
-					logger.error("ERROR: Cannot show back to menu Button");
+					logger.error("Cannot show back to menu Button");
 				}
 			});
 		} else {
@@ -193,7 +193,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 			try {
 				resetLevelAction();
 			} catch (NullBoardException e) {
-				logger.error("ERROR: Cannot show reset level Button");
+				logger.error("Cannot show reset level Button");
 			}
 		});
 
@@ -240,7 +240,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 					try {
 						loadLastGameAction(buttonPanel, startButton, selectLevel, loadGameButton, titleLabel);
 					} catch (NullBoardException e1) {
-						logger.error("ERROR: Cannot show load game Button");
+						logger.error("Cannot show load game Button");
 					}
 				});
 
@@ -250,7 +250,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 					try {
 						selectLevelAction(buttonPanel, startButton, selectLevel, loadGameButton, titleLabel);
 					} catch (NullBoardException e) {
-						logger.error("ERROR: Cannot show select level Button");
+						logger.error("Cannot show select level Button");
 					}
 				});
 
@@ -258,7 +258,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		mainPanel.add(buttonPanel, gbc);
 		mainPanel.revalidate();
 		mainPanel.repaint();
-		logger.info("Ttitle and start, load game and select level buttons have been added to the main menu");
+		logger.info("Title, start, load game and select level buttons have been added to the main menu");
 	}
 
 	/**
@@ -310,7 +310,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 				try {
 					levelAction(levelNumber);
 				} catch (NullBoardException e) {
-					msgLog = "ERROR: Cannot load level " + levelName;
+					msgLog = "Cannot load level " + levelName;
 					logger.error(msgLog);
 				}
 			});

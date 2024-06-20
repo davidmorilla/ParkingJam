@@ -62,7 +62,7 @@ public class MovableCar implements IMovableCar{
 	 */
 	public MovableCar(Car car, Pair<Integer,Integer> dimensions, int squareSize, ControllerInterface controller,
 			DataPanel dataPanel, String image) {
-		
+		logger.info("Creating movable car...");
 		this.carSymbol = car.getSymbol();
 		this.row = car.getCoordinates().getY();
 		this.col = car.getCoordinates().getX();
@@ -82,6 +82,7 @@ public class MovableCar implements IMovableCar{
 			loadImage(image);
 
 		}
+		logger.info("Movable car created from Car '{}'.", carSymbol);
 	}
 	
 	/**
@@ -192,6 +193,7 @@ public class MovableCar implements IMovableCar{
 	 * @param dy Y axis offset
 	 */
 	public void drag(int dx, int dy) {
+		logger.info("Dragging car '{}' to new position...", this.carSymbol);
 		if (!dragging) return;
 
 		// Calculate the new row and column for the car
@@ -217,9 +219,10 @@ public class MovableCar implements IMovableCar{
 				row = newRow;
 				col = newCol;
 				((Component) controller.getGrid()).repaint();
+				logger.info("Movable car '{}' repainted.", this.carSymbol);
 			}
 		} catch (Exception e) {
-			logger.error("ERROR: The position of the car could not be updated and repainted");
+			logger.error("The position of the movable car could not be updated and repainted");
 		}
 	}
 
@@ -253,7 +256,7 @@ public class MovableCar implements IMovableCar{
 				((Component) controller.getGrid()).repaint();
 			}
 		} catch (IllegalDirectionException e) {
-			logger.error("ERROR: The movement of the car is the same or the direction is not valid");
+			logger.error("The movement of the car is the same or the direction is not valid");
 		}
 	}
 	
@@ -263,6 +266,7 @@ public class MovableCar implements IMovableCar{
 	 * @param image Name of car's image
 	 */
 	public final void loadImage(String image) {
+		logger.info("Loading car '{}' image...", this.carSymbol);
 		try {
 			// Path for such resources
 			String horizontalPath = "cars/" + image + "_horizontal.png";
@@ -270,7 +274,7 @@ public class MovableCar implements IMovableCar{
 			horizontalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(horizontalPath));
 			verticalCarImage = ImageIO.read(getClass().getClassLoader().getResourceAsStream(verticalPath));
 		} catch (IOException e) {
-			logger.error("ERROR: Could not load car image");
+			logger.error("Could not load car image");
 		}
 	}
 }
