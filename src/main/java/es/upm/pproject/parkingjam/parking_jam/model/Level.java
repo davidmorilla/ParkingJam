@@ -407,14 +407,10 @@ public class Level {
 	 * @param cars  the current map of cars.
 	 * @throws IllegalCarException if the car does not exist on the board.
 	 */
-	private void deleteCar(char car, char[][] board, Map<Character, Car> cars) throws IllegalCarException {
+	private void deleteCar(char car, char[][] board, Map<Character, Car> cars) {
 		logger.info("Deleting car '{}'...", car);
 		int xCar = 0;
 		int yCar = 0;
-		if (cars.get(car) == null) {
-			logger.error("Car '{}' does not exist.", car);
-			throw new IllegalCarException();
-		}
 
 		xCar = cars.get(car).getCoordinates().getX();
 		yCar = cars.get(car).getCoordinates().getY();

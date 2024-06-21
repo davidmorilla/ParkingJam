@@ -32,6 +32,7 @@ public class GameSaver {
 		level = new File("src/main/resources/savedGame/level.txt");
 		score = new File("src/main/resources/savedGame/punctuation.txt");
 		history = new File("src/main/resources/savedGame/history.txt");
+		
 		try {
 			createLevelFile(level);
 			createScoreFile(score);

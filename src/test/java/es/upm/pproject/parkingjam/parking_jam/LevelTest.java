@@ -75,6 +75,18 @@ public class LevelTest {
 		void testConstructorNotOk() throws NullBoardException {
 			assertThrows(NullBoardException.class, () -> new Level(null,null,null));
 		}
+		
+		@Test
+		void testContructorInvalidCarsLength() {
+			char board[][] =	{{'+', '+', '+', '+'},
+					{'+', 'a', ' ', '+'},
+					{'+', '+', '@', '+'}};
+			
+			Map<Character, Car> cars = new HashMap<>();
+			cars.put('a', new Car('a',1,1,1,'H'));
+						
+			assertThrows(IllegalCarDimensionException.class, () -> new Level(board,cars,null));
+		}
 	}
 
 	@DisplayName ("Tests related to testing the movement of the cars")
