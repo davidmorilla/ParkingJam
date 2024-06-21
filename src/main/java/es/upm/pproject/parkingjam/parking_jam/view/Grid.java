@@ -90,7 +90,7 @@ public class Grid extends JPanel implements IGrid {
 		logger.info("Getting movable car at point : ({}, {})", point.x, point.y);
 		for (Manager car : movableCars.values()) {
 
-			if (car.getMovableCar().contains(point)) { {}
+			if (car.getMovableCar().contains(point)) {
 				logger.info("The movable car at point ({}, {}) has been obtained.", point.x, point.y);
 				return car.getMovableCar();
 			}
