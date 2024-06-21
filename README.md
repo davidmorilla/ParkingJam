@@ -216,7 +216,7 @@ The level files must be named `levelN.txt` (where `N` is a positive number).
 - Following Lines: Board elements, with each line containing nColumns characters representing:
     - '+' : Wall
     - ' ' : Empty square
-    - [a-zA-Z] : Vehicle identifiers
+    - [a-z] : Vehicle identifiers
     - '*' : Red car
     - '@' : Exit
 
