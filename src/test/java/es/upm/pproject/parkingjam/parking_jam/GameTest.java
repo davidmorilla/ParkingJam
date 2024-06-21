@@ -475,11 +475,11 @@ public class GameTest {
         }
 	}
 	
-	@DisplayName ("Tests related to testing the load saved game functionality")
+	@DisplayName ("Tests related to testing the load game and load saved game functionalities")
 	@Nested
 	class LoadGameTests {
 		@Test
-		void loadSavedGame() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException {
+		void testLoadSavedGame() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException, IllegalDirectionException, LevelAlreadyFinishedException, IllegalCarException, InvalidMovementException, MovementOutOfBoundariesException {
 			game = new Game(1);
 			GameSaver gs = new GameSaver();
 			game.moveCar('c', 1, 'D');
@@ -501,6 +501,25 @@ public class GameTest {
 		            {'+', ' ', 'e', ' ', 'g', 'g', 'g', '+'},
 		            {'+', '+', '+', '+', '@', '+', '+', '+'}
 		    };
+			assertArrayEquals(expectedBoard, game.getBoard());
+		}
+		
+		@Test
+		void testLoadGame() throws IllegalExitsNumberException, IllegalCarDimensionException, NullBoardException {
+			game = new Game();
+			game.loadLevel(3);
+			
+			char expectedBoard[][] = {
+		            {'+', '+', '+', '+', '+', '+', '+', '+'},
+		            {'+', ' ', ' ', ' ', ' ', ' ', ' ', '+'},
+		            {'+', 'a', 'a', 'b', '*', ' ', ' ', '+'},
+		            {'+', 'c', ' ', 'b', '*', ' ', ' ', '+'},
+		            {'+', 'c', 'd', 'd', 'd', ' ', ' ', '+'},
+		            {'+', ' ', ' ', ' ', ' ', ' ', ' ', '+'},
+		            {'+', 'e', 'e', 'e', ' ', ' ', ' ', '+'},
+		            {'+', '+', '+', '+', '@', '+', '+', '+'}
+		    };
+			
 			assertArrayEquals(expectedBoard, game.getBoard());
 		}
 	}
