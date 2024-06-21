@@ -3,7 +3,6 @@ package es.upm.pproject.parkingjam.parking_jam.view.interfaces;
 import java.awt.Graphics;
 
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalCarException;
-import es.upm.pproject.parkingjam.parking_jam.model.exceptions.IllegalDirectionException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.InvalidMovementException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.LevelAlreadyFinishedException;
 import es.upm.pproject.parkingjam.parking_jam.model.exceptions.MovementOutOfBoundariesException;

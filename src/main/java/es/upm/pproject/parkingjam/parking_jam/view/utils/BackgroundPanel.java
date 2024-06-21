@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.upm.pproject.parkingjam.parking_jam.view.Grid;
 
 /**
  * This is the panel which will sit on the back of the app and

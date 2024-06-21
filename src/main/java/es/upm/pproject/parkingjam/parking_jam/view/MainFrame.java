@@ -269,6 +269,11 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 */
 	public void showLevelButtons() throws NullBoardException {
 		logger.info("Displaying level buttons...");
+		
+		// Add title
+		JLabel titleButtons = createTitleLabel("SINGLE-LEVEL MODE");
+		mainPanel.add(titleButtons);
+
 		JPanel levelPanel = new JPanel(new GridLayout(0, 5, 10, 10));
 		levelPanel.setOpaque(false);
 

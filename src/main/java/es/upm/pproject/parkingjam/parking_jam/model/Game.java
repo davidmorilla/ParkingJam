@@ -79,7 +79,10 @@ public class Game {
 		logger.info("Loading saved level...");
 		LevelReader lr = new LevelReader();
 		char[][] board = lr.readMap(levelNumber, true);
-		levelNumber = lr.getLevelNumber(); // Get the level number from LevelReader
+
+		//Only returns !=0 if there's a saved level
+		if(lr.getLevelNumber()!=0)
+			levelNumber = lr.getLevelNumber(); // Get the level number from LevelReader
 		level = new Level(board, new LevelConverter().convertLevel(board), lr.getGameSaver());
 		int cols = level.getDimensions().getRight();
 		int rows = level.getDimensions().getLeft();
@@ -87,6 +90,7 @@ public class Game {
 		level.setHistory(history);
 
 		logger.info("Saved level {} has been loaded.", levelNumber);
+		
 		return levelNumber;
 	}
 	 /**
