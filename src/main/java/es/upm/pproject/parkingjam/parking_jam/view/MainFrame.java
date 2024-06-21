@@ -16,6 +16,7 @@ import es.upm.pproject.parkingjam.parking_jam.utilities.Pair;
 import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IGrid;
 import es.upm.pproject.parkingjam.parking_jam.view.interfaces.IMainFrame;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.BackgroundPanel;
+import es.upm.pproject.parkingjam.parking_jam.view.utils.LabelUtils;
 import es.upm.pproject.parkingjam.parking_jam.view.utils.MusicPlayer;
 
 import org.slf4j.Logger;
@@ -686,29 +687,14 @@ public class MainFrame extends JFrame implements IMainFrame {
 	 * @return the created title label
 	 */
 	public JLabel createTitleLabel(String text) {
-		logger.info("Creating title label...");
-		JLabel label = new JLabel(text) {
-			@Override
-			protected void paintComponent(Graphics g) {
-				Graphics2D g2d = (Graphics2D) g.create();
-				// Draw the shadow
-				g2d.setColor(Color.GRAY);
-				g2d.drawString(getText(), getInsets().left + 3,
-						getInsets().top + getFontMetrics(getFont()).getAscent() + 3);
-				// Draw the text
-				g2d.setColor(getForeground());
-				g2d.drawString(getText(), getInsets().left, getInsets().top + getFontMetrics(getFont()).getAscent());
-				g2d.dispose();
-			}
-		};
-
-		// Set label configuration
-		label.setFont(new Font(FONT, Font.PLAIN, 50));
-		label.setForeground(Color.BLACK);
-		label.setOpaque(false);
-		logger.info("Title lable created.");
-		return label;
-	}
+        logger.info("Creating title label...");
+        JLabel label = LabelUtils.createCustomLabel(text, Color.BLACK, 3);
+        label.setForeground(Color.BLACK);
+        label.setFont(new Font(FONT, Font.PLAIN, 50));
+        label.setOpaque(false);
+        logger.info("Title label created.");
+        return label;
+    }
 
 	/**
 	 * Gets the board grid

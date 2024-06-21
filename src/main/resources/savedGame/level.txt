@@ -1,7 +1,7 @@
 Level 2
 8 8
 ++++++++
-+   bbb+
++bbb   +
 +a  d c+
 +a**dec@
 +jjj ec+

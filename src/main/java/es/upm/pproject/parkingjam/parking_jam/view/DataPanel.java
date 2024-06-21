@@ -2,8 +2,6 @@ package es.upm.pproject.parkingjam.parking_jam.view;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.upm.pproject.parkingjam.parking_jam.controller.ControllerInterface;
+import es.upm.pproject.parkingjam.parking_jam.view.utils.LabelUtils;
 
 /**
  * The DataPanel class is a custom JPanel that displays game information
@@ -63,21 +62,9 @@ public class DataPanel extends JPanel {
      * @return a customized JLabel
      */
     private JLabel createLabel(String text) {
-    	logger.info("Creating label...");
-        JLabel label = new JLabel(text) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                // Draw shadow
-                g2d.setColor(Color.GRAY);
-                g2d.drawString(getText(), getInsets().left + 2, getInsets().top + getFontMetrics(getFont()).getAscent() + 2);
-                // Draw main text
-                g2d.setColor(getForeground());
-                g2d.drawString(getText(), getInsets().left, getInsets().top + getFontMetrics(getFont()).getAscent());
-                g2d.dispose();
-            }
-        };
-        label.setForeground(Color.BLACK); // Set text color to black
+        logger.info("Creating label...");
+        JLabel label = LabelUtils.createCustomLabel(text, Color.BLACK, 2);
+        label.setForeground(Color.BLACK);
         label.setFont(new Font("Arial Black", Font.PLAIN, 20));
         logger.info("Created label with text: '{}'", text);
         return label;
